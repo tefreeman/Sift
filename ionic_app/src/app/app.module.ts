@@ -1,3 +1,4 @@
+import { MainRoutingModule } from './main/main-routing.module';
 import { CoreModule } from './api/core.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -30,11 +31,12 @@ import { MainPageModule } from './main/main.module';
     FormsModule,
     ReactiveFormsModule,
     IonicModule.forRoot(),
-    AppRoutingModule,
     AngularFireModule.initializeApp(environment.fireBaseConfig),
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
-    MainPageModule
+    MainPageModule,
+    MainRoutingModule,
+    AppRoutingModule,
   ],
   providers: [
     StatusBar,

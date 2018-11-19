@@ -11,7 +11,6 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'loading', component: LoadingComponent},
   { path: 'register', component: RegisterComponent },
-  { path: 'home', component: MainPage},
   { path: 'my-account', component: MyAccountComponent, canActivate: [AuthGuard]}
 ];
 
