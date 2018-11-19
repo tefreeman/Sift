@@ -19,9 +19,11 @@ import { RegisterComponent } from './user/register/register.component';
 import { MyAccountComponent } from './user/my-account/my-account.component';
 // will need to factor into specific module
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoadingComponent } from './loading/loading.component';
+import { MainPageModule } from './main/main.module';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterComponent, MyAccountComponent],
+  declarations: [AppComponent, LoginComponent, RegisterComponent, MyAccountComponent, LoadingComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
@@ -31,7 +33,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.fireBaseConfig),
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
-    AngularFireAuthModule // imports firebase/auth, only needed for auth features
+    AngularFireAuthModule, // imports firebase/auth, only needed for auth features
+    MainPageModule
   ],
   providers: [
     StatusBar,
