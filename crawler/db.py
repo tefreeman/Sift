@@ -32,7 +32,14 @@ class DataStore:
         except:
             return 0
 
-    def find_Many(self, conditions, limitAmount=1000):
+    def Find(self, conditions):
+        try:
+            doc =  self.collection.find(conditions)
+            return doc
+        except:
+            return
+    
+    def Find_Many(self, conditions, limitAmount=1000):
         try:
             c = self.collection.find(conditions).limit(limitAmount)
             return list(c)
