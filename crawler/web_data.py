@@ -11,21 +11,20 @@ from pprint import pprint
 import time
 TIMEOUT = 20
 
-class Browser:
-    
-    def api_request(self, method, url, proxy):
+class Browser:  
+    def api_request(self, url, proxy):
         try:
+            print('trying')
             if proxy != '':
-                response = requests.request(method, url, timeout=TIMEOUT, proxies=proxy)
+                proxydict = {'http://': proxy, 'https://': proxy}
+                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict)
+                return {'success': True, 'response': response}
             else:
-                response = requests.request(method, url, timeout=TIMEOUT)
-            return (True, response)
+                response = requests.get(url, timeout=TIMEOUT)
+                return  {'success': True, 'response': response}
         except TimeoutError:
             print("TimeOutError")
-            return (False, response)
-        except:
-            print("Unknown Error")
-            return (False, response)
+            return  {'success': False, 'response': None}
 
 class Selenium():
     dir = os.path.dirname(__file__)
