@@ -8,6 +8,7 @@ import requests
 from pprint import pprint
 from lxml import html
 from functools import total_ordering
+import sys
 @total_ordering
 class KeyDict(object):
     def __init__(self, key, dct):
@@ -29,6 +30,7 @@ class Heap_Proxy:
         self.active_proxy_heap = []
         self.inactive_proxy_heap = []
         self.limit = limit
+        self.__Reset()
         self.__Load_Heap()
     
     def __Gen_Speed(self, failures, successes):
@@ -40,17 +42,27 @@ class Heap_Proxy:
         result = KeyDict(speed, obj)
         return result
 
-    def __Load_Heap(self):
-        proxyList = self.dataStore.Find_Many({}, limitAmount=self.limit)
-        for doc in proxyList:
-            if doc['inUse'] == False:
-               # self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true
+    def __Load_Heap(self, activeHeap = True, inactiveHeap = True):
+        if activeHeap and inactiveHeap:
+            proxyList = self.dataStore.Find_Many({'inUse': False}, limitAmount=self.limit)
+            for doc in proxyList:
+                self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true
                 if doc['online'] == True:
                     heapq.heappush(self.active_proxy_heap, self.__Make_Sortable_Dict(doc))
                 else:          
                     heapq.heappush(self.inactive_proxy_heap, self.__Make_Sortable_Dict(doc))
-            else:
-                print("in use")
+        elif activeHeap:
+            for doc in proxyList:
+                if doc['inUse'] == False:
+                    self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true
+                    heapq.heappush(self.active_proxy_heap, self.__Make_Sortable_Dict(doc))
+        elif inactiveHeap:
+            for doc in proxyList:
+                if doc['inUse'] == False:
+                    self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true     
+                    heapq.heappush(self.inactive_proxy_heap, self.__Make_Sortable_Dict(doc))
+
+
     
     def __UpdateInUse(self, proxy, inUseBool):
         self.dataStore.Update_One({"_id": proxy['_id']}, {'$set': {"inUse": inUseBool}})
@@ -62,21 +74,23 @@ class Heap_Proxy:
             return True
 
     def Get(self, active = True):
-        try:
             if active and len(self.active_proxy_heap) > 0:
+                return heapq.heappop(self.active_proxy_heap).dct
+            elif active and len(self.active_proxy_heap) == 0:
+                self.__Load_Heap(activeHeap=True, inactiveHeap=False)
                 return heapq.heappop(self.active_proxy_heap).dct
             elif active == False and len(self.inactive_proxy_heap) > 0:
                 return heapq.heappop(self.inactive_proxy_heap).dct
-            else:
-                return None
-        except:
-            print("error at Get(self)")
-            return None
+            elif active == False and len(self.active_proxy_heap) == 0:
+                self.__Load_Heap(activeHeap=False, inactiveHeap=True)
+                return heapq.heappop(self.inactive_proxy_heap).dct
+            else: 
+                raise Exception('Proxy_System.Get() something terribly wrong happenend')
     
     def Return(self, proxy, isOnline):
         proxy['online'] = isOnline
         proxy['inUse'] = False
-        self.dataStore.Replace_One({"_id": proxy['_id']}, proxy)
+        self.dataStore.Replace_One({"_id": proxy['_id']}, proxy, False)
     
     def Add_New(self, hosts):
         host_list = list()
@@ -89,6 +103,9 @@ class Heap_Proxy:
 
         print("Adding ", len(host_list), " proxies to database!")
         self.dataStore.Insert_Many(host_list)
+
+    def __Reset(self):
+         test = self.dataStore.Update_Many({ }, {'$set':{'inUse': False}} )
     
 
 class Proxy_System:
@@ -158,3 +175,4 @@ class Proxy_System:
              proxy['failures'] += 1
         
         self.proxies.Return(proxy, isOnline)
+    

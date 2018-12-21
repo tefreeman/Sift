@@ -59,10 +59,11 @@ class DataStore:
             return updateResult
         except:
             return 0
+
  
-    def Replace_One(self, condition, r_condition):
+    def Replace_One(self, condition, r_condition, _upsert):
         try:
-            replaceResult = self.collection.replace_one(condition, r_condition)
+            replaceResult = self.collection.replace_one(condition, r_condition, upsert=_upsert)
             return replaceResult
         except:
             return 0
@@ -81,5 +82,6 @@ class DataStore:
         except:
             return 0
 
-
+    def Aggregate(self, condition):
+        self.collection.aggregate(condition)
 

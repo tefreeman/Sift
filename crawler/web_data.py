@@ -14,17 +14,20 @@ TIMEOUT = 20
 class Browser:  
     def api_request(self, url, proxy):
         try:
-            print('trying')
             if proxy != '':
-                proxydict = {'http://': proxy, 'https://': proxy}
+                print('trying')
+                http = "http://" + proxy['ip'] + ':' + proxy['port']
+                https = "https://" + proxy['ip'] + ':' + proxy['port']
+                proxydict = {'http': http, 'https': https}
                 response = requests.get(url, timeout=TIMEOUT, proxies=proxydict)
-                return {'success': True, 'response': response}
             else:
                 response = requests.get(url, timeout=TIMEOUT)
-                return  {'success': True, 'response': response}
-        except TimeoutError:
-            print("TimeOutError")
-            return  {'success': False, 'response': None}
+            if response.status_code == 200:
+               return  {'success': True, 'response': response} 
+            else:
+                return {'success': False, 'response': response.status_code}
+        except (ConnectionError, ConnectionRefusedError, TimeoutError):
+            return {'success': False, 'response': 0}
 
 class Selenium():
     dir = os.path.dirname(__file__)

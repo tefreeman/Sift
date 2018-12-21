@@ -5,43 +5,93 @@ from queue import Queue
 from threading import Thread
 import time
 import json
+import requests
 
 driver = Browser()
 proxySystem = Proxy_System()
+proxySystem.Add_New_Proxies('https://www.sslproxies.org/')
 db = DataStore('localhost', 27017,'nutritionix','grocery')
 
 BrandsList = db.Find_Many({'isFinished': False})
 num_worker_threads = 1
 
 
-def crawl_brand(brandObj):
-    groceryItemListUrl = "https://www.nutritionix.com/nixapi/brands/" + brandObj['id'] + "/items/1?limit=1000&search="
-    proxyHost = proxySystem.Get_Proxy()
-    start_time = time.time()
+class Get_Data:
 
-    getResult = driver.api_request(groceryItemListUrl, proxyHost)
-   
-    timeTook = time.time() - start_time
-    content = getResult['response']
+    def __time_took(self, func, params):
+        start_time = time.time()
+        funcReturn = {}
+        funcReturn['return'] = func(*params)
+        funcReturn['time'] = time.time() - start_time
+        return funcReturn
 
-    if getResult['success'] == True:
-        proxySystem.Return_Proxy(proxyHost, timeTook, True)
-        data = content.json()
+    def __gen_url(self, obj, urlParts): #urlParts = ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=1000&search=')
+        url = ""
+        for part in urlParts:
+            if part[0] == '$':
+                url = url + obj[part[1:]]
+            else:
+                url = url + part
+        return url
+    
+    def __gen_urls_from_list(self, obj_list, urlParts):
+        url_list = []
+        for obj in obj_list:
+            url = ""
+            for part in urlParts:
+                if part[0] == '$':
+                    url = url + obj[part[1:]]
+                else:
+                    url = url + part
+            url_list.append(url)
+        return url_list
+
+    def Get_One(self, obj, urlParts):
+            url = self.__gen_url(obj, urlParts)
+            proxyHost = proxySystem.Get_Proxy()
+            try:
+                getResult = self.__time_took(driver.api_request, (url, proxyHost))
+            
+            except (TimeoutError, requests.ConnectionError):
+                print('Timeout Error')
+                proxySystem.Return_Proxy(proxyHost, 15, False)
+                self.Get_One(obj, urlParts)
+            if getResult['return']['success'] == True:
+                proxySystem.Return_Proxy(proxyHost, getResult['time'], True)
+                return getResult['return']['response'].json()
+            else:
+                print('bad Get API ', getResult['return']['response'])
+                proxySystem.Return_Proxy(proxyHost, getResult['time'], False)
+                self.Get_One(obj, urlParts)
+
+
+    def Get_All(self, obj_list, urlParts):
+            url_list = self.__gen_urls_from_list(obj_list, urlParts)
+            response_list = []
+            for url in url_list:
+               response_list.append(self.Get_One({}, (url)))
+            return response_list
+
+
+
+
         
-        for item in data['items']:
-             proxyHost = proxySystem.Get_Proxy()
-             itemName = item['item_name'].replace(" ", "-")
-             itemId = item['item_id']
-             groceryProductUrl = "https://www.nutritionix.com/i/" + itemName + "/" + itemId
-             start_time = time.time()
-             productResult = driver.api_request(groceryProductUrl, proxyHost)
-             timeTook = time.time() - start_time
-             if productResult['success'] == True:
-                  proxySystem.Return_Proxy(proxyHost, timeTook, True)
-                  productData = productResult['response'].json()
-                  print(productData)
+def crawl_brand(brandObj):
+    #setup
+    
+    work = Get_Data()
+    brandItemDirectory = work.Get_One(brandObj, ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=1000&search='))
+    brandItems = work.Get_All(brandItemDirectory['items'], ("https://www.nutritionix.com/nixapi/items/",  '$item_id'))
+
+    brandObj['items'].append(brandItems)
+        
+    if len(brandItemDirectory['items']) == len(brandObj['items']):
+        brandObj['isFinished'] = True
+        db.Replace_One({'_id': brandObj['_id']}, brandObj, upsert=False)
     else:
          pass
+    
+         
 def worker():
     while True:
         item = q.get()
@@ -58,7 +108,6 @@ for item in BrandsList:
     q.put(item)
 
 q.join()       # block until all tasks are done
-
 # Grocery Product List: https://www.nutritionix.com/nixapi/brands/51db37b0176fe9790a8983c1/items/1?limit=1000&search=
 
 #groceryItemListUrl = "https://www.nutritionix.com/nixapi/brands/" + brandId + "/items/1?limit=1000&search="
