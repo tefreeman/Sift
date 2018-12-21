@@ -32,19 +32,22 @@ class Heap_Proxy:
         self.limit = limit
         self.__Reset()
         self.__Load_Heap()
+        self.isGetting = False
+        self.timesRun = 0
+        self.maxTimesRun = 80
     
-    def __Gen_Speed(self, failures, successes):
-        return (failures + 1.0) / ( successes + 1.0)
+    def __Gen_Speed(self, failures, successes, avgReqTime):
+            return (failures + 1.0) / ( successes + 1.0) + avgReqTime
    
     def __Make_Sortable_Dict(self, obj):
-        speed = self.__Gen_Speed(obj['failures'], obj['successes'])
+        speed = self.__Gen_Speed(obj['failures'], obj['successes'], obj['avgRequestTime'])
         # (speed, obj['_id'], obj['ip'], obj['port'], obj['successes'], obj['failures'], obj['avgRequestTime'])
         result = KeyDict(speed, obj)
         return result
 
     def __Load_Heap(self, activeHeap = True, inactiveHeap = True):
+        proxyList = self.dataStore.Find_Many({'inUse': False}, limitAmount=self.limit)
         if activeHeap and inactiveHeap:
-            proxyList = self.dataStore.Find_Many({'inUse': False}, limitAmount=self.limit)
             for doc in proxyList:
                 self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true
                 if doc['online'] == True:
@@ -74,11 +77,24 @@ class Heap_Proxy:
             return True
 
     def Get(self, active = True):
-            if active and len(self.active_proxy_heap) > 0:
-                return heapq.heappop(self.active_proxy_heap).dct
-            elif active and len(self.active_proxy_heap) == 0:
+        try:
+            if self.timesRun >= self.maxTimesRun:
+                self.isGetting = True
+                self.timesRun = 0
                 self.__Load_Heap(activeHeap=True, inactiveHeap=False)
+                self.isGetting = False
+            if active and len(self.active_proxy_heap) > 0:
+                self.timesRun += 1
                 return heapq.heappop(self.active_proxy_heap).dct
+            elif active and len(self.active_proxy_heap) <= 0:
+                if self.isGetting == False:
+                    self.isGetting = True
+                    self.__Load_Heap(activeHeap=True, inactiveHeap=False)
+                    self.isGetting = False
+                    return heapq.heappop(self.active_proxy_heap).dct
+                else:
+                    time.sleep(10)
+                    return heapq.heappop(self.active_proxy_heap).dct
             elif active == False and len(self.inactive_proxy_heap) > 0:
                 return heapq.heappop(self.inactive_proxy_heap).dct
             elif active == False and len(self.active_proxy_heap) == 0:
@@ -86,11 +102,14 @@ class Heap_Proxy:
                 return heapq.heappop(self.inactive_proxy_heap).dct
             else: 
                 raise Exception('Proxy_System.Get() something terribly wrong happenend')
+        except:
+            time.sleep(10)
+            return self.Get(active)
     
     def Return(self, proxy, isOnline):
         proxy['online'] = isOnline
         proxy['inUse'] = False
-        self.dataStore.Replace_One({"_id": proxy['_id']}, proxy, False)
+        self.dataStore.Replace_One({"_id": proxy['_id']}, proxy)
     
     def Add_New(self, hosts):
         host_list = list()
@@ -112,7 +131,10 @@ class Proxy_System:
     def __init__(self):
         self.proxies = Heap_Proxy(1000)
         self.driver = Browser()
-        self.testUrl = "https://www.nutritionix.com/"
+        self.testUrl = "https://www.nutritionix.com/nixapi/items/5593bf874d09368121149e81"
+        self.count = 0
+        self.maxLoadNew = 20000
+        self.totalCount = 0
     
     def __calc_avg_time(self, proxy, timeTook):
         tlt = proxy['successes'] + proxy['failures']
@@ -120,32 +142,40 @@ class Proxy_System:
 
     def __time(self, func, params):
         start_time = time.time()
-        funcReturn = func(*params)
+        funcReturn = {}
+        funcReturn['res'] = func(*params)
         funcReturn['time'] = time.time() - start_time
         return funcReturn
 
     def __Test_Proxy(self , isActive):
-        proxy = self.proxies.Get(isActive)
-        if proxy != None:
-            proxyUrl = 'http://' + proxy['ip'] + ':' + proxy['port']
-            result = self.__time(self.driver.api_request, (self.testUrl, proxyUrl) )
-
-            if result['success']:
-                proxy['avgRequestTime'] = self.__calc_avg_time(proxy, result['time'])
-                proxy['successes'] += 1
+        try:
+            proxy = self.proxies.Get(isActive)
+            if proxy != None:
+                result = self.__time(self.driver.api_request, (self.testUrl, proxy) )
+                proxy['avgRequestTime'] = result['time']
+                proxy['successes'] = 1
+                proxy['failures'] = 0
                 self.proxies.Return(proxy, True)
+                return True
             else:
-                proxy['avgRequestTime'] = self.__calc_avg_time(proxy, result['time'])
-                proxy['failures'] += 1
-                self.proxies.Return(proxy, False)
-            
-            return True
-        else:
-            return False
+                    return False
+        except (ConnectionError, ConnectionRefusedError, TimeoutError, requests.exceptions.ProxyError
+                , requests.exceptions.ConnectTimeout, requests.exceptions.SSLError, requests.exceptions.ReadTimeout,
+                requests.exceptions.TooManyRedirects, requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
+
+                        proxy['avgRequestTime'] = self.__calc_avg_time(proxy, 8.0)
+                        proxy['failures'] += 1
+                        self.proxies.Return(proxy, False)
+                        return True
+        except:
+            print('unknown error retrying')
+            time.sleep(10)
+            return self.__Test_Proxy(isActive)
+
 
     def Add_New_Proxies(self, url):
         try:
-            page = self.driver.api_request(url, '')['response']
+            page = self.driver.api_request(url, '')
             tree = html.fromstring(page.content)
             ip = tree.xpath('//*[@id="proxylisttable"]/tbody/tr/td[1]/text()')
             port = tree.xpath('//*[@id="proxylisttable"]/tbody/tr/td[2]/text()')
@@ -153,7 +183,8 @@ class Proxy_System:
         except:
             print("error Add Host To Database")
     
-    def Test_In_Acive_Proxies(self):
+    def Test_In_Active_Proxies(self):
+        self.proxies._Heap_Proxy__Load_Heap(False, True)
         isNotEmpty = self.__Test_Proxy(False)
         while isNotEmpty:
             isNotEmpty = self.__Test_Proxy(False)
@@ -164,6 +195,15 @@ class Proxy_System:
             isNotEmpty = self.__Test_Proxy(True)
         
     def Get_Proxy(self):
+        self.count+= 1
+        self.totalCount+= 1
+        if self.count >= self.maxLoadNew:
+            self.count = 0
+            self.Add_New_Proxies('https://www.sslproxies.org/')
+            print(self.totalCount, " items processed")
+
+
+
         proxy = self.proxies.Get()
         return proxy
 

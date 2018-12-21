@@ -61,9 +61,9 @@ class DataStore:
             return 0
 
  
-    def Replace_One(self, condition, r_condition, _upsert):
+    def Replace_One(self, condition, r_condition):
         try:
-            replaceResult = self.collection.replace_one(condition, r_condition, upsert=_upsert)
+            replaceResult = self.collection.replace_one(condition, r_condition)
             return replaceResult
         except:
             return 0

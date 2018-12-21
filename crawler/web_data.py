@@ -9,25 +9,23 @@ import unittest
 import datetime
 from pprint import pprint
 import time
-TIMEOUT = 20
+TIMEOUT = 8
 
 class Browser:  
     def api_request(self, url, proxy):
-        try:
             if proxy != '':
-                print('trying')
                 http = "http://" + proxy['ip'] + ':' + proxy['port']
                 https = "https://" + proxy['ip'] + ':' + proxy['port']
                 proxydict = {'http': http, 'https': https}
                 response = requests.get(url, timeout=TIMEOUT, proxies=proxydict)
             else:
                 response = requests.get(url, timeout=TIMEOUT)
-            if response.status_code == 200:
-               return  {'success': True, 'response': response} 
+            
+            if response.ok and response != type(None):
+                return response
             else:
-                return {'success': False, 'response': response.status_code}
-        except (ConnectionError, ConnectionRefusedError, TimeoutError):
-            return {'success': False, 'response': 0}
+                raise ConnectionError('status_code not 200')
+
 
 class Selenium():
     dir = os.path.dirname(__file__)

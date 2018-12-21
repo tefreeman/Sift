@@ -6,16 +6,6 @@ from threading import Thread
 import time
 import json
 import requests
-
-driver = Browser()
-proxySystem = Proxy_System()
-proxySystem.Add_New_Proxies('https://www.sslproxies.org/')
-db = DataStore('localhost', 27017,'nutritionix','grocery')
-
-BrandsList = db.Find_Many({'isFinished': False})
-num_worker_threads = 1
-
-
 class Get_Data:
 
     def __time_took(self, func, params):
@@ -51,18 +41,14 @@ class Get_Data:
             proxyHost = proxySystem.Get_Proxy()
             try:
                 getResult = self.__time_took(driver.api_request, (url, proxyHost))
-            
-            except (TimeoutError, requests.ConnectionError):
-                print('Timeout Error')
-                proxySystem.Return_Proxy(proxyHost, 15, False)
-                self.Get_One(obj, urlParts)
-            if getResult['return']['success'] == True:
                 proxySystem.Return_Proxy(proxyHost, getResult['time'], True)
-                return getResult['return']['response'].json()
-            else:
-                print('bad Get API ', getResult['return']['response'])
-                proxySystem.Return_Proxy(proxyHost, getResult['time'], False)
-                self.Get_One(obj, urlParts)
+                return getResult['return'].json()
+            
+            except (ConnectionError, ConnectionRefusedError, TimeoutError, requests.exceptions.ProxyError
+            , requests.exceptions.ConnectTimeout, requests.exceptions.SSLError, requests.exceptions.ReadTimeout,
+             requests.exceptions.TooManyRedirects, requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
+                proxySystem.Return_Proxy(proxyHost, 15, False)
+                return self.Get_One(obj, urlParts)
 
 
     def Get_All(self, obj_list, urlParts):
@@ -83,11 +69,11 @@ def crawl_brand(brandObj):
     brandItemDirectory = work.Get_One(brandObj, ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=1000&search='))
     brandItems = work.Get_All(brandItemDirectory['items'], ("https://www.nutritionix.com/nixapi/items/",  '$item_id'))
 
-    brandObj['items'].append(brandItems)
+    brandObj['items'] = brandItems
         
     if len(brandItemDirectory['items']) == len(brandObj['items']):
         brandObj['isFinished'] = True
-        db.Replace_One({'_id': brandObj['_id']}, brandObj, upsert=False)
+        db.Replace_One({'_id': brandObj['_id']}, brandObj)
     else:
          pass
     
@@ -98,20 +84,33 @@ def worker():
         crawl_brand(item)
         q.task_done()
 
-q = Queue()
-for i in range(num_worker_threads):
-     t = Thread(target=worker)
-     t.daemon = True
-     t.start()
+while True:
+    try:
+        driver = Browser()
+        proxySystem = Proxy_System()
+        proxySystem.Add_New_Proxies('https://www.sslproxies.org/')
+        db = DataStore('localhost', 27017,'nutritionix','grocery')
 
-for item in BrandsList:
-    q.put(item)
+        BrandsList = db.Find_Many({'isFinished': False})
+        num_worker_threads = 50
 
-q.join()       # block until all tasks are done
-# Grocery Product List: https://www.nutritionix.com/nixapi/brands/51db37b0176fe9790a8983c1/items/1?limit=1000&search=
 
-#groceryItemListUrl = "https://www.nutritionix.com/nixapi/brands/" + brandId + "/items/1?limit=1000&search="
+        q = Queue()
+        for i in range(num_worker_threads):
+            t = Thread(target=worker)
+            t.daemon = True
+            t.start()
 
-# Grocery Product: https://www.nutritionix.com/i/air-heads/artificially-flavored-candy/545ce645d43cefdf6dbf8021
+        l = Thread(target=proxySystem.Test_In_Active_Proxies)
+        l.daemon = True
+        l.start()
 
-#groceryProductUrl = "https://www.nutritionix.com/i/" + productName + "/" + productId
+        for item in BrandsList:
+            q.put(item)
+
+        q.join()       # block until all tasks are done
+        l.join()
+    except:
+        pass
+    print("Main exception occured restarting main thread")
+    time.sleep(15)
