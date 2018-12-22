@@ -1,0 +1,4 @@
+from db import DataStore
+
+test = DataStore()
+test.F

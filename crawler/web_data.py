@@ -13,6 +13,7 @@ TIMEOUT = 8
 
 class Browser:  
     def api_request(self, url, proxy):
+        try:
             if proxy != '':
                 http = "http://" + proxy['ip'] + ':' + proxy['port']
                 https = "https://" + proxy['ip'] + ':' + proxy['port']
@@ -25,6 +26,8 @@ class Browser:
                 return response
             else:
                 raise ConnectionError('status_code not 200')
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError
 
 
 class Selenium():

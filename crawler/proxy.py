@@ -34,7 +34,7 @@ class Heap_Proxy:
         self.__Load_Heap()
         self.isGetting = False
         self.timesRun = 0
-        self.maxTimesRun = 80
+        self.maxTimesRun = 400
     
     def __Gen_Speed(self, failures, successes, avgReqTime):
             return (failures + 1.0) / ( successes + 1.0) + avgReqTime
@@ -119,9 +119,9 @@ class Heap_Proxy:
             else:
                 host_list.append({'ip': host[0], 'port': host[1], 'successes': 0,
                 'failures': 0, 'avgRequestTime': 0, 'online': True, 'inUse': False})
-
-        print("Adding ", len(host_list), " proxies to database!")
-        self.dataStore.Insert_Many(host_list)
+        if len(host_list) > 0:
+            print("Adding ", len(host_list), " proxies to database!")
+            self.dataStore.Insert_Many(host_list)
 
     def __Reset(self):
          test = self.dataStore.Update_Many({ }, {'$set':{'inUse': False}} )
@@ -129,7 +129,7 @@ class Heap_Proxy:
 
 class Proxy_System:
     def __init__(self):
-        self.proxies = Heap_Proxy(1000)
+        self.proxies = Heap_Proxy(800)
         self.driver = Browser()
         self.testUrl = "https://www.nutritionix.com/nixapi/items/5593bf874d09368121149e81"
         self.count = 0
@@ -161,7 +161,7 @@ class Proxy_System:
                     return False
         except (ConnectionError, ConnectionRefusedError, TimeoutError, requests.exceptions.ProxyError
                 , requests.exceptions.ConnectTimeout, requests.exceptions.SSLError, requests.exceptions.ReadTimeout,
-                requests.exceptions.TooManyRedirects, requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
+                requests.exceptions.TooManyRedirects, requests.exceptions.HTTPError, requests.exceptions.ConnectionError, ):
 
                         proxy['avgRequestTime'] = self.__calc_avg_time(proxy, 8.0)
                         proxy['failures'] += 1
@@ -180,8 +180,8 @@ class Proxy_System:
             ip = tree.xpath('//*[@id="proxylisttable"]/tbody/tr/td[1]/text()')
             port = tree.xpath('//*[@id="proxylisttable"]/tbody/tr/td[2]/text()')
             self.proxies.Add_New(list(zip(ip, port)))
-        except:
-            print("error Add Host To Database")
+        except Exception as e:
+            print(e)
     
     def Test_In_Active_Proxies(self):
         self.proxies._Heap_Proxy__Load_Heap(False, True)
