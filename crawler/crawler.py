@@ -14,6 +14,7 @@ from fake_useragent import UserAgent
 from collections import OrderedDict
 import gzip
 import brotli
+import random 
 class Get_Data:
     def __init__(self, sessionHeaders, sessionProxy ):
         self.session = requests.Session()
@@ -23,6 +24,7 @@ class Get_Data:
         self.proxy = sessionProxy
         self.session.proxies = {'http': "http://" + self.proxy['ip'] + ':' + self.proxy['port'], 'https': "https://" + self.proxy['ip'] + ':' + self.proxy['port']}
         self.totalTime = 0
+        self.reqMinTime = 4
 
     def _fix_proxy(self):
         proxySystem.Return_Proxy(self.proxy, self.totalTime / self.success+1, False)
@@ -71,6 +73,7 @@ class Get_Data:
             with threadLock:
                 self.success = self.success + 1
                 successes = successes + 1
+            return getResult.elapsed.seconds
 
         except Exception as e:
             with threadLock:
@@ -78,7 +81,7 @@ class Get_Data:
                 failures = failures + 1
             
             self._fix_proxy()
-            self.GetWrite_One(obj, urlParts, headers, times+1)
+            return self.GetWrite_One(obj, urlParts, headers, times+1)
 
     def Get_One(self, obj, urlParts, headers, times = 0):
         global successes
@@ -93,7 +96,6 @@ class Get_Data:
                 successes = successes + 1
 
         except Exception as e:
-            print(e)
             with threadLock:
                 self.failure = self.failure + 1
                 failures = failures + 1
@@ -103,8 +105,12 @@ class Get_Data:
     def Get_All(self, brandObj, obj_list, urlParts, headers):
             url_list = self.__gen_urls_from_list(brandObj, obj_list, urlParts)
             for url in url_list:
-                self.GetWrite_One(brandObj, (url), headers)
+               timeTook = self.GetWrite_One(brandObj, (url), headers)
+               if timeTook < self.reqMinTime:
+                   time.sleep(self.reqMinTime - timeTook )
+               time.sleep(random.randint(1,5))
 
+                    
 
 
         
@@ -158,7 +164,7 @@ db_monitor = DataStore('localhost', 27017, 'proxies', 'monitor')
 threadLock = threading.Lock()
 BrandsList = db.Find_Many({'isFinished': False})
 print("current left ", len(BrandsList))
-num_worker_threads = 10
+num_worker_threads = 50
 
 
 q = Queue()
