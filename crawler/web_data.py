@@ -9,7 +9,7 @@ import unittest
 import datetime
 from pprint import pprint
 import time
-TIMEOUT = 8
+TIMEOUT = 12
 
 class Browser:  
     def api_request(self, url, proxy):

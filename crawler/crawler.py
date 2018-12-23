@@ -84,8 +84,9 @@ def crawl_brand(brandObj):
     work = Get_Data()
     brandItemDirectory = work.Get_One(brandObj, ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=1000&search='))
     work.Get_All(brandObj, brandItemDirectory['items'], ("https://www.nutritionix.com/nixapi/items/",  '$item_id'))
-        
-    if len(brandItemDirectory['items']) == len(db.Find_One({'_id': brandObj['_id']})['items']):
+    MongoDbLength = len(db.Find_One({'_id': brandObj['_id']})['items'])
+    if len(brandItemDirectory['items']) <= MongoDbLength:
+        print('finished')
         brandObj['isFinished'] = True
         db.Update_One({'_id': brandObj['_id']}, {'$set': {'isFinished': True}})
     else:
@@ -107,7 +108,7 @@ db = DataStore('localhost', 27017,'nutritionix','grocery')
 
 BrandsList = db.Find_Many({'isFinished': False})
 print("current left ", len(BrandsList))
-num_worker_threads = 100
+num_worker_threads = 80
 
 
 q = Queue()
@@ -116,10 +117,15 @@ for i in range(num_worker_threads):
     t.daemon = True
     t.start()
 
+def inactive_work():
+    while True:
+        inActiveProxy = proxySystem.Get_Inactive_Proxy()
+        proxySystem.Test_Proxy(False, inActiveProxy)
 
-l = Thread(target=proxySystem.Test_In_Active_Proxies)
-l.daemon = True
-l.start()
+for i in range(0,15):
+    l = Thread(target=inactive_work)
+    l.daemon = True
+    l.start()
 
 for item in BrandsList:
     q.put(item)

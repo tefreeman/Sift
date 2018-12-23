@@ -34,7 +34,7 @@ class Heap_Proxy:
         self.__Load_Heap()
         self.isGetting = False
         self.timesRun = 0
-        self.maxTimesRun = 400
+        self.maxTimesRun = 700
     
     def __Gen_Speed(self, failures, successes, avgReqTime):
             return (failures + 1.0) / ( successes + 1.0) + avgReqTime
@@ -97,7 +97,7 @@ class Heap_Proxy:
                     return heapq.heappop(self.active_proxy_heap).dct
             elif active == False and len(self.inactive_proxy_heap) > 0:
                 return heapq.heappop(self.inactive_proxy_heap).dct
-            elif active == False and len(self.active_proxy_heap) == 0:
+            elif active == False and len(self.active_proxy_heap) <= 0:
                 self.__Load_Heap(activeHeap=False, inactiveHeap=True)
                 return heapq.heappop(self.inactive_proxy_heap).dct
             else: 
@@ -129,9 +129,9 @@ class Heap_Proxy:
 
 class Proxy_System:
     def __init__(self):
-        self.proxies = Heap_Proxy(800)
+        self.proxies = Heap_Proxy(5000)
         self.driver = Browser()
-        self.testUrl = "https://www.nutritionix.com/nixapi/items/5593bf874d09368121149e81"
+        self.testUrl = "https://www.google.com"
         self.count = 0
         self.maxLoadNew = 20000
         self.totalCount = 0
@@ -147,9 +147,8 @@ class Proxy_System:
         funcReturn['time'] = time.time() - start_time
         return funcReturn
 
-    def __Test_Proxy(self , isActive):
+    def Test_Proxy(self , isActive, proxy):
         try:
-            proxy = self.proxies.Get(isActive)
             if proxy != None:
                 result = self.__time(self.driver.api_request, (self.testUrl, proxy) )
                 proxy['avgRequestTime'] = result['time']
@@ -162,8 +161,6 @@ class Proxy_System:
         except (ConnectionError, ConnectionRefusedError, TimeoutError, requests.exceptions.ProxyError
                 , requests.exceptions.ConnectTimeout, requests.exceptions.SSLError, requests.exceptions.ReadTimeout,
                 requests.exceptions.TooManyRedirects, requests.exceptions.HTTPError, requests.exceptions.ConnectionError, ):
-
-                        proxy['avgRequestTime'] = self.__calc_avg_time(proxy, 8.0)
                         proxy['failures'] += 1
                         self.proxies.Return(proxy, False)
                         return True
@@ -182,18 +179,11 @@ class Proxy_System:
             self.proxies.Add_New(list(zip(ip, port)))
         except Exception as e:
             print(e)
-    
-    def Test_In_Active_Proxies(self):
-        self.proxies._Heap_Proxy__Load_Heap(False, True)
-        isNotEmpty = self.__Test_Proxy(False)
-        while isNotEmpty:
-            isNotEmpty = self.__Test_Proxy(False)
+            
+    def Get_Inactive_Proxy(self):
+        proxy = self.proxies.Get(False)
+        return proxy
 
-    def Test_Active_Proxies(self):
-        isNotEmpty = self.__Test_Proxy(True)
-        while isNotEmpty:
-            isNotEmpty = self.__Test_Proxy(True)
-        
     def Get_Proxy(self):
         self.count+= 1
         self.totalCount+= 1
