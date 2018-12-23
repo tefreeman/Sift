@@ -27,6 +27,7 @@ class Browser:
             else:
                 raise ConnectionError('status_code not 200')
         except requests.exceptions.RequestException as e:
+            print(e)
             raise ConnectionError
 
 
