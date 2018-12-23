@@ -33,8 +33,6 @@ class Heap_Proxy:
         self.__Reset()
         self.__Load_Heap()
         self.isGetting = False
-        self.timesRun = 0
-        self.maxTimesRun = 700
     
     def __Gen_Speed(self, failures, successes, avgReqTime):
             return (failures + 1.0) / ( successes + 1.0) + avgReqTime
@@ -48,6 +46,8 @@ class Heap_Proxy:
     def __Load_Heap(self, activeHeap = True, inactiveHeap = True):
         proxyList = self.dataStore.Find_Many({'inUse': False}, limitAmount=self.limit)
         if activeHeap and inactiveHeap:
+            self.active_proxy_heap = []
+            self.inactive_proxy_heap = []
             for doc in proxyList:
                 self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true
                 if doc['online'] == True:
@@ -55,11 +55,13 @@ class Heap_Proxy:
                 else:          
                     heapq.heappush(self.inactive_proxy_heap, self.__Make_Sortable_Dict(doc))
         elif activeHeap:
+            self.active_proxy_heap = []
             for doc in proxyList:
                 if doc['inUse'] == False:
                     self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true
                     heapq.heappush(self.active_proxy_heap, self.__Make_Sortable_Dict(doc))
         elif inactiveHeap:
+            self.inactive_proxy_heap = []
             for doc in proxyList:
                 if doc['inUse'] == False:
                     self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true     
@@ -78,22 +80,10 @@ class Heap_Proxy:
 
     def Get(self, active = True):
         try:
-            if self.timesRun >= self.maxTimesRun:
-                self.isGetting = True
-                self.timesRun = 0
-                self.__Load_Heap(activeHeap=True, inactiveHeap=False)
-                self.isGetting = False
             if active and len(self.active_proxy_heap) > 0:
-                self.timesRun += 1
                 return heapq.heappop(self.active_proxy_heap).dct
             elif active and len(self.active_proxy_heap) <= 0:
-                if self.isGetting == False:
-                    self.isGetting = True
                     self.__Load_Heap(activeHeap=True, inactiveHeap=False)
-                    self.isGetting = False
-                    return heapq.heappop(self.active_proxy_heap).dct
-                else:
-                    time.sleep(10)
                     return heapq.heappop(self.active_proxy_heap).dct
             elif active == False and len(self.inactive_proxy_heap) > 0:
                 return heapq.heappop(self.inactive_proxy_heap).dct
@@ -131,7 +121,7 @@ class Proxy_System:
     def __init__(self):
         self.proxies = Heap_Proxy(5000)
         self.driver = Browser()
-        self.testUrl = "https://www.google.com"
+        self.testUrl = "https://www.nutritionix.com/"
         self.count = 0
         self.maxLoadNew = 20000
         self.totalCount = 0

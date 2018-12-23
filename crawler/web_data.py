@@ -9,25 +9,34 @@ import unittest
 import datetime
 from pprint import pprint
 import time
-TIMEOUT = 12
+from fake_useragent import UserAgent
 
-class Browser:  
+TIMEOUT = 8
+
+class Browser:
+    def __init__(self):
+        self.ua = UserAgent()
+
     def api_request(self, url, proxy):
+        fakeHeader = {'User-Agent':str(self.ua.random)}
+        fakeHeader['referer'] = "https://www.nutritionix.com/"
+        #fakeHeader['accept'] = "application/json, text/plain, */*"
+        #fakeHeader['accept-encoding'] = "gzip, deflate, br"
+        #fakeHeader['accept-language'] = "en-US,en;q=0.9"
         try:
             if proxy != '':
                 http = "http://" + proxy['ip'] + ':' + proxy['port']
                 https = "https://" + proxy['ip'] + ':' + proxy['port']
                 proxydict = {'http': http, 'https': https}
-                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict)
+                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict, headers=fakeHeader)
             else:
-                response = requests.get(url, timeout=TIMEOUT)
+                response = requests.get(url, timeout=TIMEOUT, headers=self.ua.random)
             
             if response.ok and response != type(None):
                 return response
             else:
                 raise ConnectionError('status_code not 200')
         except requests.exceptions.RequestException as e:
-            print(e)
             raise ConnectionError
 
 

@@ -12,7 +12,6 @@ import itertools
 import sys
 
 
-
 class Get_Data:
     def __gen_url(self, obj, urlParts): #urlParts = ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=1000&search=')
         url = ""
@@ -47,7 +46,8 @@ class Get_Data:
             global successes
             global failures
             url = self.__gen_url(obj, urlParts)
-            proxyHost = proxySystem.Get_Proxy()
+            with threadLock:
+                proxyHost = proxySystem.Get_Proxy()
             getResult = driver.api_request(url, proxyHost)
             timeTook = getResult.elapsed.seconds
             proxySystem.Return_Proxy(proxyHost, timeTook, True)
@@ -55,9 +55,11 @@ class Get_Data:
             objToWrite['url'] = url
             objToWrite.pop('public_lists', None)
             writeResult = db.Update({'_id': obj['_id']}, {'$addToSet': {'items': objToWrite}})
-            successes =+ 1
+            with threadLock:
+                successes = successes + 1
         except Exception as e:
-            failures =+ 1
+            with threadLock:
+                failures = failures + 1
             proxySystem.Return_Proxy(proxyHost, 8, False)
             self.GetWrite_One(obj, urlParts, times+1)
 
@@ -66,14 +68,17 @@ class Get_Data:
         global failures
         try:
             url = self.__gen_url(obj, urlParts)
-            proxyHost = proxySystem.Get_Proxy()
+            with threadLock:
+                proxyHost = proxySystem.Get_Proxy()
             getResult = driver.api_request(url, proxyHost)
             timeTook = getResult.elapsed.seconds
             proxySystem.Return_Proxy(proxyHost, timeTook, True)
             return  getResult.json()
-            successes =+ 1
+            with threadLock:
+                successes = successes + 1
         except Exception as e:
-            failures =+ 1
+            with threadLock:
+                failures = failures + 1
             proxySystem.Return_Proxy(proxyHost, 8, False)
             return self.Get_One(obj, urlParts, times+1)
            
@@ -98,11 +103,15 @@ def crawl_brand(brandObj):
         pass
 
 def monitors():
+    oldSuccesses = 0
+    startTime = time.time()
+    time.sleep(1)
     while True:
         global successes
         global failures
-        reqPerSec = successes / failures
-        print("Items per second: ", successes, " ", failures, end='\r')
+        reqPerSec = successes / (time.time() - startTime)
+        print("Total Items: ", successes, " | Total Failures: ", failures, " | Items per second: ", reqPerSec, end='\r')
+        oldSuccesses = successes
         sys.stdout.flush()
         time.sleep(1)   
          
@@ -124,7 +133,7 @@ db_monitor = DataStore('localhost', 27017, 'proxies', 'monitor')
 threadLock = threading.Lock()
 BrandsList = db.Find_Many({'isFinished': False})
 print("current left ", len(BrandsList))
-num_worker_threads = 5
+num_worker_threads = 200
 
 
 q = Queue()
@@ -138,7 +147,7 @@ def inactive_work():
         inActiveProxy = proxySystem.Get_Inactive_Proxy()
         proxySystem.Test_Proxy(False, inActiveProxy)
 
-for i in range(0,2):
+for i in range(0,40):
     l = Thread(target=inactive_work)
     l.daemon = True
     l.start()
