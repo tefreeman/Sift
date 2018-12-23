@@ -2,7 +2,8 @@ from pymongo import MongoClient
 
 class DataStore:
     def __init__(self, url, port, database, collection=''):
-        self.client = MongoClient(url, port, username="***REMOVED***", password="***REMOVED***")
+        self.client = MongoClient(url, port)
+        #self.client = MongoClient(url, port, username="***REMOVED***", password="***REMOVED***")
         self.db = self.client[database]
         if collection != '':
             self.collection = self.db[collection]

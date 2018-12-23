@@ -9,28 +9,20 @@ import unittest
 import datetime
 from pprint import pprint
 import time
-from fake_useragent import UserAgent
+from collections import OrderedDict
 
 TIMEOUT = 8
 
 class Browser:
-    def __init__(self):
-        self.ua = UserAgent()
-
     def api_request(self, url, proxy):
-        fakeHeader = {'User-Agent':str(self.ua.random)}
-        fakeHeader['referer'] = "https://www.nutritionix.com/"
-        #fakeHeader['accept'] = "application/json, text/plain, */*"
-        #fakeHeader['accept-encoding'] = "gzip, deflate, br"
-        #fakeHeader['accept-language'] = "en-US,en;q=0.9"
-        try:
+        try:    
             if proxy != '':
                 http = "http://" + proxy['ip'] + ':' + proxy['port']
                 https = "https://" + proxy['ip'] + ':' + proxy['port']
                 proxydict = {'http': http, 'https': https}
-                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict, headers=fakeHeader)
+                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict,)
             else:
-                response = requests.get(url, timeout=TIMEOUT, headers=self.ua.random)
+                response = requests.get(url, timeout=TIMEOUT)
             
             if response.ok and response != type(None):
                 return response
@@ -38,8 +30,17 @@ class Browser:
                 raise ConnectionError('status_code not 200')
         except requests.exceptions.RequestException as e:
             raise ConnectionError
-
-
+    
+    def api_request_with_session(self, url, givenSession, headers):
+        try: 
+            response = givenSession.get(url, timeout=TIMEOUT, headers=headers)
+            if response.ok and response != type(None):
+                return response
+            else:
+                raise ConnectionError('status code not 200')
+        except requests.exceptions.RequestException as e:
+            print(e)
+            raise ConnectionError
 class Selenium():
     dir = os.path.dirname(__file__)
     fireFoxDriverPath = os.path.join(dir,'drivers','geckodriver.exe')

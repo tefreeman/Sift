@@ -10,9 +10,25 @@ import json
 import requests
 import itertools
 import sys
-
-
+from fake_useragent import UserAgent
+from collections import OrderedDict
+import gzip
+import brotli
 class Get_Data:
+    def __init__(self, sessionHeaders, sessionProxy ):
+        self.session = requests.Session()
+        self.success = 1
+        self.failure = 0
+        self.session.headers = sessionHeaders
+        self.proxy = sessionProxy
+        self.session.proxies = {'http': "http://" + self.proxy['ip'] + ':' + self.proxy['port'], 'https': "https://" + self.proxy['ip'] + ':' + self.proxy['port']}
+        self.totalTime = 0
+
+    def _fix_proxy(self):
+        proxySystem.Return_Proxy(self.proxy, self.totalTime / self.success+1, False)
+        self.proxy = proxySystem.Get_Proxy()
+        self.session.proxies = {'http': "http://" + self.proxy['ip'] + ':' + self.proxy['port'], 'https': "https://" + self.proxy['ip'] + ':' + self.proxy['port']}
+    
     def __gen_url(self, obj, urlParts): #urlParts = ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=1000&search=')
         url = ""
         for part in urlParts:
@@ -36,65 +52,74 @@ class Get_Data:
             
         for _url in urlList:
             for item in items:
-                if _url == item['url']:
+                if _url[0] == item['url']:
                     urlList.remove(_url)           
         
         return urlList
 
-    def GetWrite_One(self, obj, urlParts, times = 0):
+    def GetWrite_One(self, obj, urlParts, headers, times = 0):
         try:
             global successes
             global failures
             url = self.__gen_url(obj, urlParts)
-            with threadLock:
-                proxyHost = proxySystem.Get_Proxy()
-            getResult = driver.api_request(url, proxyHost)
-            timeTook = getResult.elapsed.seconds
-            proxySystem.Return_Proxy(proxyHost, timeTook, True)
-            objToWrite =  getResult.json()
+            getResult = driver.api_request_with_session(url, self.session, headers)
+            self.totalTime = self.totalTime + getResult.elapsed.seconds
+            objToWrite =  json.loads(brotli.decompress(getResult.content))
             objToWrite['url'] = url
             objToWrite.pop('public_lists', None)
             writeResult = db.Update({'_id': obj['_id']}, {'$addToSet': {'items': objToWrite}})
             with threadLock:
+                self.success = self.success + 1
                 successes = successes + 1
+
         except Exception as e:
             with threadLock:
+                self.failure = self.failure + 1
                 failures = failures + 1
-            proxySystem.Return_Proxy(proxyHost, 8, False)
-            self.GetWrite_One(obj, urlParts, times+1)
+            
+            self._fix_proxy()
+            self.GetWrite_One(obj, urlParts, headers, times+1)
 
-    def Get_One(self, obj, urlParts, times = 0):
+    def Get_One(self, obj, urlParts, headers, times = 0):
         global successes
         global failures
         try:
             url = self.__gen_url(obj, urlParts)
+            getResult = driver.api_request_with_session(url, self.session, headers )
+            self.totalTime = 0
+            return json.loads(brotli.decompress(getResult.content))
             with threadLock:
-                proxyHost = proxySystem.Get_Proxy()
-            getResult = driver.api_request(url, proxyHost)
-            timeTook = getResult.elapsed.seconds
-            proxySystem.Return_Proxy(proxyHost, timeTook, True)
-            return  getResult.json()
-            with threadLock:
+                self.success = self.success + 1
                 successes = successes + 1
+
         except Exception as e:
+            print(e)
             with threadLock:
+                self.failure = self.failure + 1
                 failures = failures + 1
-            proxySystem.Return_Proxy(proxyHost, 8, False)
-            return self.Get_One(obj, urlParts, times+1)
-           
-    def Get_All(self, brandObj, obj_list, urlParts):
+            self._fix_proxy()
+            return self.Get_One(obj, urlParts, headers, times+1)
+
+    def Get_All(self, brandObj, obj_list, urlParts, headers):
             url_list = self.__gen_urls_from_list(brandObj, obj_list, urlParts)
-            #for url in url_list:
-            self.GetWrite_One(brandObj, (url_list[0]))
+            for url in url_list:
+                self.GetWrite_One(brandObj, (url), headers)
 
 
 
         
 def crawl_brand(brandObj):
     #setup
-    work = Get_Data()
-    brandItemDirectory = work.Get_One(brandObj, ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=1000&search='))
-    work.Get_All(brandObj, brandItemDirectory['items'], ("https://www.nutritionix.com/nixapi/items/",  '$item_id'))
+    ua = UserAgent()
+    sessionHeader = OrderedDict({ "accept": 'application/json, text/plain, */*', 'accept-encoding': 'gzip, deflate, br', 'accept-language': 'n-US,en;q=0.9',
+     'referer': '$refererUrl', 'user-agent': ua.random})
+    work = Get_Data(sessionHeader, proxySystem.Get_Proxy())
+
+    brandItemDirectory = work.Get_One(brandObj, ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=1000&search=',), {'referer': 'https://www.google.com'})
+    work.Get_All(brandObj, brandItemDirectory['items'], ("https://www.nutritionix.com/nixapi/items/",  '$item_id'), 
+    {'referer': 'https://www.nutritionix.com/brand/' + brandObj['name'].replace(' ', '-').lower() + '/products/' + brandObj['id']})
+    
+    
     MongoDbLength = len(db.Find_One({'_id': brandObj['_id']})['items'])
     if len(brandItemDirectory['items']) <= MongoDbLength:
         brandObj['isFinished'] = True
@@ -133,7 +158,7 @@ db_monitor = DataStore('localhost', 27017, 'proxies', 'monitor')
 threadLock = threading.Lock()
 BrandsList = db.Find_Many({'isFinished': False})
 print("current left ", len(BrandsList))
-num_worker_threads = 200
+num_worker_threads = 10
 
 
 q = Queue()
@@ -147,7 +172,7 @@ def inactive_work():
         inActiveProxy = proxySystem.Get_Inactive_Proxy()
         proxySystem.Test_Proxy(False, inActiveProxy)
 
-for i in range(0,40):
+for i in range(0,1):
     l = Thread(target=inactive_work)
     l.daemon = True
     l.start()
