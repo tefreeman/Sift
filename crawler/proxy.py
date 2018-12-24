@@ -34,11 +34,9 @@ class Heap_Proxy:
         self.__Load_Heap()
         self.isGetting = False
     
-    def __Gen_Speed(self, failures, successes, avgReqTime):
-            return (failures + 1.0) / ( successes + 1.0) + avgReqTime
-   
+
     def __Make_Sortable_Dict(self, obj):
-        speed = self.__Gen_Speed(obj['failures'], obj['successes'], obj['avgRequestTime'])
+        speed = obj['avgRequestTime']
         # (speed, obj['_id'], obj['ip'], obj['port'], obj['successes'], obj['failures'], obj['avgRequestTime'])
         result = KeyDict(speed, obj)
         return result
@@ -101,6 +99,9 @@ class Heap_Proxy:
         proxy['inUse'] = False
         self.dataStore.Replace_One({"_id": proxy['_id']}, proxy)
     
+    def Update(self, proxy):
+        self.dataStore.Replace_One({"_id": proxy['_id']}, proxy)
+
     def Add_New(self, hosts):
         host_list = list()
         for host in hosts:
@@ -118,12 +119,12 @@ class Heap_Proxy:
     
 
 class Proxy_System:
-    def __init__(self):
-        self.proxies = Heap_Proxy(5000)
+    def __init__(self, heapProxyGetSize):
+        self.proxies = Heap_Proxy(heapProxyGetSize*2)
         self.driver = Browser()
-        self.testUrl = "https://www.nutritionix.com/"
+        self.testUrl = "https://www.google.com/"
         self.count = 0
-        self.maxLoadNew = 20000
+        self.maxLoadNew = 10000
         self.totalCount = 0
     
     def __calc_avg_time(self, proxy, timeTook):
@@ -137,27 +138,23 @@ class Proxy_System:
         funcReturn['time'] = time.time() - start_time
         return funcReturn
 
-    def Test_Proxy(self , isActive, proxy):
+    def Test_Proxy(self , proxy, headers):
         try:
-            if proxy != None:
-                result = self.__time(self.driver.api_request, (self.testUrl, proxy) )
-                proxy['avgRequestTime'] = result['time']
-                proxy['successes'] = 1
-                proxy['failures'] = 0
+                result = self.driver.api_request(self.testUrl, proxy, headers=headers)
+                proxy['avgRequestTime'] = result.elapsed.seconds
+                proxy['successes'] = proxy['successes'] + 1
                 self.proxies.Return(proxy, True)
                 return True
-            else:
-                    return False
         except (ConnectionError, ConnectionRefusedError, TimeoutError, requests.exceptions.ProxyError
                 , requests.exceptions.ConnectTimeout, requests.exceptions.SSLError, requests.exceptions.ReadTimeout,
                 requests.exceptions.TooManyRedirects, requests.exceptions.HTTPError, requests.exceptions.ConnectionError, ):
                         proxy['failures'] += 1
                         self.proxies.Return(proxy, False)
-                        return True
-        except:
-            print('unknown error retrying')
-            time.sleep(10)
-            return self.__Test_Proxy(isActive)
+        except Exception as e:
+            print(e)
+            print('unknown Test_Proxy error retrying')
+            proxy['failures'] += 1
+            self.proxies.Return(proxy, False)
 
 
     def Add_New_Proxies(self, url):
@@ -195,4 +192,10 @@ class Proxy_System:
              proxy['failures'] += 1
         
         self.proxies.Return(proxy, isOnline)
+
+    def Update_Proxy_Stats(self, proxy, timeTook):
+        proxy['avgRequestTime'] = self.__calc_avg_time(proxy, timeTook)
+        proxy['successes'] += 1
+        self.proxies.Update(proxy)
+        return proxy
     

@@ -11,18 +11,23 @@ from pprint import pprint
 import time
 from collections import OrderedDict
 
-TIMEOUT = 8
+TIMEOUT = 6
 
 class Browser:
-    def api_request(self, url, proxy):
+    def api_request(self, url, proxy, headers=''):
         try:    
-            if proxy != '':
+            if proxy != '' and headers == '':
                 http = "http://" + proxy['ip'] + ':' + proxy['port']
                 https = "https://" + proxy['ip'] + ':' + proxy['port']
                 proxydict = {'http': http, 'https': https}
-                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict,)
-            else:
+                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict)
+            elif headers == '' and proxy == '':
                 response = requests.get(url, timeout=TIMEOUT)
+            elif headers != '' and proxy != '':
+                http = "http://" + proxy['ip'] + ':' + proxy['port']
+                https = "https://" + proxy['ip'] + ':' + proxy['port']
+                proxydict = {'http': http, 'https': https}
+                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict, headers=headers)
             
             if response.ok and response != type(None):
                 return response
