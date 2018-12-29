@@ -1,13 +1,16 @@
+import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-loading',
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss']
 })
 export class LoadingComponent implements OnInit {
-
-  constructor() { }
+  constructor(
+    private router: Router,
+    private auth: AuthService
+  ) {}
   /* TODO
    * 1. Check internet connection
    * 2. Check if user is registered
@@ -16,7 +19,13 @@ export class LoadingComponent implements OnInit {
    * 5. If login unsuccessful redirect to startScreen
    * 6. If offline enter offline mode
   */
+
   ngOnInit() {
+    if (this.auth.isLoggedIn()) {
+      this.router.navigate(['/home']);
+    } else {
+      this.router.navigate(['/start']);
+    }
   }
 
 }
