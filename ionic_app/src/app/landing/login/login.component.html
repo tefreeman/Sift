@@ -6,16 +6,11 @@
 
         <ion-row justify-content-center>
 
-            <ion-col
-                align-self-end
-                style="padding-top: 10vh;"
+            <ion-col size="12" size-lg="6"
+                style="margin-top: 24px;"
             >
                 <!-- place holder for the logo element -->
                 <div style="height: 20vh; width: 20vh; background: var(--ion-color-primary); margin: auto; padding: 0px"></div>
-            </ion-col>
-        </ion-row>
-        <ion-row justify-content-center>
-            <ion-col>
                 <div text-center>
                     <ion-text color="primary">
                         <h1 style="font-size: 8vmin; padding: 0px; margin: 0px">LOGIN</h1>
@@ -23,10 +18,9 @@
                 </div>
             </ion-col>
 
-        </ion-row>
-        <form [formGroup]="userForm"  (ngSubmit)="signupWithEmail()">
-        <ion-row>
-            <ion-col>
+            <ion-col size="12" size-lg="6">
+
+                <form [formGroup]="userForm"  (ngSubmit)="signupWithEmail()">
                 <ion-item>
                     <ion-label for="email" style="font-size: 4vmin" position="floating">EMAIL</ion-label>
                     <ion-input type="email" formControlName="email" required></ion-input>
@@ -43,10 +37,6 @@
                 <div *ngIf="formErrors.password">
                         {{ formErrors.password }}
                 </div>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col offset="6">
                 <label (click)="presentAlertConfirm()">
                     <p style="font-size: 2vmin"
                         text-align-right
@@ -56,10 +46,6 @@
                         forgot password?
                     </p>
                 </label>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col size="12">
                 <div text-center>
                     <ion-button
                         type="submit"  [disabled]="!userForm.valid"
@@ -73,17 +59,12 @@
                     </ion-button>
                 </div>
                 <span *ngIf="userForm.valid" >Form is valid</span>
-            </ion-col>
-
-        </ion-row>
-    </form>
-        <ion-row justify-content-center>
-            <ion-col>
+            </form>
+        </ion-col>
+            <ion-col size="12">
                 <h4 text-center>OR CONNECT WITH</h4>
             </ion-col>
-        </ion-row>
-        <ion-row justify-content-center>
-            <ion-col>
+            <ion-col size="6">
                 <div style="width: 30vmin; margin: auto;">
                     <ion-button
                         (click)="loginWithGoogle()"
@@ -96,7 +77,7 @@
                     </ion-button>
                 </div>
             </ion-col>
-            <ion-col>
+            <ion-col size="6">
                 <div style="width: 30vmin; margin: auto;">
                     <ion-button
                         (click)="loginWithFacebook()"
