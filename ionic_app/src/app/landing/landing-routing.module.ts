@@ -1,3 +1,4 @@
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { StartScreenComponent } from './start-screen/start-screen.component';
 import { LoginComponent } from './login/login.component';
 import { LoadingComponent } from './loading/loading.component';
@@ -12,7 +13,8 @@ const routes: Routes = [
   { path: '', component: LoadingComponent },
   { path: 'login', component: LoginComponent},
   { path: 'sign-up', component: SignUpComponent},
-  { path: 'start', component: StartScreenComponent}
+  { path: 'start', component: StartScreenComponent},
+  { path: 'forgot-password', component: ForgotPasswordComponent}
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

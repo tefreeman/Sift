@@ -59,6 +59,16 @@ export class AuthService {
     return this.oAuthLogin(provider);
   }
 
+  FacebookLogin() {
+    const provider = new auth.FacebookAuthProvider();
+    return this.oAuthLogin(provider);
+  }
+
+  TwitterLogin() {
+    const provider = new auth.TwitterAuthProvider();
+    return this.oAuthLogin(provider);
+  }
+
   private oAuthLogin(provider) {
     return this.afAuth.auth.signInWithPopup(provider)
       .then((credential) => {
@@ -83,6 +93,12 @@ export class AuthService {
 
   }
 
+  resetPassword(email: string) {
+    this.afAuth.auth.sendPasswordResetEmail(email).then()
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 
   signOut() {
     this.afAuth.auth.signOut().then(() => {
