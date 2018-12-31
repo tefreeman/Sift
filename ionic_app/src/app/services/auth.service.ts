@@ -7,7 +7,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 
 import { Observable, of } from 'rxjs';
 import { switchMap} from 'rxjs/operators';
-
+import { first } from 'rxjs/operators';
 interface User {
   uid: string;
   email: string;
@@ -107,10 +107,6 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    if (this.user) {
-      return true;
-    }
-    return false;
+    return this.afAuth.authState.pipe(first()).toPromise();
   }
-
 }

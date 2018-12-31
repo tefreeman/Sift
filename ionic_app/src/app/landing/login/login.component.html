@@ -20,7 +20,7 @@
 
             <ion-col size="12" size-lg="6">
 
-                <form [formGroup]="userForm"  (ngSubmit)="signupWithEmail()">
+                <form [formGroup]="userForm"  (ngSubmit)="loginWithEmail()">
                 <ion-item>
                     <ion-label for="email" style="font-size: 4vmin" position="floating">EMAIL</ion-label>
                     <ion-input type="email" formControlName="email" required></ion-input>
@@ -50,7 +50,6 @@
                     <ion-button
                         type="submit"  [disabled]="!userForm.valid"
                         style="width: 40vmin; height: 8vmin; font-size: 4vmin; margin-top: 5vh"
-                        routerLink="/sign-up"
                         shape="round"
                         fill="outline"
                         color="primary"
@@ -62,7 +61,7 @@
             </form>
         </ion-col>
             <ion-col size="12">
-                <h4 text-center>OR CONNECT WITH</h4>
+                <h4 text-center (click)="testLogin()">OR CONNECT WITH</h4>
             </ion-col>
             <ion-col size="6">
                 <div style="width: 30vmin; margin: auto;">

@@ -72,12 +72,12 @@ validationMessages = {
   }
   }
 
-  signupWithEmail(): void {
-    this.auth.emailSignUp(this.userForm.value);
+  loginWithEmail(): void {
+    console.log(this.auth.emailLogin(this.userForm.value));
   }
 
-  loginWithEmail(): void {
-    this.auth.emailLogin(this.userForm.value);
+  testLogin() {
+    this.auth.isLoggedIn();
   }
 
   loginWithGoogle(): void {

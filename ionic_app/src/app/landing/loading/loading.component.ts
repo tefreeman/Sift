@@ -21,11 +21,15 @@ export class LoadingComponent implements OnInit {
   */
 
   ngOnInit() {
-    if (this.auth.isLoggedIn()) {
+    this.redirectUser();
+  }
+
+  async redirectUser() {
+    const user = await this.auth.isLoggedIn();
+    if (user) {
       this.router.navigate(['/home']);
     } else {
       this.router.navigate(['/start']);
-    }
+   }
   }
-
 }
