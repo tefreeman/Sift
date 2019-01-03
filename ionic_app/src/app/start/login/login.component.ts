@@ -73,7 +73,7 @@ validationMessages = {
   }
 
   loginWithEmail(): void {
-    console.log(this.auth.emailLogin(this.userForm.value));
+    this.auth.emailLogin(this.userForm.value);
   }
 
   testLogin() {
