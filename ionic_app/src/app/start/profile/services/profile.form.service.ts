@@ -1,15 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Profile, Personal, Goal, Taste } from './profile.interfaces';
 
 
-interface Profile {
-    me: Me;
-}
-
-interface Me {
-    firstName: string;
-    age: number;
-    gender: string;
-}
 @Injectable()
 export class ProfileFormService {
     userProfile: Profile;
@@ -17,11 +9,27 @@ export class ProfileFormService {
         // TODO grab info from server if it already exists and autofill fields
     }
 
-    setProfileMe(me: Me) {
-        this.userProfile.me = me;
+    setProfileMe(personalData: Personal) {
+        this.userProfile.personal = personalData;
     }
 
-    getProfileMe() {
-       return this.userProfile.me;
+    getProfileMe(): Personal {
+       return this.userProfile.personal;
+    }
+
+    setProfileGoal(goalData: Goal) {
+        this.userProfile.goal = goalData;
+    }
+
+    getProfileGoal(): Goal {
+       return this.userProfile.goal;
+    }
+
+    setProfileTaste(tasteData: Taste) {
+        this.userProfile.taste = tasteData;
+    }
+
+    getProfileTaste(): Taste {
+       return this.userProfile.taste;
     }
 }

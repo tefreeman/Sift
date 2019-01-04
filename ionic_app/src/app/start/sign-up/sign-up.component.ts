@@ -1,7 +1,6 @@
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import {ReactiveFormsModule, FormGroup, FormBuilder, Validators} from '@angular/forms';
-import { messaging } from 'firebase';
 
 @Component({
   selector: 'app-sign-up',

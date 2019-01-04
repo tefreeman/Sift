@@ -1,3 +1,4 @@
+import { ProfileFormService } from './services/profile.form.service';
 import { FoodAvoidsComponent } from './food-avoids/food-avoids.component';
 import { GoalsComponent } from './goals/goals.component';
 import { HistoryComponent } from './history/history.component';
@@ -14,11 +15,12 @@ import { ProfileComponent } from './profile.component';
   imports: [
     CommonModule,
     IonicModule,
-    ProfileRoutingModule
-  ]
+    ProfileRoutingModule,
+  ],
+  providers: [ProfileFormService]
 })
 export class ProfileModule {
-  
+
   constructor() {
 
   }
