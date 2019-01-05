@@ -30,9 +30,9 @@ export class AppComponent {
   async redirectUser() {
     const user = await this.auth.isLoggedIn();
     if (user) {
-     // this.router.navigate(['/home']);
+      this.router.navigate(['/home']);
     } else {
-    //  this.router.navigate(['/start']);
+      this.router.navigate(['/start']);
    }
   }
 }

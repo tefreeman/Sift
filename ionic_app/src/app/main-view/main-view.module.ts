@@ -5,13 +5,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { TabBarComponent } from './tab-bar/tab-bar.component';
-
+import { MapsComponent } from './maps/maps.component';
+import {GoogleMaps} from '@ionic-native/google-maps/ngx';
 @NgModule({
-  declarations: [MainViewComponent, HeaderComponent, TabBarComponent],
+  declarations: [MainViewComponent, HeaderComponent, TabBarComponent, MapsComponent],
   imports: [
     CommonModule,
     IonicModule,
     MainViewRoutingModule
-  ]
+  ],
+  providers: [GoogleMaps]
 })
 export class MainViewModule { }
