@@ -1,5 +1,15 @@
 from db import DataStore
 
+largestName = 0
+name = ""
+db2 = DataStore('localhost', 27017,'nutritionix','restaurants')
+restaurants = db2.Find_Many({}, 1000000)
 
-db2 = DataStore('localhost', 27017,'proxies','proxies')
-db2.Update_Many({}, {"$set": {'online': False, 'successes': 0, 'failures': 0, 'avgRequestTime': 0}})
+for place in restaurants:
+    for item in place['items']:
+        nameSize = len(item['item_name'])
+        if (nameSize > largestName):
+                largestName = nameSize
+                name = item['item_name']
+print(largestName)
+print(name)
