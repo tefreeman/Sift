@@ -15,7 +15,7 @@ from fake_useragent import UserAgent
 from collections import OrderedDict
 import gzip
 import brotli
-import random 
+import random
 class Get_Data:
     def __init__(self, sessionHeaders, sessionProxy ):
         self.session = requests.Session()
