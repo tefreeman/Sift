@@ -15,7 +15,7 @@ from fake_useragent import UserAgent
 from collections import OrderedDict
 import gzip
 import brotli
-import random
+from bson.objectid import ObjectId
 
 class Get_Data:
     def __init__(self, sessionHeaders, sessionProxy ):
@@ -40,12 +40,12 @@ class Get_Data:
         url = ""
         for part in urlParts:
             if part[0] == '$':
-                url = url + obj[part[1:]]
+                url = url + str(obj[part[1:]])
             else:
                 url = url + part
         return url
 
-    def GetWrite_One(self, url, headers, times = 0):
+    def GetWrite_One(self, coordsObj, url, headers, times = 0):
         try:
             global successes
             global failures
@@ -53,34 +53,54 @@ class Get_Data:
             getResult = driver.api_request_with_session(url, self.session, headers)
             self.totalTime = self.totalTime + getResult.elapsed.seconds
 
-            objToWrite =  json.loads(brotli.decompress(getResult.content))
-            if(objToWrite['searchPageProps']['searchExceptionProps']['exceptionType'] == "excessivePaging"):
-                return False
-
-            writeResult = db.Insert_Many(objToWrite)
+            jsonObj =  json.loads(getResult.content)
+            
+            #check if 0 results
+            if 'noResultsSuggestions' in jsonObj['searchPageProps']['searchResultsProps']:
+                print('no results')
+                dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'isFinished': True}})
+                dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'lastUpdate': time.time()}})
+                return False #exit crawling gps coords
+        
+            for item in jsonObj['searchPageProps']['searchResultsProps']['searchResults']:
+               item['loc'] =  jsonObj['searchPageProps']['searchMapProps']['mapState']['markers'][i]['location']
+                
+            writeResult = dbGps.Update({'_id': coordsObj['_id']}, {'$addToSet': {'items': {'$each': jsonObj['searchPageProps']['searchResultsProps']['searchResults']} }})
 
             with threadLock:
                 self.success = self.success + 1
                 successes = successes + 1
 
             self.proxy = proxySystem.Update_Proxy_Stats(self.proxy, getResult.elapsed.seconds)
-            return True
+            
+            if len(jsonObj['searchPageProps']['searchResultsProps']['searchResults']) < 30:
+                print("finished")
+                dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'isFinished': True}})
+                dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'lastUpdate': time.time()}})
+                return False
+            else:
+                return True
+
         except Exception as e:
             with threadLock:
                 self.failure = self.failure + 1
                 failures = failures + 1
             self._fix_proxy()
-            return self.GetWrite_One(url, headers, times+1)
+            return self.GetWrite_One(coordsObj, url, headers, times+1)
 
 
-    def Get_All(self, obj, urlParts, headers):
-            url = self.__gen_url(obj, urlParts)
-            result = self.GetWrite_One(obj, (url), headers)
+    def Get_All(self, coordsObj, urlParts, headers):
+            url = self.__gen_url(coordsObj['coords'], urlParts)
+            numItems = len(coordsObj['items'])
+            if numItems < 30:
+                result = self.GetWrite_One(coordsObj, (url + "&request_origin=user"), headers)
+            else:
+                result = True
             while result:
-                 result = self.GetWrite_One(obj, (url), headers)
-            
+                numItems = numItems + 30
+                result = self.GetWrite_One(coordsObj, (url + "&start=" + str(numItems) + "&request_origin=user"), headers)
 
-               # time.sleep(random.randint(1,2))
+               # time.sleep(random.randint(1,2)) &start=30
     def getAvgTime(self):
         return self.totalTime / self.success
 
@@ -88,8 +108,9 @@ class Get_Data:
 # requesturl https://www.yelp.com/search/snippet?find_desc=Restaurants
 # &l=g%3A-86.7274475098%2C33.4348794896%2C-86.6251373291%2C33.5207890536&parent_request_id=9c2473a25cc25cc5&request_origin=user
 # first coords top right, 2nd coords bottom left
-def crawl_brand(brandObj):
+def crawl_coords(coordsObj):
     #setup
+
     ua = UserAgent()
     sessionHeader = OrderedDict({ "accept": '*/*, text/plain, */*', 'accept-encoding': 'gzip, deflate, br', 'accept-language': 'en-US,en;q=0.9',
      'referer': 'https://www.yelp.com', 'user-agent': ua.random})
@@ -98,16 +119,13 @@ def crawl_brand(brandObj):
         proxy = proxySystem.Get_Proxy()
     work = Get_Data(sessionHeader, proxy)
     #time.sleep(random.randint(1,120))
-    
-    #change coords query here
-    coordsObj = dbGps.Find_One({'_id': '5c3299aa15c5f431acf40e2e'})
 
-    work.Get_All(coordsObj['coords'], ("requesturl https://www.yelp.com/search/snippet?find_desc=Restaurants&l=g%3A","$topRightLat","%2C", "topRightLon", "%2C", "botLeftLat", "%2C", "$botLeftLon"), 
+    work.Get_All(coordsObj, ("https://www.yelp.com/search/snippet?find_desc=Restaurants&l=g%3A","$topRightLon","%2C", "$topRightLat", "%2C", "$botLeftLon", "%2C", "$botLeftLat"), 
     {'referer': 'https://www.yelp.com'})
     
     proxySystem.Return_Proxy(proxy, work.getAvgTime(), True )
 
-    dbGps.Update_One({'_id': brandObj['_id']}, {'$set': {'isFinished': True}})
+    # update db
 
 def monitors():
     startTime = time.time()
@@ -123,7 +141,7 @@ def monitors():
 def worker():
     while True:
         item = q.get()
-        crawl_brand(item)
+        crawl_coords(item)
         q.task_done()
 
 def inactive_work():
@@ -134,23 +152,27 @@ def inactive_work():
         proxySystem.Test_Proxy(inActiveProxy, sessionHeader)
 
 #globals
-num_worker_threads = 30
+num_worker_threads = 20
 successes = 0
 failures = 1
 
 driver = Browser()
 proxySystem = Proxy_System(num_worker_threads)
 proxySystem.Add_New_Proxies('https://www.sslproxies.org/')
-db = DataStore('localhost', 27017,'yelp','items')
 db_monitor = DataStore('localhost', 27017, 'proxies', 'monitor')
+
 dbGps = DataStore('localhost', 27017,'yelp','coords')
+
 threadLock = threading.Lock()
-BrandsList = db.Find_Many({'isFinished': False})
-print("current left ", len(BrandsList))
 
 
 
 q = Queue()
+
+coordsQuery = dbGps.Find_Many({'isFinished': False})
+if coordsQuery == None:
+    raise Exception("Coords Query did not find a valid coordsQuery Obj")
+
 time.sleep(1)
 
 for i in range(0,20):
@@ -168,11 +190,8 @@ for i in range(num_worker_threads):
     t.daemon = True
     t.start()
 
-
-for item in BrandsList:
+for item in coordsQuery:
     q.put(item)
-
-
 
 
 q.join()       # block until all tasks are done

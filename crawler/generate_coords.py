@@ -1,19 +1,22 @@
 from geopy import distance
 from db import DataStore
+from decimal import Decimal
 
 db = DataStore('127.0.0.1', 27017,'yelp','coords')
 
+# round gps coords to x decimal places
+numDecimals = 7
 # size of rectangle
-width = 350
-height = 180
+width = 4800
+height = 3000
 
 # resolution (yelp 50 miles)
-res = 60
+res = 100
 
 coords = []
 #start point top left of rect box
-lat = 33.4750858
-lon = -86.7538841
+lat = 48.484779
+lon = -125.065144
 
 start = distance.Point(lat, lon)
 while height > 0:
@@ -30,14 +33,14 @@ while height > 0:
         # gets the top row which is 1 point further right than bot
         top_pt = distance.GeodesicDistance(kilometers=localWidth+res).destination(point=top_row, bearing=90) 
 
-        coords.append({'topRightLat': top_pt.latitude, 'topRightLon': top_pt.longitude,
-        'botLeftLat': bot_pt.latitude, 'botLeftLon': bot_pt.longitude, 'processed': False, 'item': 0})
+        coords.append({'topRightLat': round(top_pt.latitude, numDecimals), 'topRightLon': round(top_pt.longitude, numDecimals),
+        'botLeftLat': round(bot_pt.latitude, numDecimals), 'botLeftLon': round(bot_pt.longitude, numDecimals)})
         
         localWidth = localWidth - res
-        
 
-doc = {'startCoords': (lat, lon), 'res': res, 'width': width, 'height': height, 'coords': coords }
-
-db.Insert_One(doc)
+docs = []
+for points in coords:
+    docs.append({'coords': points, 'items': [], 'isFinished': False, 'lastUpdate': 0})
+db.Insert_Many(docs)
 
 
