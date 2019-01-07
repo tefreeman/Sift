@@ -16,6 +16,7 @@ from collections import OrderedDict
 import gzip
 import brotli
 import random
+
 class Get_Data:
     def __init__(self, sessionHeaders, sessionProxy ):
         self.session = requests.Session()
@@ -43,105 +44,70 @@ class Get_Data:
             else:
                 url = url + part
         return url
-    
-    def __gen_urls_from_list(self, brandObj, obj_list, urlParts):
-        urlList = list()
-        items = db.Find_One({'id': brandObj['id']})['items']
-        for obj in obj_list:
-            url = ""
-            for part in urlParts:
-                if part[0] == '$':
-                    url = url + obj[part[1:]]
-                else:
-                    url = url + part
-            urlList.append(url)
-            
-        for _url in urlList:
-            for item in items:
-                if _url == item['url']:
-                    if _url in urlList:
-                        urlList.remove(_url)           
-        
-        return urlList
 
-    def GetWrite_One(self, obj, urlParts, headers, times = 0):
+    def GetWrite_One(self, url, headers, times = 0):
         try:
             global successes
             global failures
-            url = self.__gen_url(obj, urlParts)
+
             getResult = driver.api_request_with_session(url, self.session, headers)
             self.totalTime = self.totalTime + getResult.elapsed.seconds
+
             objToWrite =  json.loads(brotli.decompress(getResult.content))
-            objToWrite['url'] = url
-            objToWrite.pop('public_lists', None)
-            writeResult = db.Update({'_id': obj['_id']}, {'$addToSet': {'items': objToWrite}})
+            if(objToWrite['searchPageProps']['searchExceptionProps']['exceptionType'] == "excessivePaging"):
+                return False
+
+            writeResult = db.Insert_Many(objToWrite)
+
             with threadLock:
                 self.success = self.success + 1
                 successes = successes + 1
 
             self.proxy = proxySystem.Update_Proxy_Stats(self.proxy, getResult.elapsed.seconds)
-
+            return True
         except Exception as e:
             with threadLock:
                 self.failure = self.failure + 1
                 failures = failures + 1
             self._fix_proxy()
-            return self.GetWrite_One(obj, urlParts, headers, times+1)
+            return self.GetWrite_One(url, headers, times+1)
 
-    def Get_One(self, obj, urlParts, headers, times = 0):
-        global successes
-        global failures
-        try:
+
+    def Get_All(self, obj, urlParts, headers):
             url = self.__gen_url(obj, urlParts)
-            getResult = driver.api_request_with_session(url, self.session, headers )
-            self.totalTime = self.totalTime + getResult.elapsed.seconds
-            return json.loads(brotli.decompress(getResult.content))
-            with threadLock:
-                self.success = self.success + 1
-                successes = successes + 1
-            self.proxy = proxySystem.Update_Proxy_Stats(self.proxy, getResult.elapsed.seconds)
+            result = self.GetWrite_One(obj, (url), headers)
+            while result:
+                 result = self.GetWrite_One(obj, (url), headers)
+            
 
-        except Exception as e:
-            with threadLock:
-                self.failure = self.failure + 1
-                failures = failures + 1
-            self._fix_proxy()
-            return self.Get_One(obj, urlParts, headers, times+1)
-
-    def Get_All(self, brandObj, obj_list, urlParts, headers):
-            url_list = self.__gen_urls_from_list(brandObj, obj_list, urlParts)
-            for url in url_list:
-                self.GetWrite_One(brandObj, (url), headers)
                # time.sleep(random.randint(1,2))
     def getAvgTime(self):
         return self.totalTime / self.success
 
-                    
-
-
-        
+# https://www.yelp.com/search?find_desc=&l=g%3A-122.40626836663546%2C37.7923363916078%2C-122.45742345696749%2C37.75162923470684           
+# requesturl https://www.yelp.com/search/snippet?find_desc=Restaurants
+# &l=g%3A-86.7274475098%2C33.4348794896%2C-86.6251373291%2C33.5207890536&parent_request_id=9c2473a25cc25cc5&request_origin=user
+# first coords top right, 2nd coords bottom left
 def crawl_brand(brandObj):
     #setup
     ua = UserAgent()
-    sessionHeader = OrderedDict({ "accept": 'application/json, text/plain, */*', 'accept-encoding': 'gzip, deflate, br', 'accept-language': 'n-US,en;q=0.9',
-     'referer': '$refererUrl', 'user-agent': ua.random})
+    sessionHeader = OrderedDict({ "accept": '*/*, text/plain, */*', 'accept-encoding': 'gzip, deflate, br', 'accept-language': 'en-US,en;q=0.9',
+     'referer': 'https://www.yelp.com', 'user-agent': ua.random})
+    
     with threadLock:
         proxy = proxySystem.Get_Proxy()
     work = Get_Data(sessionHeader, proxy)
     #time.sleep(random.randint(1,120))
-    brandItemDirectory = work.Get_One(brandObj, ("https://www.nutritionix.com/nixapi/brands/", '$id', '/items/1?limit=10000&search=',), {'referer': 'https://www.google.com'})
-    work.Get_All(brandObj, brandItemDirectory['items'], ("https://www.nutritionix.com/nixapi/items/",  '$item_id'), 
-    {'referer': 'https://www.nutritionix.com/brand/' + brandObj['name'].replace(' ', '-').lower() + '/products/' + brandObj['id']})
+    
+    #change coords query here
+    coordsObj = dbGps.Find_One({'_id': '5c3299aa15c5f431acf40e2e'})
+
+    work.Get_All(coordsObj['coords'], ("requesturl https://www.yelp.com/search/snippet?find_desc=Restaurants&l=g%3A","$topRightLat","%2C", "topRightLon", "%2C", "botLeftLat", "%2C", "$botLeftLon"), 
+    {'referer': 'https://www.yelp.com'})
     
     proxySystem.Return_Proxy(proxy, work.getAvgTime(), True )
-    MongoDbLength = len(db.Find_One({'_id': brandObj['_id']})['items'])
-    if len(brandItemDirectory['items']) <= MongoDbLength:
-        print('updated: ', MongoDbLength)
-        brandObj['isFinished'] = True
-        db.Update_One({'_id': brandObj['_id']}, {'$set': {'isFinished': True}})
-    else:
-        print("mongodb != len of items")
-        raise Exception("MongoDb does not contain enough items")
+
+    dbGps.Update_One({'_id': brandObj['_id']}, {'$set': {'isFinished': True}})
 
 def monitors():
     startTime = time.time()
@@ -175,8 +141,9 @@ failures = 1
 driver = Browser()
 proxySystem = Proxy_System(num_worker_threads)
 proxySystem.Add_New_Proxies('https://www.sslproxies.org/')
-db = DataStore('localhost', 27017,'nutritionix','grocery')
+db = DataStore('localhost', 27017,'yelp','items')
 db_monitor = DataStore('localhost', 27017, 'proxies', 'monitor')
+dbGps = DataStore('localhost', 27017,'yelp','coords')
 threadLock = threading.Lock()
 BrandsList = db.Find_Many({'isFinished': False})
 print("current left ", len(BrandsList))
