@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project Author="trevor" CommentTableSortAscending="false" CommentTableSortColumn="Date Time" Description="&lt;html&gt;&#13;&#10;  &lt;head&gt;&#13;&#10;    &lt;style type=&quot;text/css&quot;&gt;&#10;      &lt;!--&#10;        body { color: #000000; font-family: Dialog; font-size: 12px }&#10;      --&gt;&#10;    &lt;/style&gt;&#13;&#10;    &#13;&#10;  &lt;/head&gt;&#13;&#10;  &lt;body&gt;&#13;&#10;  &lt;/body&gt;&#13;&#10;&lt;/html&gt;&#13;&#10;" DocumentationType="html" ExportedFromDifferentName="false" ExporterVersion="12.2" Name="foodApp" TextualAnalysisHighlightOptionCaseSensitive="false" UmlVersion="2.x" Xml_structure="simple">
+	<ProjectInfo>
+		<LogicalView/>
+		<ProjectOptions>
+			<DiagramOptions ActivityDiagramControlFlowDisplayOption="\u0000" ActivityDiagramShowActionCallBehaviorOption="\u0000" ActivityDiagramShowActivityEdgeWeight="true" ActivityDiagramShowObjectNodeType="true" ActivityDiagramShowPartitionHandle="\u0000" AddDataStoresExtEntitiesToDecomposedDFD="\u0002" AlignColumnProperties="true" AllowConfigShowInOutFlowButtonsInDataFlowDiagram="false" AutoGenerateRoleName="false" AutoSetAttributeType="true" AutoSetColumnType="true" AutoSyncRoleName="true" BpdAutoStretchPools="true" BpdConnectGatewayWithFlowObjectInDifferentPool="\u0000" BpdDefaultConnectionPointStyle="\u0001" BpdDefaultConnectorStyle="\u0005" BpdDhowIdOption="\u0000" BpdShowActivitiesTypeIcon="true" BusinessProcessDiagramDefaultLanguage="English" ClassVisibilityStyle="\u0001" ConnectorLabelOrientation="\u0000" CreateOneMessagePerDirection="true" DecisionMergeNodeConnectionPointStyle="\u0000" DefaultAssociationEndNavigable="\u0001" DefaultAssociationEndVisibility="\u0000" DefaultAssociationShowFromMultiplicity="true" DefaultAssociationShowFromRoleName="true" DefaultAssociationShowFromRoleVisibility="true" DefaultAssociationShowStereotypes="true" DefaultAssociationShowToMultiplicity="true" DefaultAssociationShowToRoleName="true" DefaultAssociationShowToRoleVisibility="true" DefaultAttributeMultiplicity="false" DefaultAttributeType="" DefaultAttributeVisibility="\u0001" DefaultClassAttributeMultiplicity="" DefaultClassAttributeMultiplicityOrdered="false" DefaultClassAttributeMultiplicityUnique="true" DefaultClassInterfaceBall="false" DefaultClassVisibility="\u0004" DefaultColumnType="integer(10)" DefaultConnectionPointStyle="\u0000" DefaultConnectorStyle="\u0001" DefaultDiagramBackground="rgb(255, 255, 255)" DefaultDisplayAsRobustnessAnalysisIcon="true" DefaultDisplayAsRobustnessAnalysisIconInSequenceDiagram="true" DefaultDisplayAsStereotypeIcon="false" DefaultFontColor="rgb(0, 0, 0)" DefaultGenDiagramTypeFromScenario="\u0000" DefaultHtmlDocFontColor="rgb(0, 0, 0)" DefaultLineJumps="\u0000" DefaultOperationVisibility="\u0004" DefaultParameterDirection="\u0002" DefaultShowAttributeInitialValue="true" DefaultShowAttributeOption="\u0001" DefaultShowClassMemberStereotype="true" DefaultShowDirection="false" DefaultShowMultiplicityConstraints="false" DefaultShowOperationOption="\u0001" DefaultShowOperationSignature="true" DefaultShowOrderedMultiplicityConstraint="true" DefaultShowOwnedAssociationEndAsAttribute="true" DefaultShowOwner="false" DefaultShowOwnerSkipModelInFullyQualifiedOwnerSignature="true" DefaultShowTemplateParameter="true" DefaultShowTypeOption="\u0001" DefaultShowUniqueMultiplicityConstraint="true" DefaultTypeOfSubProcess="\u0000" DefaultWrapClassMember="false" DrawTextAnnotationOpenRectangleFollowConnectorEnd="true" EnableMinimumSize="true" EntityColumnConstraintsPresentation="\u0002" ErdIndexNumOfDigits="-1" ErdIndexPattern="{table_name}" ErdIndexPatternSyncAutomatically="true" ErdManyToManyJoinTableDelimiter="_" EtlTableDiagramFontSize="14" ExpandedSubProcessDiagramContent="\u0001" ForeignKeyArrowHeadSize="\u0002" ForeignKeyConnectorEndPointAssociatedColumn="false" ForeignKeyNamePattern="{reference_table_name}{reference_column_name}" ForeignKeyNamePatternCaseHandling="0" ForeignKeyRelationshipPattern="{association_name}" FractionalMetrics="true" GeneralizationSetNotation="\u0001" GraphicAntiAliasing="true" GridDiagramFontSize="14" LineJumpSize="\u0000" ModelElementNameAlignment="\u0004" MultipleLineClassName="\u0001" PaintConnectorThroughLabel="false" PointConnectorEndToCompartmentMember="false" PrimaryKeyConstraintPattern="" PrimaryKeyNamePattern="ID" RenameConstructorAfterRenameClass="\u0000" RenameExtensionPointToFollowExtendUseCase="\u0000" ShapeAutoFitSize="false" ShowActivationsInSequenceDiagram="true" ShowActivityStateNodeCaption="524287" ShowArtifactOption="\u0002" ShowAssociatedDiagramNameOfInteraction="false" ShowAssociationRoleStereotypes="true" ShowAttributeGetterSetter="false" ShowClassEmptyCompartments="false" ShowColumnNullable="true" ShowColumnType="true" ShowColumnUniqueConstraintName="false" ShowColumnUserType="false" ShowComponentOption="\u0002" ShowExtraColumnProperties="true" ShowInOutFlowButtonsInDataFlowDiagram="false" ShowInOutFlowsInSubLevelDiagram="true" ShowMessageOperationSignatureForSequenceAndCommunicationDiagram="true" ShowMessageStereotypeInSequenceAndCommunicationDiagram="true" ShowNumberInCollaborationDiagram="true" ShowNumberInSequenceDiagram="true" ShowPackageNameStyle="\u0000" ShowParameterNameInOperationSignature="true" ShowRowGridLineWithinCompClassDiagram="false" ShowRowGridLineWithinCompERD="true" ShowRowGridLineWithinORMDiagram="true" ShowSchemaNameInERD="true" ShowTransitionTrigger="\u0000" ShowUseCaseExtensionPoint="true" ShowUseCaseID="false" StateShowParametersOfInternalActivities="false" StateShowPrePostConditionAndBodyOfInternalActivities="true" StopTargetLifelineOnCreateDestroyMessage="\u0002" SupportHtmlTaggedValue="false" SupportMultipleLineAttribute="true" SuppressImpliedMultiplicityForAttributeAssociationEnd="false" SyncAssociationNameWithAssociationClass="\u0000" SyncAssociationRoleNameWithReferencedAttributeName="true" SyncDocOfInterfaceToSubClass="\u0000" TextAntiAliasing="true" TextualAnalysisGenerateRequirementTextOption="\u0001" TextualAnalysisHighlightOption="\u0000" UnnamedIndexPattern="{table_name}_{column_name}" UseStateNameTab="false" WireflowDiagramDevice="0" WireflowDiagramShowActiveFlowLabel="true" WireflowDiagramTheme="0" WireflowDiagramWireflowShowPreview="true" WireflowDiagramWireflowShowScreenId="true">
+				<DefaultHtmlDocFont Family="Dialog" Size="12" Style="0"/>
+			</DiagramOptions>
+			<GeneralOptions ConfirmSubLevelIdWithDot="true"/>
+			<InstantReverseOptions CalculateGeneralizationAndRealization="false" CreateShapeForParentModelOfDraggedClassPackage="false" ReverseGetterSetter="\u0000" ReverseOperationImplementation="false" ShowPackageForNewDiagram="\u0001" ShowPackageOwner="\u0000"/>
+			<ModelQualityOptions EnableModelQualityChecking="false"/>
+			<ORMOptions DecimalPrecision="19" DecimalScale="0" ExportCommentToDatabase="true" FormattedSQL="false" GenerateAssociationWithAttribute="false" GenerateDiagramFromORMWizards="true" GetterSetterVisibility="\u0000" IdGeneratorType="native" MappingFileColumnOrder="\u0000" NumericToClassType="\u0000" QuoteSQLIdentifier="\u0000" RecreateShapeWhenSync="false" SyncToClassDiagramAttributeName="\u0001" SyncToClassDiagramAttributeNamePrefix="" SyncToClassDiagramAttributeNameSuffix="" SyncToClassDiagramClassName="\u0000" SyncToClassDiagramClassNamePrefix="" SyncToClassDiagramClassNameSuffix="" SyncToERDColumnName="\u0000" SyncToERDColumnNamePrefix="" SyncToERDColumnNameSuffix="" SyncToERDTableName="\u0004" SyncToERDTableNamePrefix="" SyncToERDTableNameSuffix="" SynchronizeDefaultValueToColumn="false" SynchronizeName="\u0002" TablePerSubclassFKMapping="\u0000" UpperCaseSQL="true" UseDefaultDecimal="true" WrappingServletRequest="\u0001"/>
+			<RequirementDiagramOptions DefaultWrapMember="true" ShowAttributes="\u0001" SupportHTMLAttribute="false"/>
+			<StateCodeEngineOptions AutoCreateInitialStateInStateDiagram="true" AutoCreateTransitionMethods="true" DefaultInitialStateLocationX="-1" DefaultInitialStateLocationY="-1" GenerateDebugMessage="false" GenerateSample="true" GenerateTryCatch="true" Language="\u0000" RegenerateTransitionMethods="false" SyncTransitionMethods="true"/>
+			<WarningOptions CreateORMClassInDefaultPackage="true"/>
+			<PORepository>
+				<POUserIDFormats>
+					<POUserIDFormat Digits="2" Guid="false" Id="regorBaFYEDKeAkD" LastNumericValue="0" ModelType="BPMNElement" Prefix="BP" Suffix=""/>
+					<POUserIDFormat Digits="2" Guid="false" Id="begorBaFYEDKeAkE" LastNumericValue="0" ModelType="Actor" Prefix="AC" Suffix=""/>
+					<POUserIDFormat Digits="2" Guid="false" Id="begorBaFYEDKeAkF" LastNumericValue="0" ModelType="UseCase" Prefix="UC" Suffix=""/>
+					<POUserIDFormat Digits="3" Guid="false" Id="begorBaFYEDKeAkG" LastNumericValue="0" ModelType="Requirement" Prefix="REQ" Suffix=""/>
+					<POUserIDFormat Digits="3" Guid="false" Id="begorBaFYEDKeAkH" LastNumericValue="0" ModelType="BusinessRule" Prefix="BR" Suffix=""/>
+					<POUserIDFormat Digits="-1" Guid="false" Id="begorBaFYEDKeAkI" LastNumericValue="0" ModelType="BusinessProcessDiagram" Prefix="" Suffix=""/>
+				</POUserIDFormats>
+			</PORepository>
+		</ProjectOptions>
+	</ProjectInfo>
+	<Models>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="jkgorBaFYEDKeAWK" Name="boolean" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.449" PmLastModified="2019-01-09T18:05:58.001" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="zkgorBaFYEDKeAWL" Name="byte" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.451" PmLastModified="2019-01-09T18:05:57.953" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="zkgorBaFYEDKeAWM" Name="char" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.451" PmLastModified="2019-01-09T18:05:57.953" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="LkgorBaFYEDKeAWN" Name="double" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.452" PmLastModified="2019-01-09T18:05:57.962" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="LkgorBaFYEDKeAWO" Name="float" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.452" PmLastModified="2019-01-09T18:05:57.962" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="rkgorBaFYEDKeAWP" Name="int" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.453" PmLastModified="2019-01-09T18:05:58.012" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="rkgorBaFYEDKeAWQ" Name="long" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.453" PmLastModified="2019-01-09T18:05:58.012" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="bkgorBaFYEDKeAWR" Name="short" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.454" PmLastModified="2019-01-09T18:05:57.983" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="bkgorBaFYEDKeAWS" Name="void" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.454" PmLastModified="2019-01-09T18:05:57.983" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="bkgorBaFYEDKeAWT" Name="string" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:34.454" PmLastModified="2019-01-09T18:05:57.983" QualityScore="-1" UserIDLastNumericValue="0"/>
+		<Class Abstract="false" Active="false" BacklogActivityId="0" BusinessKeyMutable="true" BusinessModel="false" ConnectToCodeModel="1" Documentation_plain="" Id="ZmIorBaFYEDKeAkZ" Leaf="false" Name="FireBaseAPI" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:47.750" PmLastModified="2019-01-09T19:38:40.837" QualityScore="-1" Root="false" UserIDLastNumericValue="0" Visibility="public">
+			<ModelChildren>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="YrdYrBaFYEDKeAk_" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="userCollection" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:13:03.686" PmLastModified="2019-01-09T19:25:33.911" QualityScore="-1" ReadOnly="false" Scope="instance" Type="FireBaseCollection" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="O.ZCrBaFYEDKeAwi" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="placesCollection" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:56:10.972" PmLastModified="2019-01-09T18:58:21.058" QualityScore="-1" ReadOnly="false" Scope="instance" Type="FireBaseCollection" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="Y7HirBaFYEDKeAyN" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="placesGridDbCollection" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:01:48.358" PmLastModified="2019-01-09T19:03:09.740" QualityScore="-1" ReadOnly="false" Scope="instance" Type="FireBaseCollection" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="_rB0rBaFYEDKeAsJ" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="cacheService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:33:57.119" PmLastModified="2019-01-09T18:34:17.820" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<Type>
+						<Class Idref="9tEkrBaFYEDKeAoq" Name="FireFileCache"/>
+					</Type>
+				</Attribute>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="MMqCrBaFYEDKeAwb" Leaf="false" Name="getPlacesDatabase" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:55:00.108" PmLastModified="2019-01-09T19:03:41.160" QualityScore="-1" Query="false" ReturnType="sqliteFile" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="k9pirBaFYEDKeAx1" Multiplicity="Unspecified" Name="gridID" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:00:30.025" PmLastModified="2019-01-09T19:00:40.033" QualityScore="-1" Type="number" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="na_qrBaFYEDKeAzK" Leaf="false" Name="getUserMLHealth" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:19:43.545" PmLastModified="2019-01-09T19:34:07.642" QualityScore="-1" Query="false" ReturnType="InterfaceUserMLHealth" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="HQR6rBaFYEDKeA2C" Leaf="false" Name="getUserMLTaste" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:26:27.768" PmLastModified="2019-01-09T19:34:07.642" QualityScore="-1" Query="false" ReturnType="InterfaceUserMLTaste" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="isgGrBaFYEDKeA3F" Leaf="false" Name="UpdateUserProfile" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:28:35.409" PmLastModified="2019-01-09T19:33:23.786" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="Be8GrBaFYEDKeA3I" Multiplicity="Unspecified" Name="userProfile" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:29:33.856" PmLastModified="2019-01-09T19:30:29.080" QualityScore="-1" Type="InterfaceUserProfile" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="0oSGrBaFYEDKeA3O" Leaf="false" Name="GetUserProfile" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:29:44.523" PmLastModified="2019-01-09T19:35:10.538" QualityScore="-1" Query="false" ReturnType="InterfaceUserProfile" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="0NPGrBaFYEDKeA3o" Leaf="false" Name="GetUserHistory" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:32:39.051" PmLastModified="2019-01-09T19:35:10.538" QualityScore="-1" Query="false" ReturnType="InterfaceUserHistory" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="hc.mrBaFYEDKeA40" Leaf="false" Name="UpdateUserHistory" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:35:00.513" PmLastModified="2019-01-09T19:35:41.578" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="IfpmrBaFYEDKeA46" Multiplicity="Unspecified" Name="userHistory" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:35:28.132" PmLastModified="2019-01-09T19:35:41.578" QualityScore="-1" Type="interfaceUserHistory" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+			</ModelChildren>
+			<MasterView>
+				<Class Idref="RmIorBaFYEDKeAkY" Name="FireBaseAPI"/>
+			</MasterView>
+		</Class>
+		<Class Abstract="false" Active="false" BacklogActivityId="0" BusinessKeyMutable="true" BusinessModel="false" ConnectToCodeModel="1" Documentation_plain="" Id="Q8BYrBaFYEDKeAku" Leaf="false" Name="Account" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:12:03.906" PmLastModified="2019-01-09T18:18:58.894" QualityScore="-1" Root="false" UserIDLastNumericValue="0" Visibility="public">
+			<ModelChildren>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="G.84rBaFYEDKeAmD" Leaf="false" Name="oAuthLogin" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:15:17.464" PmLastModified="2019-01-09T18:17:39.610" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="Sly4rBaFYEDKeAmG" Leaf="false" Name="updateUserData" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:15:34.482" PmLastModified="2019-01-09T18:17:39.610" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="yR24rBaFYEDKeAmK" Multiplicity="Unspecified" Name="user" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:16:06.803" PmLastModified="2019-01-09T18:16:16.878" QualityScore="-1" Type="InterfaceUser" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="4bfYrBaFYEDKeAld" Leaf="false" Name="isLoggedIn" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:14:09.287" PmLastModified="2019-01-09T18:14:35.348" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="mDQ4rBaFYEDKeAlm" Leaf="false" Name="emailSignUp" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:14:25.305" PmLastModified="2019-01-09T18:15:11.193" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="ifE4rBaFYEDKeAl3" Leaf="false" Name="emailLogin" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:14:50.769" PmLastModified="2019-01-09T18:15:11.193" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="v8U4rBaFYEDKeAl6" Leaf="false" Name="googleLogin" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:14:55.997" PmLastModified="2019-01-09T18:15:11.194" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="UB04rBaFYEDKeAl9" Leaf="false" Name="facebookLogin" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:15:01.130" PmLastModified="2019-01-09T18:15:27.531" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="Byc4rBaFYEDKeAmA" Leaf="false" Name="twitterLogin" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:15:12.608" PmLastModified="2019-01-09T18:15:27.531" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="BR24rBaFYEDKeAmL" Leaf="false" Name="resetPassword" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:16:06.816" PmLastModified="2019-01-09T18:17:07.332" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="OIx4rBaFYEDKeAmV" Multiplicity="Unspecified" Name="email" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:16:37.660" PmLastModified="2019-01-09T18:17:07.332" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Type>
+								<DataType Idref="bkgorBaFYEDKeAWT" Name="string"/>
+							</Type>
+						</Parameter>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="m7J4rBaFYEDKeAmc" Leaf="false" Name="signOut" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:16:45.017" PmLastModified="2019-01-09T18:17:07.333" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="UE_4rBaFYEDKeAnR" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="user" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:18:32.586" PmLastModified="2019-01-09T18:18:58.894" QualityScore="-1" ReadOnly="false" Scope="instance" Type="InterfaceUser" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="OogErBaFYEDKeAnU" Leaf="false" Name="getUser" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:18:40.604" PmLastModified="2019-01-09T18:18:58.895" QualityScore="-1" Query="false" ReturnType="InterfaceUser" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id=".ogErBaFYEDKeAnV" Leaf="false" Name="setUser" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:18:40.607" PmLastModified="2019-01-09T18:18:58.895" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ReturnType>
+						<DataType Idref="bkgorBaFYEDKeAWS" Name="void"/>
+					</ReturnType>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="xogErBaFYEDKeAnW" Multiplicity="Unspecified" Name="user" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:18:40.611" PmLastModified="2019-01-09T18:18:58.896" QualityScore="-1" Type="InterfaceUser" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+			</ModelChildren>
+			<MasterView>
+				<Class Idref="Q8BYrBaFYEDKeAkt" Name="Account"/>
+			</MasterView>
+		</Class>
+		<Class Abstract="false" Active="false" BacklogActivityId="0" BusinessKeyMutable="true" BusinessModel="false" ConnectToCodeModel="1" Documentation_plain="" Id="9tEkrBaFYEDKeAoq" Leaf="false" Name="FireFileCache" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:23:33.999" PmLastModified="2019-01-09T18:54:04.001" QualityScore="-1" Root="false" UserIDLastNumericValue="0" Visibility="public">
+			<ModelChildren>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="2nLkrBaFYEDKeApR" Leaf="false" Name="cacheDataToFile" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:26:34.971" PmLastModified="2019-01-09T18:53:37.640" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="017UrBaFYEDKeAq4" Multiplicity="Unspecified" Name="data" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:31:08.491" PmLastModified="2019-01-09T18:31:18.496" QualityScore="-1" Type="FireStore" TypeModifier="" UserIDLastNumericValue="0"/>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="54s8rBaFYEDKeAuk" Multiplicity="Unspecified" Name="name" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:50:04.903" PmLastModified="2019-01-09T18:50:14.924" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Type>
+								<DataType Idref="bkgorBaFYEDKeAWT" Name="string"/>
+							</Type>
+						</Parameter>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="t2v8rBaFYEDKeAvm" Multiplicity="Unspecified" Name="expirationDate" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:53:22.797" PmLastModified="2019-01-09T18:53:37.640" QualityScore="-1" Type="number" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="yQQUrBaFYEDKeApo" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="fileStorage" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:27:28.787" PmLastModified="2019-01-09T18:28:31.513" QualityScore="-1" ReadOnly="false" Scope="instance" Type="CordovaFileStorage" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="K6MUrBaFYEDKeAps" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="sqlite" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:28:11.092" PmLastModified="2019-01-09T18:29:47.031" QualityScore="-1" ReadOnly="false" Scope="instance" Type="CordovaSqliteStorage" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="zGZUrBaFYEDKeAql" Leaf="false" Name="returnCached" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:29:57.683" PmLastModified="2019-01-09T18:50:28.049" QualityScore="-1" Query="false" ReturnType="observable" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="observable" Documentation_plain="" Id="rKC8rBaFYEDKeAuw" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:50:18.037" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="bKC8rBaFYEDKeAux" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:50:18.038" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="data" Documentation_plain="" Id="7KC8rBaFYEDKeAuy" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:50:18.039" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="l_jUrBaFYEDKeAqr" Multiplicity="Unspecified" Name="name" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:30:45.225" PmLastModified="2019-01-09T18:50:28.054" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Type>
+								<DataType Idref="bkgorBaFYEDKeAWT" Name="string"/>
+							</Type>
+						</Parameter>
+					</ModelChildren>
+				</Operation>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="F3McrBaFYEDKeAtv" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="keyDirectory" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:45:41.992" PmLastModified="2019-01-09T18:52:24.920" QualityScore="-1" ReadOnly="false" Scope="instance" Type="sqlDB" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="xlOcrBaFYEDKeAt5" Leaf="false" Name="isExpired" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:46:46.371" PmLastModified="2019-01-09T18:52:56.202" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<ReturnType>
+						<DataType Idref="jkgorBaFYEDKeAWK" Name="boolean"/>
+					</ReturnType>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="6H5crBaFYEDKeAuJ" Multiplicity="Unspecified" Name="request" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:47:32.375" PmLastModified="2019-01-09T18:47:42.397" QualityScore="-1" Type="FireStore" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+			</ModelChildren>
+			<MasterView>
+				<Class Idref="9tEkrBaFYEDKeAop" Name="FireFileCache"/>
+			</MasterView>
+		</Class>
+		<Class Abstract="false" Active="false" BacklogActivityId="0" BusinessKeyMutable="true" BusinessModel="false" ConnectToCodeModel="1" Documentation_plain="" Id="Ghn0rBaFYEDKeAsz" Leaf="false" Name="UserDataService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:35:38.200" PmLastModified="2019-01-09T20:51:47.897" QualityScore="-1" Root="false" UserIDLastNumericValue="0" Visibility="public">
+			<ModelChildren>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="ZBharBaFYEDKeA0q" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="user" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:22:03.430" PmLastModified="2019-01-09T19:22:17.666" QualityScore="-1" ReadOnly="false" Scope="instance" Type="InterfaceUser" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="BQGarBaFYEDKeA0J" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="userTaste" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:21:24.640" PmLastModified="2019-01-09T19:21:43.400" QualityScore="-1" ReadOnly="false" Scope="instance" Type="InterfaceUserTaste" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="GUWarBaFYEDKeA0Q" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="userHealth" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:21:33.336" PmLastModified="2019-01-09T19:22:17.663" QualityScore="-1" ReadOnly="false" Scope="instance" Type="InterfaceUserHealth" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="l9oWrBaFYEDKeA5h" Leaf="false" Name="UserDataService" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:38.281" PmLastModified="2019-01-09T19:38:40.835" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="gekWrBaFYEDKeA5n" Multiplicity="Unspecified" Name="user" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:53.537" PmLastModified="2019-01-09T19:38:40.835" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0"/>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="wekWrBaFYEDKeA5o" Multiplicity="Unspecified" Name="userTaste" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:53.539" PmLastModified="2019-01-09T19:38:40.835" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0"/>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="oekWrBaFYEDKeA5p" Multiplicity="Unspecified" Name="userHealth" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:53.541" PmLastModified="2019-01-09T19:38:40.835" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="X2PurBaFYEDKeA9I" Leaf="false" Name="getUserTaste" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:54:28.730" PmLastModified="2019-01-09T19:57:09.557" QualityScore="-1" Query="false" ReturnType="interfaceUserMLTaste" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="AF_urBaFYEDKeA9L" Leaf="false" Name="getUserHealth" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:54:41.792" PmLastModified="2019-01-09T19:57:09.557" QualityScore="-1" Query="false" ReturnType="interfaceUserMLHealth" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="nmyerBaFYEDKeA9t" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="userFilters" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:56:02.809" PmLastModified="2019-01-09T19:56:13.837" QualityScore="-1" ReadOnly="false" Scope="instance" Type="InterfaceUserFilters" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="OKGerBaFYEDKeA.B" Leaf="false" Name="getUserFilters" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:56:22.940" PmLastModified="2019-01-09T19:56:42.617" QualityScore="-1" Query="false" ReturnType="interfaceUserFilters" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="K1WerBaFYEDKeA.E" Leaf="false" Name="setUserFilters" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:56:32.596" PmLastModified="2019-01-09T19:56:54.834" QualityScore="-1" Query="false" ReturnType="interfaceUserFilters" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id=".RPVrBaFYEDKeBOd" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="userLocation" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:51:17.023" PmLastModified="2019-01-09T20:51:47.898" QualityScore="-1" ReadOnly="false" Scope="instance" Type="gpsCoords" TypeModifier="" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+			</ModelChildren>
+			<MasterView>
+				<Class Idref="Ghn0rBaFYEDKeAsy" Name="UserDataService"/>
+			</MasterView>
+		</Class>
+		<Class Abstract="false" Active="false" BacklogActivityId="0" BusinessKeyMutable="true" BusinessModel="false" ConnectToCodeModel="1" Documentation_plain="" Id="ySMCrBaFYEDKeAv_" Leaf="false" Name="PlacesApi" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:54:23.635" PmLastModified="2019-01-09T20:51:47.913" QualityScore="-1" Root="false" UserIDLastNumericValue="0" Visibility="public">
+			<ModelChildren>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="kNjWrBaFYEDKeA6u" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="cordovaGps" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:40:38.281" PmLastModified="2019-01-09T19:41:06.389" QualityScore="-1" ReadOnly="false" Scope="instance" Type="cordovaGpsService" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="vIbWrBaFYEDKeA6y" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="currentGridID" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:40:56.253" PmLastModified="2019-01-09T19:41:24.978" QualityScore="-1" ReadOnly="false" Scope="instance" Type="number" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="F5XWrBaFYEDKeA62" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="dbManagerService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:41:14.856" PmLastModified="2019-01-09T20:48:28.592" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<Type>
+						<Class Idref="h30lrBaFYEDKeBKr" Name="DbManagerService"/>
+					</Type>
+				</Attribute>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="ZRz2rBaFYEDKeA7T" Leaf="false" Name="PlacesApi" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:45:08.006" PmLastModified="2019-01-09T19:59:56.795" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="Se8OrBaFYEDKeA7r" Multiplicity="Unspecified" Name="cordovaGps" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:47:02.418" PmLastModified="2019-01-09T19:47:20.903" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0"/>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="vosOrBaFYEDKeA7m" Multiplicity="Unspecified" Name="currentGridID" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:46:52.669" PmLastModified="2019-01-09T19:47:20.905" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0"/>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="QYsOrBaFYEDKeA7n" Multiplicity="Unspecified" Name="placesDB" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:46:52.674" PmLastModified="2019-01-09T19:47:20.906" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0"/>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="E8k.rBaFYEDKeA.6" Multiplicity="Unspecified" Name="userDataService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:59:43.304" PmLastModified="2019-01-09T19:59:56.795" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="Kko.rBaFYEDKeA.s" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="userDataService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:59:26.548" PmLastModified="2019-01-09T19:59:56.797" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<Type>
+						<Class Idref="Ghn0rBaFYEDKeAsz" Name="UserDataService"/>
+					</Type>
+				</Attribute>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="uN6.rBaFYEDKeA_I" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="itemsService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:00:42.525" PmLastModified="2019-01-09T20:01:00.516" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<Type>
+						<Class Idref="_jZurBaFYEDKeA8O" Name="ItemsService"/>
+					</Type>
+				</Attribute>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="HwR.rBaFYEDKeBAC" Leaf="false" Name="getPlaceById" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:01:24.984" PmLastModified="2019-01-09T20:08:52.562" QualityScore="-1" Query="false" ReturnType="InterfacePlace" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="46LBrBaFYEDKeBAh" Multiplicity="Unspecified" Name="id" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:07:02.087" PmLastModified="2019-01-09T20:07:12.122" QualityScore="-1" Type="number" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="QinBrBaFYEDKeBBJ" Leaf="false" Name="getPlacesByName" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:07:22.178" PmLastModified="2019-01-09T20:29:05.449" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="4nDprBaFYEDKeBHH" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:38.599" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="knDprBaFYEDKeBHI" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:38.601" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="place" Documentation_plain="" Id="knDprBaFYEDKeBHJ" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:38.601" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="zY0hrBaFYEDKeBBe" Multiplicity="Unspecified" Name="name" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:08:35.251" PmLastModified="2019-01-09T20:08:52.562" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Type>
+								<DataType Idref="bkgorBaFYEDKeAWT" Name="string"/>
+							</Type>
+						</Parameter>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="2bahrBaFYEDKeBBx" Leaf="false" Name="getPlacesByType" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:09:23.355" PmLastModified="2019-01-09T20:10:06.374" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="knehrBaFYEDKeBB1" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:09:56.297" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="UnehrBaFYEDKeBB2" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:09:56.298" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="place" Documentation_plain="" Id="0nehrBaFYEDKeBB3" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:09:56.299" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="3HehrBaFYEDKeBB0" Multiplicity="Unspecified" Name="placeType" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:09:56.283" PmLastModified="2019-01-09T20:10:06.376" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Type>
+								<DataType Idref="bkgorBaFYEDKeAWT" Name="string"/>
+							</Type>
+						</Parameter>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="SnehrBaFYEDKeBB4" Leaf="false" Name="getPlacesByCost" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:09:56.306" PmLastModified="2019-01-09T20:15:54.319" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="y8TRrBaFYEDKeBCT" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:15:37.683" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="K8TRrBaFYEDKeBCU" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:15:37.684" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="place" Documentation_plain="" Id="K8TRrBaFYEDKeBCV" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:15:37.684" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="M8TRrBaFYEDKeBCS" Multiplicity="Unspecified" Name="cost" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:15:37.676" PmLastModified="2019-01-09T20:15:54.320" QualityScore="-1" Type="number" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="hWLVrBaFYEDKeBOV" Leaf="false" Name="calculateDistanceToPlace" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:50:43.745" PmLastModified="2019-01-09T20:51:47.914" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+			</ModelChildren>
+			<MasterView>
+				<Class Idref="SSMCrBaFYEDKeAv." Name="PlacesApi"/>
+			</MasterView>
+		</Class>
+		<Class Abstract="false" Active="false" BacklogActivityId="0" BusinessKeyMutable="true" BusinessModel="false" ConnectToCodeModel="1" Documentation_plain="" Id="_jZurBaFYEDKeA8O" Leaf="false" Name="ItemsService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:53:00.031" PmLastModified="2019-01-09T20:48:28.578" QualityScore="-1" Root="false" UserIDLastNumericValue="0" Visibility="public">
+			<ModelChildren>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="BKnurBaFYEDKeA9B" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="dbManagerService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:54:15.968" PmLastModified="2019-01-09T20:48:28.579" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<Type>
+						<Class Idref="h30lrBaFYEDKeBKr" Name="DbManagerService"/>
+					</Type>
+				</Attribute>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="fHkxrBaFYEDKeBDA" Leaf="false" Name="createFilteredItemList" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:17:14.558" PmLastModified="2019-01-09T20:23:44.213" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="LJZJrBaFYEDKeBEz" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:23:34.196" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="HJZJrBaFYEDKeBE0" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:23:34.200" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="itemsID" Documentation_plain="" Id="nJZJrBaFYEDKeBE1" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:23:34.201" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="Fr2JrBaFYEDKeBEN" Multiplicity="Unspecified" Name="filterName" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:22:50.216" PmLastModified="2019-01-09T20:23:33.414" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Type>
+								<DataType Idref="bkgorBaFYEDKeAWT" Name="string"/>
+							</Type>
+						</Parameter>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="dHyxrBaFYEDKeBDD" Leaf="false" Name="createAllFilteredItemList" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:17:55.502" PmLastModified="2019-01-09T20:24:22.484" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="lDGxrBaFYEDKeBDc" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="userDataService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:18:15.465" PmLastModified="2019-01-09T20:18:35.960" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true">
+					<Type>
+						<Class Idref="Ghn0rBaFYEDKeAsz" Name="UserDataService"/>
+					</Type>
+				</Attribute>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="sIFxrBaFYEDKeBDv" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="FilteredItemsIndex" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:19:18.157" PmLastModified="2019-01-09T20:22:07.138" QualityScore="-1" ReadOnly="false" Scope="instance" Type="InterfaceFilteredItemsIndex" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="3mnJrBaFYEDKeBFV" Leaf="false" Name="getItemById" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:24:51.323" PmLastModified="2019-01-09T20:27:16.434" QualityScore="-1" Query="false" ReturnType="interfaceItem" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="q3sprBaFYEDKeBFo" Multiplicity="Unspecified" Name="id" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:26:15.381" PmLastModified="2019-01-09T20:26:42.385" QualityScore="-1" Type="number" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="hISprBaFYEDKeBGJ" Leaf="false" Name="getItemsByName" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:26:32.353" PmLastModified="2019-01-09T20:29:05.430" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="mnTprBaFYEDKeBHT" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:46.809" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="WnTprBaFYEDKeBHU" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:46.810" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="item" Documentation_plain="" Id="2nTprBaFYEDKeBHV" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:46.811" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="SqaprBaFYEDKeBGP" Multiplicity="Unspecified" Name="name" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:26:49.810" PmLastModified="2019-01-09T20:27:16.434" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Type>
+								<DataType Idref="bkgorBaFYEDKeAWT" Name="string"/>
+							</Type>
+						</Parameter>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="g2hprBaFYEDKeBGl" Leaf="false" Name="getItemsByType" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:27:35.233" PmLastModified="2019-01-09T20:28:03.042" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="F9pprBaFYEDKeBGp" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:27:52.936" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="l9pprBaFYEDKeBGq" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:27:52.937" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="item" Documentation_plain="" Id="V9pprBaFYEDKeBGr" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:27:52.938" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="h9pprBaFYEDKeBGo" Multiplicity="Unspecified" Name="type" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:27:52.929" PmLastModified="2019-01-09T20:28:03.044" QualityScore="-1" Type="number" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="D9pprBaFYEDKeBGs" Leaf="false" Name="getItemsByCost" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:27:52.944" PmLastModified="2019-01-09T20:29:05.433" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="wYNprBaFYEDKeBGw" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:18.947" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="oYNprBaFYEDKeBGx" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:18.949" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="item" Documentation_plain="" Id="YYNprBaFYEDKeBGy" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:18.950" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="LoNprBaFYEDKeBGv" Multiplicity="Unspecified" Name="cost" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:28:18.932" PmLastModified="2019-01-09T20:29:05.435" QualityScore="-1" Type="number" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="YD3prBaFYEDKeBIT" Leaf="false" Name="getItemsByNutrition" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:29:23.078" PmLastModified="2019-01-09T20:30:40.542" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="fMMZrBaFYEDKeBIX" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:30:30.462" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="AsMZrBaFYEDKeBIY" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:30:30.464" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="items" Documentation_plain="" Id="AsMZrBaFYEDKeBIZ" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:30:30.464" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="lMMZrBaFYEDKeBIW" Multiplicity="Unspecified" Name="nutrientQuery" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:30:30.441" PmLastModified="2019-01-09T20:30:40.543" QualityScore="-1" Type="nutrientQueryInterface" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="UsMZrBaFYEDKeBIa" Leaf="false" Name="getItemsByIngredient" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:30:30.474" PmLastModified="2019-01-09T20:32:16.083" QualityScore="-1" Query="false" ReturnType="array" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<TemplateTypeBindInfo>
+						<TemplateTypeBindInfo BacklogActivityId="0" BindedType="array" Documentation_plain="" Id="YYhZrBaFYEDKeBIe" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:31:56.038" QualityScore="-1" TypeModifier="" UserIDLastNumericValue="0">
+							<Details>
+								<TemplateTypeBindDetails BacklogActivityId="0" Documentation_plain="" Id="4YhZrBaFYEDKeBIf" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:31:56.039" QualityScore="-1" UserIDLastNumericValue="0" Wildcard="Non Wildcard">
+									<Arguments>
+										<TemplateTypeBindInfo BacklogActivityId="0" BindedType="items" Documentation_plain="" Id="EYhZrBaFYEDKeBIg" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:31:56.040" QualityScore="-1" UserIDLastNumericValue="0"/>
+									</Arguments>
+								</TemplateTypeBindDetails>
+							</Details>
+						</TemplateTypeBindInfo>
+					</TemplateTypeBindInfo>
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="zohZrBaFYEDKeBId" Multiplicity="Unspecified" Name="ingredientQuery" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:31:56.019" PmLastModified="2019-01-09T20:32:16.083" QualityScore="-1" Type="interface ingredientQuery" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+			</ModelChildren>
+			<MasterView>
+				<Class Idref="_jZurBaFYEDKeA8N" Name="ItemsService"/>
+			</MasterView>
+		</Class>
+		<Class Abstract="false" Active="false" BacklogActivityId="0" BusinessKeyMutable="true" BusinessModel="false" ConnectToCodeModel="1" Documentation_plain="" Id="h30lrBaFYEDKeBKr" Leaf="false" Name="DbManagerService" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:43:35.777" PmLastModified="2019-01-09T20:49:14.428" QualityScore="-1" Root="false" UserIDLastNumericValue="0" Visibility="public">
+			<ModelChildren>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="ZzllrBaFYEDKeBLS" Leaf="false" Name="initDBs" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:45:38.150" PmLastModified="2019-01-09T20:46:15.104" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="w1JlrBaFYEDKeBLJ" Leaf="false" Name="loadPlacesDB" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:45:17.123" PmLastModified="2019-01-09T20:45:48.232" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="QM5lrBaFYEDKeBLM" Leaf="false" Name="loadItemsDB" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:45:27.426" PmLastModified="2019-01-09T20:45:48.232" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="NZFlrBaFYEDKeBLP" Leaf="false" Name="loadFileCacheDB" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:45:33.229" PmLastModified="2019-01-09T20:47:20.028" QualityScore="-1" Query="false" ReturnType="db" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="llKlrBaFYEDKeBK1" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="placesDB" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:44:11.497" PmLastModified="2019-01-09T20:44:42.048" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="XZalrBaFYEDKeBK4" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="itemsDB" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:44:19.514" PmLastModified="2019-01-09T20:44:42.049" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Attribute Abstract="false" Aggregation="None" AllowEmptyName="false" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" HasGetter="false" HasSetter="false" Id="8K6lrBaFYEDKeBK7" IsID="false" Leaf="false" Multiplicity="Unspecified" Name="fileCacheDB" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:44:22.415" PmLastModified="2019-01-09T20:44:42.050" QualityScore="-1" ReadOnly="false" Scope="instance" TypeModifier="" UserIDLastNumericValue="0" Visibility="private" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="PKrlrBaFYEDKeBMU" Leaf="false" Name="GetLoadPlacesDB" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:46:25.340" PmLastModified="2019-01-09T20:47:20.028" QualityScore="-1" Query="false" ReturnType="db" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="b5HlrBaFYEDKeBMX" Leaf="false" Name="GetLoadItemsDB" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:46:38.838" PmLastModified="2019-01-09T20:47:20.028" QualityScore="-1" Query="false" ReturnType="db" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="a7nlrBaFYEDKeBMa" Leaf="false" Name="GetFileCacheDB" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:46:43.926" PmLastModified="2019-01-09T20:47:20.029" QualityScore="-1" Query="false" ReturnType="db" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true"/>
+				<Operation Abstract="false" BacklogActivityId="0" ConnectToCodeModel="1" Documentation_plain="" Id="XVGVrBaFYEDKeBNm" Leaf="false" Name="checkForUpdate" Ordered="false" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:48:50.106" PmLastModified="2019-01-09T20:49:14.429" QualityScore="-1" Query="false" ReturnTypeDocumentation_plain="" Scope="instance" Static="false" TypeModifier="" Unique="true" UserIDLastNumericValue="0" Visibility="public" Visible="true">
+					<ModelChildren>
+						<Parameter BacklogActivityId="0" Direction="inout" Documentation_plain="" Id="6UOVrBaFYEDKeBNs" Multiplicity="Unspecified" Name="db" PmAuthor="trevo" PmCreateDateTime="2019-01-09T20:49:04.407" PmLastModified="2019-01-09T20:49:14.429" QualityScore="-1" Type="DB" TypeModifier="" UserIDLastNumericValue="0"/>
+					</ModelChildren>
+				</Operation>
+			</ModelChildren>
+			<MasterView>
+				<Class Idref="B30lrBaFYEDKeBKq" Name="DbManagerService"/>
+			</MasterView>
+		</Class>
+		<Association Abstract="false" BacklogActivityId="0" Derived="false" Direction="From To" Documentation_plain="" EndRelationshipFromMetaModelElement="ZmIorBaFYEDKeAkZ" EndRelationshipToMetaModelElement="Ghn0rBaFYEDKeAsz" Id="rBUWrBaFYEDKeA5u" Leaf="false" OrderingInProfile="-1" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:57.813" PmLastModified="2019-01-09T19:38:40.827" QualityScore="-1" UserIDLastNumericValue="0" Visibility="Unspecified">
+			<FromEnd>
+				<AssociationEnd AggregationKind="None" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" EndModelElement="ZmIorBaFYEDKeAkZ" Id="vBUWrBaFYEDKeA5w" JavaCodeAttributeName="" Leaf="false" Multiplicity="Unspecified" Navigable="Navigable" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:57.821" ProvidePropertyGetterMethod="false" ProvidePropertySetterMethod="false" QualityScore="-1" ReadOnly="false" Static="false" TypeModifier="" UserIDLastNumericValue="0" Visibility="Unspecified">
+					<Qualifier>
+						<Qualifier BacklogActivityId="0" Documentation_plain="" Id="AhUWrBaFYEDKeA5y" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:57.824" QualityScore="-1" UserIDLastNumericValue="0"/>
+					</Qualifier>
+					<Type>
+						<Class Idref="ZmIorBaFYEDKeAkZ" Name="FireBaseAPI"/>
+					</Type>
+				</AssociationEnd>
+			</FromEnd>
+			<ToEnd>
+				<AssociationEnd AggregationKind="None" BacklogActivityId="0" ConnectToCodeModel="1" Derived="false" DerivedUnion="false" Documentation_plain="" EndModelElement="Ghn0rBaFYEDKeAsz" Id="AhUWrBaFYEDKeA5z" JavaCodeAttributeName="" Leaf="false" Multiplicity="Unspecified" Navigable="Navigable" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:57.824" ProvidePropertyGetterMethod="false" ProvidePropertySetterMethod="false" QualityScore="-1" ReadOnly="false" Static="false" TypeModifier="" UserIDLastNumericValue="0" Visibility="Unspecified">
+					<Qualifier>
+						<Qualifier BacklogActivityId="0" Documentation_plain="" Id="AhUWrBaFYEDKeA50" Name="" PmAuthor="trevo" PmCreateDateTime="2019-01-09T19:37:57.824" QualityScore="-1" UserIDLastNumericValue="0"/>
+					</Qualifier>
+					<Type>
+						<Class Idref="Ghn0rBaFYEDKeAsz" Name="UserDataService"/>
+					</Type>
+				</AssociationEnd>
+			</ToEnd>
+		</Association>
+	</Models>
+	<Diagrams>
+		<ClassDiagram AlignToGrid="false" AutoFitShapesSize="false" ConnectionPointStyle="0" ConnectorLabelOrientation="0" ConnectorLineJumps="0" ConnectorLineJumpsSize="0" ConnectorModelElementNameAlignment="4" ConnectorStyle="1" DiagramBackground="rgb(255, 255, 255)" Editable="true" FollowDiagramParentElement="true" GeneralizationSetNotation="2" GridColor="rgb(192, 192, 192)" GridHeight="10" GridVisible="false" GridWidth="10" Height="798" HideConnectorIfFromToIsHidden="0" HideEmptyTaggedValues="false" Id="i.worBaFYEDKeAkJ" ImageHeight="0" ImageScale="1.0" ImageWidth="0" InitializeDiagramForCreate="true" Maximized="true" ModelElementNameAlignment="4" Name="Class Diagram1" PaintConnectorThroughLabel="1" PmAuthor="trevo" PmCreateDateTime="2019-01-09T18:05:44.017" PmLastModified="2019-01-09T20:51:37.888" PointConnectorEndToCompartmentMember="false" QualityScore="-1" RequestFitSizeWithPromptUser="false" RequestValidateSnapToGrid="false" ShapePresentationOption="0" ShowActivityStateNodeCaption="524287" ShowAllocatedFrom="true" ShowAllocatedTo="true" ShowAssociationNavigationArrows="3" ShowAttributeGetterSetter="false" ShowAttributesCodeDetails="2" ShowAttributesPropertyModifiers="2" ShowAttributesType="1" ShowClassEmptyCompartments="2" ShowClassOwner="2" ShowClassReferencedAttributes="true" ShowColorLegend="false" ShowConnectorName="0" ShowConstraints="false" ShowDefaultPackage="true" ShowEllipsisForUnshownClassMembers="2" ShowInformationItemOption="2" ShowOperationsCodeDetails="2" ShowOperationsParameters="1" ShowOperationsReturnType="1" ShowPMAuthor="false" ShowPMDifficulty="false" ShowPMDiscipline="false" ShowPMIteration="false" ShowPMPhase="false" ShowPMPriority="false" ShowPMStatus="false" ShowPMVersion="false" ShowPackageNameStyle="0" ShowPackageOwner="2" ShowParametersCodeDetails="2" ShowShapeLegend="false" ShowShapeStereotypeIconName="true" ShowStereotypes="true" ShowTaggedValues="false" ShowTemplateInfoOfGeneralizationAndRealization="false" SuppressImplied1MultiplicityForAttributeAndAssociationEnd="false" TeamworkCreateDateTime="0" TrimmedHeight="0" TrimmedWidth="0" Width="835" X="0" Y="0" ZoomRatio="1.0" _globalPaletteOption="true">
+			<Shapes>
+				<Class AttributeSortType="0" Background="rgb(122, 207, 245)" ConnectToPoint="true" ConnectionPointType="2" CreatorDiagramType="ClassDiagram" DisplayAsRobustnessAnalysisIcon="true" EnumerationLiteralSortType="0" Foreground="rgb(0, 0, 0)" Height="200" Id="RmIorBaFYEDKeAkY" InterfaceBall="false" KShDrOp="false" KSwCsMbSt="true" LShCmMl="false" LshRfAts="0" MShDrAt="false" MSwTpPts="true" MetaModelElement="ZmIorBaFYEDKeAkZ" Model="ZmIorBaFYEDKeAkZ" ModelElementNameAlignment="9" Name="FireBaseAPI" OperationSortType="0" OverrideAppearanceWithStereotypeIcon="true" ParentConnectorDTheta="0.0" ParentConnectorHeaderLength="40" ParentConnectorLineLength="10" PresentationOption="4" PrimitiveShapeType="0" RequestDefaultSize="false" RequestFitSize="false" RequestFitSizeFromCenter="false" RequestResetCaption="false" RequestResetCaptionFitWidth="false" RequestResetCaptionSize="false" RequestSetSizeOption="0" Selectable="true" ShowAllocatedFrom="0" ShowAllocatedTo="0" ShowAttributeType="1" ShowAttributesCodeDetails="0" ShowAttributesPropertyModifiers="0" ShowAttributesType="0" ShowClassMemberConstraints="true" ShowEllipsisForUnshownMembers="0" ShowEmptyCompartments="0" ShowEnumerationLiteralType="1" ShowInitialAttributeValue="true" ShowOperationParameterDirection="false" ShowOperationProperties="false" ShowOperationRaisedExceptions="false" ShowOperationSignature="true" ShowOperationTemplateParameters="false" ShowOperationType="1" ShowOperationsCodeDetails="0" ShowOperationsParameters="0" ShowOperationsReturnType="0" ShowOwnerOption="3" ShowParameterNameInOperationSignature="true" ShowParametersCodeDetails="0" ShowStereotypeIconName="0" ShowTypeOption="0" SuppressImplied1MultiplicityForAttribute="0" VisibilityStyle="1" Width="303" WpMbs="false" X="143" Y="58" ZOrder="14">
+					<ElementFont Color="rgb(0, 0, 0)" Name="Dialog" Size="11" Style="0"/>
+					<Line Cap="0" Color="rgb(0, 0, 0)" Transparency="0" Weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption Height="15" InternalHeight="-2147483648" InternalWidth="-2147483648" Side="FreeMove" Visible="true" Width="303" X="0" Y="0"/>
+					<FillColor Color="rgb(122, 207, 245)" Style="1" Transparency="0" Type="1"/>
+					<CompartmentFont Value="none"/>
+				</Class>
+				<Class AttributeSortType="0" Background="rgb(122, 207, 245)" ConnectToPoint="true" ConnectionPointType="2" CreatorDiagramType="ClassDiagram" DisplayAsRobustnessAnalysisIcon="true" EnumerationLiteralSortType="0" Foreground="rgb(0, 0, 0)" Height="222" Id="Q8BYrBaFYEDKeAkt" InterfaceBall="false" KShDrOp="false" KSwCsMbSt="true" LShCmMl="false" LshRfAts="0" MShDrAt="false" MSwTpPts="true" MetaModelElement="Q8BYrBaFYEDKeAku" Model="Q8BYrBaFYEDKeAku" ModelElementNameAlignment="9" Name="Account" OperationSortType="0" OverrideAppearanceWithStereotypeIcon="true" ParentConnectorDTheta="0.0" ParentConnectorHeaderLength="40" ParentConnectorLineLength="10" PresentationOption="4" PrimitiveShapeType="0" RequestDefaultSize="false" RequestFitSize="false" RequestFitSizeFromCenter="false" RequestResetCaption="false" RequestResetCaptionFitWidth="false" RequestResetCaptionSize="false" RequestSetSizeOption="0" Selectable="true" ShowAllocatedFrom="0" ShowAllocatedTo="0" ShowAttributeType="1" ShowAttributesCodeDetails="0" ShowAttributesPropertyModifiers="0" ShowAttributesType="0" ShowClassMemberConstraints="true" ShowEllipsisForUnshownMembers="0" ShowEmptyCompartments="0" ShowEnumerationLiteralType="1" ShowInitialAttributeValue="true" ShowOperationParameterDirection="false" ShowOperationProperties="false" ShowOperationRaisedExceptions="false" ShowOperationSignature="true" ShowOperationTemplateParameters="false" ShowOperationType="1" ShowOperationsCodeDetails="0" ShowOperationsParameters="0" ShowOperationsReturnType="0" ShowOwnerOption="3" ShowParameterNameInOperationSignature="true" ShowParametersCodeDetails="0" ShowStereotypeIconName="0" ShowTypeOption="0" SuppressImplied1MultiplicityForAttribute="0" VisibilityStyle="1" Width="234" WpMbs="false" X="968" Y="43" ZOrder="12">
+					<ElementFont Color="rgb(0, 0, 0)" Name="Dialog" Size="11" Style="0"/>
+					<Line Cap="0" Color="rgb(0, 0, 0)" Transparency="0" Weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption Height="15" InternalHeight="-2147483648" InternalWidth="-2147483648" Side="FreeMove" Visible="true" Width="234" X="0" Y="0"/>
+					<FillColor Color="rgb(122, 207, 245)" Style="1" Transparency="0" Type="1"/>
+					<CompartmentFont Value="none"/>
+				</Class>
+				<Class AttributeSortType="0" Background="rgb(122, 207, 245)" ConnectToPoint="true" ConnectionPointType="2" CreatorDiagramType="ClassDiagram" DisplayAsRobustnessAnalysisIcon="true" EnumerationLiteralSortType="0" Foreground="rgb(0, 0, 0)" Height="117" Id="9tEkrBaFYEDKeAop" InterfaceBall="false" KShDrOp="false" KSwCsMbSt="true" LShCmMl="false" LshRfAts="0" MShDrAt="false" MSwTpPts="true" MetaModelElement="9tEkrBaFYEDKeAoq" Model="9tEkrBaFYEDKeAoq" ModelElementNameAlignment="9" Name="FireFileCache" OperationSortType="0" OverrideAppearanceWithStereotypeIcon="true" ParentConnectorDTheta="0.0" ParentConnectorHeaderLength="40" ParentConnectorLineLength="10" PresentationOption="4" PrimitiveShapeType="0" RequestDefaultSize="false" RequestFitSize="false" RequestFitSizeFromCenter="false" RequestResetCaption="false" RequestResetCaptionFitWidth="false" RequestResetCaptionSize="false" RequestSetSizeOption="0" Selectable="true" ShowAllocatedFrom="0" ShowAllocatedTo="0" ShowAttributeType="1" ShowAttributesCodeDetails="0" ShowAttributesPropertyModifiers="0" ShowAttributesType="0" ShowClassMemberConstraints="true" ShowEllipsisForUnshownMembers="0" ShowEmptyCompartments="0" ShowEnumerationLiteralType="1" ShowInitialAttributeValue="true" ShowOperationParameterDirection="false" ShowOperationProperties="false" ShowOperationRaisedExceptions="false" ShowOperationSignature="true" ShowOperationTemplateParameters="false" ShowOperationType="1" ShowOperationsCodeDetails="0" ShowOperationsParameters="0" ShowOperationsReturnType="0" ShowOwnerOption="3" ShowParameterNameInOperationSignature="true" ShowParametersCodeDetails="0" ShowStereotypeIconName="0" ShowTypeOption="0" SuppressImplied1MultiplicityForAttribute="0" VisibilityStyle="1" Width="377" WpMbs="false" X="129" Y="283" ZOrder="10">
+					<ElementFont Color="rgb(0, 0, 0)" Name="Dialog" Size="11" Style="0"/>
+					<Line Cap="0" Color="rgb(0, 0, 0)" Transparency="0" Weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption Height="15" InternalHeight="-2147483648" InternalWidth="-2147483648" Side="FreeMove" Visible="true" Width="377" X="0" Y="0"/>
+					<FillColor Color="rgb(122, 207, 245)" Style="1" Transparency="0" Type="1"/>
+					<CompartmentFont Value="none"/>
+				</Class>
+				<Class AttributeSortType="0" Background="rgb(122, 207, 245)" ConnectToPoint="true" ConnectionPointType="2" CreatorDiagramType="ClassDiagram" DisplayAsRobustnessAnalysisIcon="true" EnumerationLiteralSortType="0" Foreground="rgb(0, 0, 0)" Height="207" Id="Ghn0rBaFYEDKeAsy" InterfaceBall="false" KShDrOp="false" KSwCsMbSt="true" LShCmMl="false" LshRfAts="0" MShDrAt="false" MSwTpPts="true" MetaModelElement="Ghn0rBaFYEDKeAsz" Model="Ghn0rBaFYEDKeAsz" ModelElementNameAlignment="9" Name="UserDataService" OperationSortType="0" OverrideAppearanceWithStereotypeIcon="true" ParentConnectorDTheta="0.0" ParentConnectorHeaderLength="40" ParentConnectorLineLength="10" PresentationOption="4" PrimitiveShapeType="0" RequestDefaultSize="false" RequestFitSize="false" RequestFitSizeFromCenter="false" RequestResetCaption="false" RequestResetCaptionFitWidth="false" RequestResetCaptionSize="false" RequestSetSizeOption="0" Selectable="true" ShowAllocatedFrom="0" ShowAllocatedTo="0" ShowAttributeType="1" ShowAttributesCodeDetails="0" ShowAttributesPropertyModifiers="0" ShowAttributesType="0" ShowClassMemberConstraints="true" ShowEllipsisForUnshownMembers="0" ShowEmptyCompartments="0" ShowEnumerationLiteralType="1" ShowInitialAttributeValue="true" ShowOperationParameterDirection="false" ShowOperationProperties="false" ShowOperationRaisedExceptions="false" ShowOperationSignature="true" ShowOperationTemplateParameters="false" ShowOperationType="1" ShowOperationsCodeDetails="0" ShowOperationsParameters="0" ShowOperationsReturnType="0" ShowOwnerOption="3" ShowParameterNameInOperationSignature="true" ShowParametersCodeDetails="0" ShowStereotypeIconName="0" ShowTypeOption="0" SuppressImplied1MultiplicityForAttribute="0" VisibilityStyle="1" Width="280" WpMbs="false" X="577" Y="51" ZOrder="8">
+					<ElementFont Color="rgb(0, 0, 0)" Name="Dialog" Size="11" Style="0"/>
+					<Line Cap="0" Color="rgb(0, 0, 0)" Transparency="0" Weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption Height="15" InternalHeight="-2147483648" InternalWidth="-2147483648" Side="FreeMove" Visible="true" Width="280" X="0" Y="0"/>
+					<FillColor Color="rgb(122, 207, 245)" Style="1" Transparency="0" Type="1"/>
+					<CompartmentFont Value="none"/>
+				</Class>
+				<Class AttributeSortType="0" Background="rgb(122, 207, 245)" ConnectToPoint="true" ConnectionPointType="2" CreatorDiagramType="ClassDiagram" DisplayAsRobustnessAnalysisIcon="true" EnumerationLiteralSortType="0" Foreground="rgb(0, 0, 0)" Height="192" Id="SSMCrBaFYEDKeAv." InterfaceBall="false" KShDrOp="false" KSwCsMbSt="true" LShCmMl="false" LshRfAts="0" MShDrAt="false" MSwTpPts="true" MetaModelElement="ySMCrBaFYEDKeAv_" Model="ySMCrBaFYEDKeAv_" ModelElementNameAlignment="9" Name="PlacesApi" OperationSortType="0" OverrideAppearanceWithStereotypeIcon="true" ParentConnectorDTheta="0.0" ParentConnectorHeaderLength="40" ParentConnectorLineLength="10" PresentationOption="4" PrimitiveShapeType="0" RequestDefaultSize="false" RequestFitSize="false" RequestFitSizeFromCenter="false" RequestResetCaption="false" RequestResetCaptionFitWidth="false" RequestResetCaptionSize="false" RequestSetSizeOption="0" Selectable="true" ShowAllocatedFrom="0" ShowAllocatedTo="0" ShowAttributeType="1" ShowAttributesCodeDetails="0" ShowAttributesPropertyModifiers="0" ShowAttributesType="0" ShowClassMemberConstraints="true" ShowEllipsisForUnshownMembers="0" ShowEmptyCompartments="0" ShowEnumerationLiteralType="1" ShowInitialAttributeValue="true" ShowOperationParameterDirection="false" ShowOperationProperties="false" ShowOperationRaisedExceptions="false" ShowOperationSignature="true" ShowOperationTemplateParameters="false" ShowOperationType="1" ShowOperationsCodeDetails="0" ShowOperationsParameters="0" ShowOperationsReturnType="0" ShowOwnerOption="3" ShowParameterNameInOperationSignature="true" ShowParametersCodeDetails="0" ShowStereotypeIconName="0" ShowTypeOption="0" SuppressImplied1MultiplicityForAttribute="0" VisibilityStyle="1" Width="342" WpMbs="false" X="553" Y="309" ZOrder="6">
+					<ElementFont Color="rgb(0, 0, 0)" Name="Dialog" Size="11" Style="0"/>
+					<Line Cap="0" Color="rgb(0, 0, 0)" Transparency="0" Weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption Height="15" InternalHeight="-2147483648" InternalWidth="-2147483648" Side="FreeMove" Visible="true" Width="342" X="0" Y="0"/>
+					<FillColor Color="rgb(122, 207, 245)" Style="1" Transparency="0" Type="1"/>
+					<CompartmentFont Value="none"/>
+				</Class>
+				<Class AttributeSortType="0" Background="rgb(122, 207, 245)" ConnectToPoint="true" ConnectionPointType="2" CreatorDiagramType="ClassDiagram" DisplayAsRobustnessAnalysisIcon="true" EnumerationLiteralSortType="0" Foreground="rgb(0, 0, 0)" Height="206" Id="_jZurBaFYEDKeA8N" InterfaceBall="false" KShDrOp="false" KSwCsMbSt="true" LShCmMl="false" LshRfAts="0" MShDrAt="false" MSwTpPts="true" MetaModelElement="_jZurBaFYEDKeA8O" Model="_jZurBaFYEDKeA8O" ModelElementNameAlignment="9" Name="ItemsService" OperationSortType="0" OverrideAppearanceWithStereotypeIcon="true" ParentConnectorDTheta="0.0" ParentConnectorHeaderLength="40" ParentConnectorLineLength="10" PresentationOption="4" PrimitiveShapeType="0" RequestDefaultSize="false" RequestFitSize="false" RequestFitSizeFromCenter="false" RequestResetCaption="false" RequestResetCaptionFitWidth="false" RequestResetCaptionSize="false" RequestSetSizeOption="0" Selectable="true" ShowAllocatedFrom="0" ShowAllocatedTo="0" ShowAttributeType="1" ShowAttributesCodeDetails="0" ShowAttributesPropertyModifiers="0" ShowAttributesType="0" ShowClassMemberConstraints="true" ShowEllipsisForUnshownMembers="0" ShowEmptyCompartments="0" ShowEnumerationLiteralType="1" ShowInitialAttributeValue="true" ShowOperationParameterDirection="false" ShowOperationProperties="false" ShowOperationRaisedExceptions="false" ShowOperationSignature="true" ShowOperationTemplateParameters="false" ShowOperationType="1" ShowOperationsCodeDetails="0" ShowOperationsParameters="0" ShowOperationsReturnType="0" ShowOwnerOption="3" ShowParameterNameInOperationSignature="true" ShowParametersCodeDetails="0" ShowStereotypeIconName="0" ShowTypeOption="0" SuppressImplied1MultiplicityForAttribute="0" VisibilityStyle="1" Width="409" WpMbs="false" X="955" Y="309" ZOrder="4">
+					<ElementFont Color="rgb(0, 0, 0)" Name="Dialog" Size="11" Style="0"/>
+					<Line Cap="0" Color="rgb(0, 0, 0)" Transparency="0" Weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption Height="16" InternalHeight="-2147483648" InternalWidth="-2147483648" Side="FreeMove" Visible="true" Width="410" X="0" Y="0"/>
+					<FillColor Color="rgb(122, 207, 245)" Style="1" Transparency="0" Type="1"/>
+					<CompartmentFont Value="none"/>
+				</Class>
+				<Class AttributeSortType="0" Background="rgb(122, 207, 245)" ConnectToPoint="true" ConnectionPointType="2" CreatorDiagramType="ClassDiagram" DisplayAsRobustnessAnalysisIcon="true" EnumerationLiteralSortType="0" Foreground="rgb(0, 0, 0)" Height="192" Id="B30lrBaFYEDKeBKq" InterfaceBall="false" KShDrOp="false" KSwCsMbSt="true" LShCmMl="false" LshRfAts="0" MShDrAt="false" MSwTpPts="true" MetaModelElement="h30lrBaFYEDKeBKr" Model="h30lrBaFYEDKeBKr" ModelElementNameAlignment="9" Name="DbManagerService" OperationSortType="0" OverrideAppearanceWithStereotypeIcon="true" ParentConnectorDTheta="0.0" ParentConnectorHeaderLength="40" ParentConnectorLineLength="10" PresentationOption="4" PrimitiveShapeType="0" RequestDefaultSize="false" RequestFitSize="false" RequestFitSizeFromCenter="false" RequestResetCaption="false" RequestResetCaptionFitWidth="false" RequestResetCaptionSize="false" RequestSetSizeOption="0" Selectable="true" ShowAllocatedFrom="0" ShowAllocatedTo="0" ShowAttributeType="1" ShowAttributesCodeDetails="0" ShowAttributesPropertyModifiers="0" ShowAttributesType="0" ShowClassMemberConstraints="true" ShowEllipsisForUnshownMembers="0" ShowEmptyCompartments="0" ShowEnumerationLiteralType="1" ShowInitialAttributeValue="true" ShowOperationParameterDirection="false" ShowOperationProperties="false" ShowOperationRaisedExceptions="false" ShowOperationSignature="true" ShowOperationTemplateParameters="false" ShowOperationType="1" ShowOperationsCodeDetails="0" ShowOperationsParameters="0" ShowOperationsReturnType="0" ShowOwnerOption="3" ShowParameterNameInOperationSignature="true" ShowParametersCodeDetails="0" ShowStereotypeIconName="0" ShowTypeOption="0" SuppressImplied1MultiplicityForAttribute="0" VisibilityStyle="1" Width="138" WpMbs="false" X="242" Y="453" ZOrder="2">
+					<ElementFont Color="rgb(0, 0, 0)" Name="Dialog" Size="11" Style="0"/>
+					<Line Cap="0" Color="rgb(0, 0, 0)" Transparency="0" Weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption Height="15" InternalHeight="-2147483648" InternalWidth="-2147483648" Side="FreeMove" Visible="true" Width="138" X="0" Y="0"/>
+					<FillColor Color="rgb(122, 207, 245)" Style="1" Transparency="0" Type="1"/>
+					<CompartmentFont Value="none"/>
+				</Class>
+			</Shapes>
+		</ClassDiagram>
+	</Diagrams>
+</Project>
