@@ -56,16 +56,28 @@ class Get_Data:
             jsonObj =  json.loads(getResult.content)
             
             #check if 0 results
-            if 'noResultsSuggestions' in jsonObj['searchPageProps']['searchResultsProps']:
-                print('no results')
+            if 'searchExceptionProps' in jsonObj['searchPageProps']:
                 dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'isFinished': True}})
                 dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'lastUpdate': time.time()}})
+                with threadLock:
+                    self.success = self.success + 1
+                    successes = successes + 1
+                self.proxy = proxySystem.Update_Proxy_Stats(self.proxy, getResult.elapsed.seconds)
                 return False #exit crawling gps coords
-        
+            elif 'noResultsSuggestions' in jsonObj['searchPageProps']['searchResultsProps']:
+                dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'isFinished': True}})
+                dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'lastUpdate': time.time()}})
+                with threadLock:
+                    self.success = self.success + 1
+                    successes = successes + 1
+                self.proxy = proxySystem.Update_Proxy_Stats(self.proxy, getResult.elapsed.seconds)
+                return False #exit crawling gps coords
+            i = 0
             for item in jsonObj['searchPageProps']['searchResultsProps']['searchResults']:
                item['loc'] =  jsonObj['searchPageProps']['searchMapProps']['mapState']['markers'][i]['location']
+               i = i + 1
                 
-            writeResult = dbGps.Update({'_id': coordsObj['_id']}, {'$addToSet': {'items': {'$each': jsonObj['searchPageProps']['searchResultsProps']['searchResults']} }})
+            dbGps.Update({'_id': coordsObj['_id']}, {'$addToSet': {'items': {'$each': jsonObj['searchPageProps']['searchResultsProps']['searchResults']} }})
 
             with threadLock:
                 self.success = self.success + 1
@@ -95,6 +107,7 @@ class Get_Data:
             if numItems < 30:
                 result = self.GetWrite_One(coordsObj, (url + "&request_origin=user"), headers)
             else:
+                numItems = numItems - (numItems % 30) - 30
                 result = True
             while result:
                 numItems = numItems + 30
@@ -152,7 +165,7 @@ def inactive_work():
         proxySystem.Test_Proxy(inActiveProxy, sessionHeader)
 
 #globals
-num_worker_threads = 20
+num_worker_threads = 100
 successes = 0
 failures = 1
 
@@ -175,7 +188,7 @@ if coordsQuery == None:
 
 time.sleep(1)
 
-for i in range(0,20):
+for i in range(0,50):
     l = Thread(target=inactive_work)
     l.daemon = True
     l.start()
