@@ -1,4 +1,4 @@
-import { FireStoreDataService } from './firestore-data.service';
+import { DataService } from './data.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -28,7 +28,7 @@ interface EmailPasswordCredentials {
 export class AuthService {
 
   constructor(
-    private fsDataService: FireStoreDataService,
+    private fsDataService: DataService,
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router

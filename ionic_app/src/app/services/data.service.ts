@@ -20,7 +20,7 @@ interface User {
 
 
 @Injectable({ providedIn: 'root' })
-export class FireStoreDataService {
+export class DataService {
 
 user: Observable<User>;
 
@@ -56,9 +56,14 @@ constructor(
 
     }
 
-    getPlacesDB(id: number) {
-        this.afs.collection('gridPlaces', ref => ref.where('id', '==', id));
+    getPlacesDB(id: string): Observable<firebase.firestore.DocumentSnapshot> {
+        return this.afs.collection('grid').doc(id).get();
     }
+
+    getReviewById(id: string): Observable<firebase.firestore.DocumentSnapshot> {
+        return this.afs.collection('reviews').doc(id).get();
+    }
+
 
 
 }
