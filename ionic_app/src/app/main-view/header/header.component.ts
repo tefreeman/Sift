@@ -1,5 +1,5 @@
+import { ItemsService } from './../../services/items.service';
 import { Component, OnInit } from '@angular/core';
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -7,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private itemsService: ItemsService) { }
 
   ngOnInit() {
+    this.itemsService.getItems('TODO_filterObj')
+    .subscribe(function(data) {console.log(data); });
   }
 
 }

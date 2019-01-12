@@ -40,8 +40,6 @@ constructor(
             }
             })
         );
-
-        //// Get grided places api db
     }
     updateUserData(user) {
     // Sets user data to firestore on login
