@@ -62,5 +62,8 @@ constructor(
         this.afs.collection('gridPlaces', ref => ref.where('id', '==', id));
     }
 
+    getUser() {
+        return this.user;
+    }
 
 }

@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import {ReactiveFormsModule, FormGroup, FormBuilder, Validators} from '@angular/forms';
@@ -16,7 +17,6 @@ export class SignUpComponent implements OnInit {
   */
 
  userForm: FormGroup;
-
  formErrors = {
    'email': '',
    'password': ''
@@ -47,7 +47,11 @@ export class SignUpComponent implements OnInit {
    }
 
    signupWithEmail(): void {
-     this.auth.emailSignUp(this.userForm.value);
+     this.auth.emailSignUp(this.userForm.value).then(function(success) {
+     },
+     function(error) {
+       console.log(error);
+     });
    }
 
    loginWithGoogle(): void {
