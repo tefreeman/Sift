@@ -72,8 +72,7 @@ private gridId: Observable<any>;
      this.watch.subscribe((d) => {
       let pt = closest(this.sortedGpsGrid, 'lat', d.coords.latitude);
       console.log(distance('k', d.coords.latitude, d.coords.longitude, pt.lat, pt.lon  ));
-     })
-    }
+     })  }
 
   getGpsCoords(): Observable<Geoposition> {
     return this.watch;

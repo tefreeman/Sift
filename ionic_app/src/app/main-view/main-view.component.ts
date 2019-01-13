@@ -1,3 +1,4 @@
+import { LocalDbService } from './../services/local-db.service';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { GpsService } from '../services/gps.service';
@@ -8,10 +9,10 @@ import { GpsService } from '../services/gps.service';
 })
 export class MainViewComponent implements OnInit {
 
-  constructor(private auth: AuthService, private testGps: GpsService) { }
+  constructor(private auth: AuthService, private localDb: LocalDbService) { }
 
   ngOnInit() {
-    this.testGps.getGpsCoords().subscribe((d) => console.log(d));
+    this.localDb.loadDB().then()
   }
 
   testLogout() {
