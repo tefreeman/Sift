@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 import { Observable } from 'rxjs';
-import { subscribeOn, concatMap } from 'rxjs/operators';
+import { subscribeOn, concatMap, first, map, filter, skip } from 'rxjs/operators';
 import { sortedChanges } from '@angular/fire/firestore';
-import {map} from 'rxjs/operators'
 import { ObserveOnOperator } from 'rxjs/internal/operators/observeOn';
 /**
 * Returns the closest number from a sorted array.
@@ -55,7 +54,8 @@ else {
 export class GpsService {
 
 //TODO set var from cloud store config
-private minEdgeDistance = 15;
+private CONFIG_distanceToChangeGridKM = 20;
+
 private sortedGpsGrid = [
   { 'lat': 2, 'lon': 82, subCoords: [
     {'id': 0, 'lat': 3, 'lon': 83,},
@@ -77,25 +77,50 @@ private sortedGpsGrid = [
 
 private watch: Observable<Geoposition>
 private gridId: Observable<any>;
+private currentGrid;
 
     constructor(private geolocation: Geolocation) {
      this.watch = this.geolocation.watchPosition();
-
-     this.gridId = this.watch.pipe(
+     
+     const firstGpsObs = this.watch.pipe(
+     first(),
      map( (userPos) => {
       const outerSearch = closest(this.sortedGpsGrid, 'lat', userPos.coords.latitude).subCoords;
       let closestDist = 999999;
-      let id;
+      let closestGrid;
       for (let i = 0 ; i < outerSearch.length; i++) {
         let dist  = distance('k', userPos.coords.latitude, userPos.coords.longitude, outerSearch[i].lat, outerSearch[i].lon)
         if (dist < closestDist) {
           closestDist = dist;
-          id = outerSearch[i].id;
+          closestGrid = outerSearch[i]
         }
       }
-      return id;
+      this.currentGrid = closestGrid;
+      return closestGrid.id;
      })
      )
+
+     const afterFirstGpsObs = this.watch.pipe(
+      skip(1),
+      filter( (userPos) => distance('k', userPos.coords.latitude,
+       userPos.coords.longitude, this.currentGrid.lat, this.currentGrid.lon ) > this.CONFIG_distanceToChangeGridKM),
+      map( (userPos) => {
+       const outerSearch = closest(this.sortedGpsGrid, 'lat', userPos.coords.latitude).subCoords;
+       let closestDist = 999999;
+       let closestGrid;
+       for (let i = 0 ; i < outerSearch.length; i++) {
+         let dist  = distance('k', userPos.coords.latitude, userPos.coords.longitude, outerSearch[i].lat, outerSearch[i].lon)
+         if (dist < closestDist) {
+           closestDist = dist;
+           closestGrid = outerSearch[i]
+         }
+       }
+       this.currentGrid = closestGrid;
+       return closestGrid.id;
+      })
+      )
+ 
+
     }
 
   getGpsCoords(): Observable<Geoposition> {
