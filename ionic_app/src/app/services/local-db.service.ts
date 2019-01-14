@@ -1,78 +1,101 @@
+
+import { RequestFileCacheService } from './cache/request-file-cache.service';
 import { Injectable } from '@angular/core';
 import * as Loki from 'lokijs';
 import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
-import { promise } from 'protractor';
+import { Observable, pipe, merge} from 'rxjs';
+import { map, mapTo, filter, concatMap, switchMap, flatMap, tap} from 'rxjs/operators'
+import { DataService } from './data.service';
+import { database } from 'firebase';
 
 @Injectable({providedIn: 'root'})
 export class LocalDbService {
+ 
  private db: Loki;
- private restaurants: any;
- private items: any;
- private testSeralizedJSON = {"filename":"localData.db","collections":[{"name":"restaurants","data":[{"test":"data","meta":{"revision":0,"created":1547349209231,"version":0},"$loki":1},{"test":"data","meta":{"revision":0,"created":1547349357547,"version":0},"$loki":2}],"idIndex":[1,2],"binaryIndices":{},"constraints":null,"uniqueNames":[],"transforms":{},"objType":"restaurants","dirty":true,"cachedIndex":null,"cachedBinaryIndex":null,"cachedData":null,"adaptiveBinaryIndices":true,"transactional":false,"cloneObjects":false,"cloneMethod":"parse-stringify","asyncListeners":false,"disableMeta":false,"disableChangesApi":true,"disableDeltaChangesApi":true,"autoupdate":false,"serializableIndices":true,"ttl":null,"maxId":2,"DynamicViews":[],"events":{"insert":[],"update":[],"pre-insert":[],"pre-update":[],"close":[],"flushbuffer":[],"error":[],"delete":[null],"warning":[null]},"changes":[]},{"name":"items","data":[{"test":"data","meta":{"revision":0,"created":1547349209231,"version":0},"$loki":1},{"test":"data","meta":{"revision":0,"created":1547349357547,"version":0},"$loki":2}],"idIndex":[1,2],"binaryIndices":{},"constraints":null,"uniqueNames":[],"transforms":{},"objType":"items","dirty":true,"cachedIndex":null,"cachedBinaryIndex":null,"cachedData":null,"adaptiveBinaryIndices":true,"transactional":false,"cloneObjects":false,"cloneMethod":"parse-stringify","asyncListeners":false,"disableMeta":false,"disableChangesApi":true,"disableDeltaChangesApi":true,"autoupdate":false,"serializableIndices":true,"ttl":null,"maxId":2,"DynamicViews":[],"events":{"insert":[],"update":[],"pre-insert":[],"pre-update":[],"close":[],"flushbuffer":[],"error":[],"delete":[null],"warning":[null]},"changes":[]}],"databaseVersion":1.5,"engineVersion":1.5,"autosave":true,"autosaveInterval":4000,"autosaveHandle":null,"throttledSaves":true,"options":{"autosave":true,"autoload":true,"autosaveInterval":4000,"adapter":null,"serializationMethod":"normal","destructureDelimiter":"$<\n","recursiveWait":true,"recursiveWaitLimit":false,"recursiveWaitLimitDuration":2000,"started":1547349357490},"persistenceMethod":"adapter","persistenceAdapter":null,"verbose":false,"events":{"init":[null],"loaded":[],"flushChanges":[],"close":[],"changes":[],"warning":[]},"ENV":"BROWSER"};
-  constructor() {
-  }
+ private adapter;
+ private readyObservable;
+ private cols = {'restaurants': null, 'items': null};
 
-  private loadCollections() {
-    return new Promise((resolve, reject) => {
-      this.restaurants =  this.db.getCollection('restaurants');
-      this.items = this.db.getCollection('items');
-      resolve();
+
+   constructor(private fileCache: RequestFileCacheService, private dataService: DataService) {
+    this.adapter = new LokiIndexedAdapter();
+    this.db = new Loki('localData', {
+      verbose: true,
+      destructureDelimiter: '='
     });
-}
-
-  private loadHandler() {
-
-    // if database did not exist it will be empty so I will intitialize here
-      this.loadCollections().then(() => {
-        if (this.items === null || this.restaurants === null) {
-
-          console.log('collections null, grabbing from the server');
-          this.db.loadJSONObject(this.testSeralizedJSON);
-    
-            // set it again
-            this.restaurants = this.db.getCollection('restaurants');
-            this.items = this.db.getCollection('items');
-            this.db.saveDatabase();
-
-            if (this.items === null || this.restaurants === null) {
-              console.log('db seralized loading error');
-            }
-
-      }
-      else {
-        // success restaurants and items are loaded
-        console.log('restaurants and items are loaded!')
-      }
-      }, (err) => {
-        console.log('rejected');
-      });
   }
 
-  loadDB() {
-    const promise = new Promise((resolve, reject) => {
-      const adapter = new LokiIndexedAdapter();
-      this.db = new Loki('localData.db', {
-        autosave: true,
-        autoload: true,
-        autosaveInterval: 4 * 1000,
-        adapter: adapter
-      });
 
-      
-      this.db.loadDatabase({}, (err) => {
-        if (err) {
-          console.log("error");
-        }
-        else {
-        this.loadHandler();
-        resolve();
-        }
-      });
-      
+  public getCollection(name: string) {
+    this.initDb(name).subscribe(() => {
+      // After restaurants Db has been loaded
+      console.log(this.db);
+      return this.db.getCollection(name);
     });
-    return promise;
+  }
+
+  public saveDB(fileName: string) {
+    return this.fileCache.writeFile(fileName, this.db.seralize());
+  }
+
+  private initDb(fileName: string) {
+
+     const fileCacheCheck = this.fileCache.checkIfFileCached(fileName);
+     const fileNotCached = fileCacheCheck.pipe(
+       filter((res) => res.code === 1),
+       concatMap( () => {
+        return this.getFromServer();
+       }),
+     );
+     const fileIsCached = fileCacheCheck.pipe(
+       filter((res) => res === true),
+       concatMap( () => {
+        return this.getFromFile(fileName);
+       })
+     );
+
+    return merge(fileNotCached, fileIsCached).pipe(
+    concatMap((jsonData) => {
+      return this.loadJsonIntoCollection(jsonData);
+    })
+    );
+   }
+
+  private getFromFile(colName: string) {
+    return this.fileCache.readAsText(colName);
+  }
+
+  private getFromServer() {
+    return this.dataService.getGridById();
+  }
+
+  private loadJsonIntoCollection(jsonData) {
+    console.log(jsonData);
+    return Observable.create((observer) => {
+      observer.next(this.db.loadJSON((jsonData))); 
+    });
+  }
+
+
+  private checkVersion() {
 
   }
+
+  testFunc() {
+    console.log('fire');
+  }
+  
+
+
+
+
+  // Check Cache and File, Load if exists
+  // If don't exist download file from server and open into collection
+
+// TODO integrate file cache
+
+//TODO verify local db against version from firestore. If outdated download update and reload collections
+// TODO any fileRead errors should
 
 
 }

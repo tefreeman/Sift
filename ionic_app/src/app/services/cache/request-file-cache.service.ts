@@ -1,38 +1,38 @@
 import { Injectable } from '@angular/core';
-import { timeInterval } from 'rxjs/operators';
-import {File} from '@ionic-native/file/ngx';
-
+import {File, IWriteOptions} from '@ionic-native/file/ngx';
+import { from, Observable, of } from 'rxjs';
+import { map, mapTo, filter, concatMap, merge, switchMap} from 'rxjs/operators'
 @Injectable({ providedIn: 'root' })
 export class RequestFileCacheService {
-    constructor(private fileStorage: File) {}
-
-     cache(fileName: string, obj: any) {
-        this.fileStorage.createFile(this.fileStorage.cacheDirectory, fileName, true)
-         .then(
-             () => console.log('success'),
-             err => console.log('error ', err)
-         );
+    private directory;
+    constructor(private fileStorage: File) {
+        this.directory = fileStorage.dataDirectory;
     }
 
-    async clearCachedFile(fileName: string) {
-        this.fileStorage.removeFile(this.fileStorage.cacheDirectory, fileName)
-        .then(
-            () => console.log('success'),
-            err => console.log(err)
-        );
+    cache(fileName: string, obj: any) {
+       return from(this.fileStorage.createFile(this.directory, fileName, true));
     }
 
-    async checkIfFileCached(fileName: string) {
-        let result;
-        await this.fileStorage.checkFile(this.fileStorage.cacheDirectory, fileName)
-        .then(
-            () => result = true,
-            err => result = false,
-        );
-        return result;
+    clearCachedFile(fileName: string) {
+        return from(this.fileStorage.removeFile(this.directory, fileName));
     }
 
+    checkIfFileCached(fileName: string) {
+        return from(this.fileStorage.checkFile(this.directory, fileName).then( (val) => {
+            return true;
+        }, (rejected) => {
+            return rejected;
+        }));
+    }
 
+    readAsText(fileName) {
+        return from(this.fileStorage.readAsBinaryString(this.directory, fileName));
+
+    }
+    //default overwrites
+    writeFile(fileName, data) {
+        return from(this.fileStorage.writeFile(this.directory, fileName, data, {'replace': true} ));
+    }
 
 }
 

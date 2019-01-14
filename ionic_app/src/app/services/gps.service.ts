@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 import { Observable } from 'rxjs';
-import { subscribeOn } from 'rxjs/operators';
+import { subscribeOn, concatMap } from 'rxjs/operators';
 import { sortedChanges } from '@angular/fire/firestore';
-
+import {map} from 'rxjs/operators'
+import { ObserveOnOperator } from 'rxjs/internal/operators/observeOn';
 /**
 * Returns the closest number from a sorted array.
 **/
@@ -56,11 +57,22 @@ export class GpsService {
 //TODO set var from cloud store config
 private minEdgeDistance = 15;
 private sortedGpsGrid = [
-  {'id': 0, 'lat': 2, 'lon': 82},
-  {'id': 1, 'lat': 31, 'lon': 85},
-  {'id': 0, 'lat': 77, 'lon': 82},
-  {'id': 1, 'lat': 74, 'lon': 85},
-  {'id': 2, 'lat': 71, 'lon': 87},
+  { 'lat': 2, 'lon': 82, subCoords: [
+    {'id': 0, 'lat': 3, 'lon': 83,},
+    {'id': 0, 'lat': 4, 'lon': 84,},
+    {'id': 0, 'lat': 4.2, 'lon': 85,},
+    {'id': 0, 'lat': 5, 'lon': 86,},
+    {'id': 0, 'lat': 6, 'lon': 87,},
+  
+  ]},
+  { 'lat': 33, 'lon': -83, subCoords: [
+    {'id': 0, 'lat': 3, 'lon': 83,},
+    {'id': 0, 'lat': 4, 'lon': 84,},
+    {'id': 0, 'lat': 4.2, 'lon': 85,},
+    {'id': 0, 'lat': 5, 'lon': 86,},
+    {'id': 0, 'lat': 6, 'lon': 87,},
+  
+  ]}
 ];
 
 private watch: Observable<Geoposition>
@@ -68,17 +80,29 @@ private gridId: Observable<any>;
 
     constructor(private geolocation: Geolocation) {
      this.watch = this.geolocation.watchPosition();
-     
-     this.watch.subscribe((d) => {
-      let pt = closest(this.sortedGpsGrid, 'lat', d.coords.latitude);
-      console.log(distance('k', d.coords.latitude, d.coords.longitude, pt.lat, pt.lon  ));
-     })  }
+
+     this.gridId = this.watch.pipe(
+     map( (userPos) => {
+      const outerSearch = closest(this.sortedGpsGrid, 'lat', userPos.coords.latitude).subCoords;
+      let closestDist = 999999;
+      let id;
+      for (let i = 0 ; i < outerSearch.length; i++) {
+        let dist  = distance('k', userPos.coords.latitude, userPos.coords.longitude, outerSearch[i].lat, outerSearch[i].lon)
+        if (dist < closestDist) {
+          closestDist = dist;
+          id = outerSearch[i].id;
+        }
+      }
+      return id;
+     })
+     )
+    }
 
   getGpsCoords(): Observable<Geoposition> {
     return this.watch;
   }
 
-  getGridId(): Observable<any> {
+  getGridId(): Observable<number> {
     return this.gridId;
   }
 
