@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
-import { Observable } from 'rxjs';
-import { subscribeOn, concatMap, first, map, filter, skip } from 'rxjs/operators';
+import { Observable, merge } from 'rxjs';
+import { subscribeOn, concatMap, first, map, filter, skip} from 'rxjs/operators';
 import { sortedChanges } from '@angular/fire/firestore';
 import { ObserveOnOperator } from 'rxjs/internal/operators/observeOn';
 /**
@@ -59,18 +59,18 @@ private CONFIG_distanceToChangeGridKM = 20;
 private sortedGpsGrid = [
   { 'lat': 2, 'lon': 82, subCoords: [
     {'id': 0, 'lat': 3, 'lon': 83,},
-    {'id': 0, 'lat': 4, 'lon': 84,},
-    {'id': 0, 'lat': 4.2, 'lon': 85,},
-    {'id': 0, 'lat': 5, 'lon': 86,},
-    {'id': 0, 'lat': 6, 'lon': 87,},
+    {'id': 1, 'lat': 4, 'lon': 84,},
+    {'id': 2, 'lat': 4.2, 'lon': 85,},
+    {'id': 3, 'lat': 5, 'lon': 86,},
+    {'id': 4, 'lat': 6, 'lon': 87,},
   
   ]},
   { 'lat': 33, 'lon': -83, subCoords: [
     {'id': 0, 'lat': 3, 'lon': 83,},
-    {'id': 0, 'lat': 4, 'lon': 84,},
-    {'id': 0, 'lat': 4.2, 'lon': 85,},
-    {'id': 0, 'lat': 5, 'lon': 86,},
-    {'id': 0, 'lat': 6, 'lon': 87,},
+    {'id': 1, 'lat': 4, 'lon': 84,},
+    {'id': 2, 'lat': 4.2, 'lon': 85,},
+    {'id': 3, 'lat': 5, 'lon': 86,},
+    {'id': 4, 'lat': 6, 'lon': 87,},
   
   ]}
 ];
@@ -81,7 +81,6 @@ private currentGrid;
 
     constructor(private geolocation: Geolocation) {
      this.watch = this.geolocation.watchPosition();
-     
      const firstGpsObs = this.watch.pipe(
      first(),
      map( (userPos) => {
@@ -119,7 +118,8 @@ private currentGrid;
        return closestGrid.id;
       })
       )
- 
+    
+    this.gridId = merge(firstGpsObs, afterFirstGpsObs);
 
     }
 

@@ -1,0 +1,16 @@
+{
+  "name": "backendfunctions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gpsGenerator.js",
+  "scripts": {
+    "start": "node gpsGenerator.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fast-haversine": "^1.0.0",
+    "geolib": "^2.0.24"
+  }
+}

@@ -65,6 +65,7 @@ constructor(
     //TODO for some reason keeps hitting non stop fixed
     getGridById(): Observable<any> {
        return this.gpsService.getGridId().pipe (
+        tap((x) => console.log(x)),
         distinctUntilChanged(),
         concatMap((id) => {
             return this.afs.collection('grid').doc(id.toString()).get();
