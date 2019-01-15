@@ -9,6 +9,12 @@ from pprint import pprint
 from lxml import html
 from functools import total_ordering
 import sys
+
+def RESET_ALL_PROXIES():
+    proxiesDB = DataStore('localhost', 27017,'proxies','proxies')
+    proxiesDB.Update({}, {'$set' : {'inUse': False, 'online': True, 'successes': 0, 'failures': 0, 'avgRequestTime': 1}})
+
+RESET_ALL_PROXIES()
 @total_ordering
 class KeyDict(object):
     def __init__(self, key, dct):
