@@ -165,7 +165,7 @@ function getAllCoordsUS() {
     for (let i = 22.0; i < 50.0; i  = i + 0.25000){
         for(let j = -130.0; j < -60.0; j = j+ 0.25000) {
             let location = [j,i];
-            let myKey = `${j}-${i}`;
+            let myKey = `${j},${i}`;
             gpsObj.push({'key': myKey, 'location': location});
             id++;
     
