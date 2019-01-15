@@ -3,11 +3,11 @@ const geolib = require('geolib');
 
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const fs = require('fs');
+const Loki = require('lokijs');
 
 //avl tree
 const AVLTree = require('avl');
-
-    
 
 
 // Connection URL
@@ -144,7 +144,7 @@ function insertRestaurantsFromCoords(){
 }
 
 
-
+//insertRestaurantsFromCoords().then();
 
 
 
@@ -204,21 +204,30 @@ function fillGrid() {
         
             // Get the documents collection
             const collection = db.collection('restaurants');
+            const collectionGrid = db.collection('grid');
 
             collection.find({}).toArray(function(err, docs) {
                 let obj = getAllCoordsUS();
                 let coords = obj[0];
                 let maxDistance = obj[1];
-
-            for(let i = 0; i < 50; i++) {
+            
+                while(coords.length > 0) {
+                    let localCoords = coords.pop();
                 collection.find({ 'location':   {
-                     '$geoWithin': { '$centerSphere': [[-88, 30], (maxDistance/ 1000 )/ 6378.15214 ] } 
+                     '$geoWithin': { '$centerSphere': [localCoords['location'], (maxDistance/ 1000 )/ 6378.15214 ] } 
                 } }).toArray(function(err, docs) {
                 if (err) {console.log(err);}
-                    console.log(docs);
-                    coords[i]['items'] = docs;
+                if (docs.length > 0) {
+                    localCoords['items'] = docs;
+                    collectionGrid.insertOne(localCoords, function(err, result) {
+                        assert.equal(err, null);
+                        assert.equal(1, result.result.n);
+                        assert.equal(1, result.ops.length);
+            
                     })
                 }
+                });
+            }
            // client.close();
             resolve();
             })
@@ -226,8 +235,38 @@ function fillGrid() {
     }) 
 }
 
-fillGrid().then((d) => {console.log(d)});
+//fillGrid().then((d) => {console.log(d)});
 
+function writeLokiDbs() {
+    return new Promise( (resolve) => {
+        client.connect(function(err) {
+            assert.equal(null, err);
+            console.log("Connected successfully to server");
+        
+            const db = client.db('places');
+        
+            // Get the documents collection
+            const collection = db.collection('grid'); 
+            collection.find({}).toArray(function(err, docs) {
+                for (let i = 0; i < docs.length; i++) {
+                    
+                    let tmpLokiDb = new Loki(docs[i]['key']);
+                    let col = tmpLokiDb.addCollection('restaurants');
+                    col.insert(docs[i]['items']);
+                    let string = tmpLokiDb.serialize();
+                    fs.writeFileSync("C:/Users/trevo/Documents/projects/foodApp/backendFunctions/testJsonObj/" + docs[i]['key'] + '.json', string, function(err) {
+                        if(err) {
+                            return console.log(err);
+                        }
+                    });
+                }
+                client.close();
+            });
+        })
+    })
+}
+
+writeLokiDbs().then();
 
 
 
