@@ -45,12 +45,12 @@ class Get_Data:
                 url = url + part
         return url
 
-    def GetWrite_One(self, coordsObj, url, headers, times = 0):
+    def GetWrite_One(self, coordsObj, url, times = 0):
         try:
             global successes
             global failures
 
-            getResult = driver.api_request_with_session(url, self.session, headers)
+            getResult = driver.api_request_with_session(url, self.session, self.session.headers)
             self.totalTime = self.totalTime + getResult.elapsed.seconds
 
             jsonObj =  json.loads(getResult.content)
@@ -64,8 +64,8 @@ class Get_Data:
                     self.success = self.success + 1
                     successes = successes + 1
                 return False #exit crawling gps coords
-        
-            for item in jsonObj['searchPageProps']['searchResultsProps']['searchResults']:
+            
+            for i, item in enumerate(jsonObj['searchPageProps']['searchResultsProps']['searchResults']):
                item['loc'] =  jsonObj['searchPageProps']['searchMapProps']['mapState']['markers'][i]['location']
                 
             writeResult = dbGps.Update({'_id': coordsObj['_id']}, {'$addToSet': {'items': {'$each': jsonObj['searchPageProps']['searchResultsProps']['searchResults']} }})
@@ -89,19 +89,21 @@ class Get_Data:
                 self.failure = self.failure + 1
                 failures = failures + 1
             self._fix_proxy()
-            return self.GetWrite_One(coordsObj, url, headers, times+1)
+            return self.GetWrite_One(coordsObj, url, times+1)
 
 
-    def Get_All(self, coordsObj, urlParts, headers):
+    def Get_All(self, coordsObj, urlParts):
             url = self.__gen_url(coordsObj['coords'], urlParts)
             numItems = len(coordsObj['items'])
             if numItems < 30:
-                result = self.GetWrite_One(coordsObj, (url + "&request_origin=user"), headers)
+                self.session.headers['referer'] =  url
+                result = self.GetWrite_One(coordsObj, (url + "&request_origin=user"))
             else:
                 result = True
             while result:
+                self.session.headers['referer'] =  url + "&start=" + str(numItems)
                 numItems = numItems + 30
-                result = self.GetWrite_One(coordsObj, (url + "&start=" + str(numItems) + "&request_origin=user"), headers)
+                result = self.GetWrite_One(coordsObj, (url + "&start=" + str(numItems) + "&request_origin=user"))
 
                # time.sleep(random.randint(1,2)) &start=30
     def getAvgTime(self):
@@ -115,7 +117,7 @@ def crawl_coords(coordsObj):
     #setup
 
     ua = UserAgent()
-    sessionHeader = OrderedDict({ "accept": '*/*, text/plain, */*', 'accept-encoding': 'gzip, deflate, br', 'accept-language': 'en-US,en;q=0.9',
+    sessionHeader = OrderedDict({ "accept": '*/*', 'accept-encoding': 'gzip, deflate, br', 'accept-language': 'en-US,en;q=0.9',
      'referer': 'https://www.yelp.com', 'user-agent': ua.random})
     
     with threadLock:
@@ -123,8 +125,7 @@ def crawl_coords(coordsObj):
     work = Get_Data(sessionHeader, proxy)
     #time.sleep(random.randint(1,120))
 
-    work.Get_All(coordsObj, ("https://www.yelp.com/search/snippet?find_desc=Restaurants&l=g%3A","$topRightLon","%2C", "$topRightLat", "%2C", "$botLeftLon", "%2C", "$botLeftLat"), 
-    {'referer': 'https://www.yelp.com'})
+    work.Get_All(coordsObj, ("https://www.yelp.com/search/snippet?find_desc=Restaurants&l=g%3A","$topRightLon","%2C", "$topRightLat", "%2C", "$botLeftLon", "%2C", "$botLeftLat"))
     
     proxySystem.Return_Proxy(proxy, work.getAvgTime(), True )
 
@@ -155,7 +156,7 @@ def inactive_work():
         proxySystem.Test_Proxy(inActiveProxy, sessionHeader)
 
 #globals
-num_worker_threads = 150
+num_worker_threads = 20
 successes = 0
 failures = 1
 
@@ -178,7 +179,7 @@ if coordsQuery == None:
 
 time.sleep(1)
 
-for i in range(0,20):
+for i in range(0,10):
     l = Thread(target=inactive_work)
     l.daemon = True
     l.start()

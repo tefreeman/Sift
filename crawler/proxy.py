@@ -120,7 +120,7 @@ class Heap_Proxy:
 
 class Proxy_System:
     def __init__(self, heapProxyGetSize):
-        self.proxies = Heap_Proxy(heapProxyGetSize*10)
+        self.proxies = Heap_Proxy(heapProxyGetSize*3)
         self.driver = Browser()
         self.testUrl = "https://www.google.com/"
         self.count = 0
