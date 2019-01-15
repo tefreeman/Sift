@@ -11,12 +11,12 @@ width = 4800
 height = 3000
 
 # resolution (yelp 50 miles)
-res = 100
+res = 20
 
 coords = []
 #start point top left of rect box
-lat = 48.484779
-lon = -125.065144
+lat = 50.484779
+lon = -128.065144
 
 start = distance.Point(lat, lon)
 while height > 0:

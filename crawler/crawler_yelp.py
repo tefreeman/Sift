@@ -60,6 +60,9 @@ class Get_Data:
                 print('no results')
                 dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'isFinished': True}})
                 dbGps.Update_One({'_id': coordsObj['_id']}, {'$set': {'lastUpdate': time.time()}})
+                with threadLock:
+                    self.success = self.success + 1
+                    successes = successes + 1
                 return False #exit crawling gps coords
         
             for item in jsonObj['searchPageProps']['searchResultsProps']['searchResults']:
@@ -152,7 +155,7 @@ def inactive_work():
         proxySystem.Test_Proxy(inActiveProxy, sessionHeader)
 
 #globals
-num_worker_threads = 20
+num_worker_threads = 150
 successes = 0
 failures = 1
 
