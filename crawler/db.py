@@ -30,17 +30,17 @@ class DataStore:
             doc =  self.collection.find(conditions)
             return doc
     
-    def Find_Many(self, conditions, limitAmount=100000):
-            c = self.collection.find(conditions).limit(limitAmount)
+    def Find_Many(self, conditions, limitAmount=0):
+            c = self.collection.find(conditions)
             return list(c)
 
-    def Update_One(self, condition, u_Condition):
-            updateResult = self.collection.update_one(condition, u_Condition)
+    def Update_One(self, condition, u_Condition, _upsert=False):
+            updateResult = self.collection.update_one(condition, u_Condition, upsert=_upsert)
             return updateResult
 
-    def Update_Many(self, condition, u_condition):
+    def Update_Many(self, condition, u_condition, _upsert=False):
 
-            updateResult = self.collection.update_many(condition, u_condition)
+            updateResult = self.collection.update_many(condition, u_condition, upsert=_upsert)
             return updateResult
    
     def Update(self, condition, u_condition):

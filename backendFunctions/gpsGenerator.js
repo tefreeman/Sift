@@ -51,11 +51,16 @@ function getYelpCoords(dbName) {
                 let total = 0;
                 for(let j = 0; j < docs.length; j++) {
                     let doc = docs[j];
-                    for (let i = 0; i < doc['items'].length; i++) {
-                        total++;
-                        tree.insert(doc['items'][i]['bizId'], doc['items'][i]);
-                        
-                    }
+                        for (let i = 0; i < doc['items'].length; i++) {
+                            if (doc['items'][i]['bizId'] != null)
+                            {
+                            total++;
+                            tree.insert(doc['items'][i]['bizId'], doc['items'][i]);
+                            } else {
+                                console.log('null');
+                            }
+                            
+                        }
                 }
 
                 client.close();
@@ -66,6 +71,14 @@ function getYelpCoords(dbName) {
 
     });
 }
+
+getYelpCoords('yelp').then((res) => {
+    let count = 0
+    res.forEach( (n) => {
+        count++;
+    })
+    console.log(count);
+})
 
 function cleanCategories(cats) {
     let arr = [];
@@ -266,7 +279,7 @@ function writeLokiDbs() {
     })
 }
 
-writeLokiDbs().then();
+//writeLokiDbs().then();
 
 
 

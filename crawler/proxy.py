@@ -12,9 +12,9 @@ import sys
 
 def RESET_ALL_PROXIES():
     proxiesDB = DataStore('localhost', 27017,'proxies','proxies')
-    proxiesDB.Update({}, {'$set' : {'inUse': False, 'online': True, 'successes': 0, 'failures': 0, 'avgRequestTime': 1}})
-
-RESET_ALL_PROXIES()
+    result = proxiesDB.Update_Many({ }, {'$set' : {'inUse': False, 'online': True, 'successes': 1, 'failures': 0, 'avgRequestTime': 1.0}})
+    print(result)
+#RESET_ALL_PROXIES()
 @total_ordering
 class KeyDict(object):
     def __init__(self, key, dct):
@@ -48,28 +48,25 @@ class Heap_Proxy:
         return result
 
     def __Load_Heap(self, activeHeap = True, inactiveHeap = True):
-        proxyList = self.dataStore.Find_Many({'inUse': False}, limitAmount=self.limit)
+        proxyList = self.dataStore.Find_Many({})
         if activeHeap and inactiveHeap:
             self.active_proxy_heap = []
             self.inactive_proxy_heap = []
             for doc in proxyList:
-                self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true
-                if doc['online'] == True:
-                    heapq.heappush(self.active_proxy_heap, self.__Make_Sortable_Dict(doc))
-                else:          
-                    heapq.heappush(self.inactive_proxy_heap, self.__Make_Sortable_Dict(doc))
+                    if doc['online'] == True:
+                        heapq.heappush(self.active_proxy_heap, self.__Make_Sortable_Dict(doc))
+                    else:          
+                        heapq.heappush(self.inactive_proxy_heap, self.__Make_Sortable_Dict(doc))
         elif activeHeap:
             self.active_proxy_heap = []
             for doc in proxyList:
-                if doc['inUse'] == False:
-                    self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true
-                    heapq.heappush(self.active_proxy_heap, self.__Make_Sortable_Dict(doc))
+                if doc['online'] == True:
+                        heapq.heappush(self.active_proxy_heap, self.__Make_Sortable_Dict(doc))
         elif inactiveHeap:
             self.inactive_proxy_heap = []
             for doc in proxyList:
-                if doc['inUse'] == False:
-                    self.__UpdateInUse(doc, True) # sets inUse in monogoDB to true     
-                    heapq.heappush(self.inactive_proxy_heap, self.__Make_Sortable_Dict(doc))
+                if doc['online'] == False:
+                        heapq.heappush(self.inactive_proxy_heap, self.__Make_Sortable_Dict(doc))
 
 
     
@@ -126,9 +123,9 @@ class Heap_Proxy:
 
 class Proxy_System:
     def __init__(self, heapProxyGetSize):
-        self.proxies = Heap_Proxy(heapProxyGetSize*3)
+        self.proxies = Heap_Proxy(heapProxyGetSize*100)
         self.driver = Browser()
-        self.testUrl = "https://www.google.com/"
+        self.testUrl = "https://www.yelp.com/"
         self.count = 0
         self.maxLoadNew = 10000
         self.totalCount = 0
@@ -147,7 +144,7 @@ class Proxy_System:
     def Test_Proxy(self , proxy, headers):
         try:
                 result = self.driver.api_request(self.testUrl, proxy, headers=headers)
-                proxy['avgRequestTime'] = result.elapsed.seconds
+                proxy['avgRequestTime'] = result.elapsed.microseconds / 1000000.0
                 proxy['successes'] = proxy['successes'] + 1
                 self.proxies.Return(proxy, True)
                 return True
@@ -184,8 +181,6 @@ class Proxy_System:
             self.count = 0
             self.Add_New_Proxies('https://www.sslproxies.org/')
             print(self.totalCount, " items processed")
-
-
 
         proxy = self.proxies.Get()
         return proxy

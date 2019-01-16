@@ -7,11 +7,11 @@ db = DataStore('127.0.0.1', 27017,'yelp','coords')
 # round gps coords to x decimal places
 numDecimals = 7
 # size of rectangle
-width = 4800
-height = 3000
+width = 5000
+height = 3200
 
 # resolution (yelp 50 miles)
-res = 20
+res = 50
 
 coords = []
 #start point top left of rect box
