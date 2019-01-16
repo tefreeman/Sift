@@ -22,20 +22,20 @@ class ProxyGrabber:
         self.proxy_list = AVLTree()
         self.checked_proxies = AVLTree()
 
-    def build_proxy_obj(self, ip, port):
+    def _build_proxy_obj(self, ip, port):
         return {'ip': ip, 'port': port, 'successes': 0, 'failures': 0, 'online': True, 'inUse': False, 'avgReqTime': 0}
 
-    def proxy_key(self, proxy):
+    def _proxy_key(self, proxy):
         return proxy['ip'] + proxy['port']
 
     def add_proxies_from_db(self):
         proxy_list = self.proxyDb.Find_Many({})
         for proxy in proxy_list:
-            self.proxy_list.insert(self.proxy_key(proxy), proxy)
+            self.proxy_list.insert(self._proxy_key(proxy), proxy)
 
     def add_proxies(self, proxies):
         for proxy in proxies:
-            self.proxy_list.insert(self.proxy_key(proxy), proxy)
+            self.proxy_list.insert(self._proxy_key(proxy), proxy)
 
     def get_useragent(self):
         return {'user-agent': ua.random}
@@ -60,7 +60,7 @@ class ProxyGrabber:
     def load_proxies(self):
         proxies = self.proxyDb.Find_Many({'waitTil': {'$lt':time.time()}})
         for proxy in proxies:
-            self.proxy_list.insert(self.proxy_key(proxy), proxy)
+            self.proxy_list.insert(self._proxy_key(proxy), proxy)
 
     def save_proxy(self, proxy):
         self.proxyDb.Update_One({'ip': proxy['ip'], 'port': proxy['port']}, proxy, True)
@@ -128,7 +128,7 @@ class ProxyGrabber:
                 checked_proxy_list.append(elem)
 
         for proxy in checked_proxy_list:
-            self.checked_proxies.insert(self.proxy_key(proxy), proxy)
+            self.checked_proxies.insert(self._proxy_key(proxy), proxy)
 
     def check_proxy(self):
         pass
@@ -158,7 +158,7 @@ class ProxyGrabber:
                                     port = elem
                                     break
                     if ip != '' and port != '':
-                            proxy_list.append(self.build_proxy_obj(ip, port)) 
+                            proxy_list.append(self._build_proxy_obj(ip, port)) 
             return proxy_list
 def check_proxy(proxy):
         proxyUrl = 'http://' + proxy['ip'] + ':' + proxy['port']
