@@ -1,17 +1,20 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-
 import { auth } from 'firebase/app';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection} from '@angular/fire/firestore';
-import { Observable, of, from} from 'rxjs';
-import {concatMap, map, tap, distinctUntilChanged} from 'rxjs/operators';
-import { switchMap} from 'rxjs/operators';
-import { first } from 'rxjs/operators';
-import { GpsService } from './gps.service';
-import { AngularFireStorage, StorageBucket } from '@angular/fire/storage';
+import { from, Observable, of, zip } from 'rxjs';
+import {
+    concatMap, distinctUntilChanged, first, flatMap, map, switchMap, tap
+} from 'rxjs/operators';
+
 import { HttpClient } from '@angular/common/http';
 import { ThrowStmt } from '@angular/compiler';
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import {
+    AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument
+} from '@angular/fire/firestore';
+import { AngularFireStorage, StorageBucket } from '@angular/fire/storage';
+import { Router } from '@angular/router';
+
+import { GpsService } from './gps.service';
 
 interface User {
     uid: string;
@@ -62,27 +65,23 @@ constructor(
     return userRef.set(data, { merge: true });
 
     }
-    //TODO for some reason keeps hitting non stop fixed
-    getGridById(): Observable<any> {
-       return this.gpsService.getGridId().pipe (
-        tap((x) => console.log(x)),
-        distinctUntilChanged(),
-        concatMap((id) => {
-            return this.afs.collection('grid').doc(id.toString()).get();
-        }),
-        concatMap( (doc) => {
-            console.log(doc.get('url'));
-            return from(this.storage.storage.refFromURL(doc.get('url')).getDownloadURL());
-        }),
-        concatMap((url) => {
-            console.log(url);
-           return this.http.get(url, {responseType: 'json'}).pipe(
-               //TODO remove stringify and add compression to google file storage 
-               map( (data) =>  JSON.stringify(data))
-           )
-        })
-        );
 
+    getGridByKey(key): Observable<any> {
+
+
+        return this.afs.collection('grid').doc(key).get().pipe(
+            concatMap( (doc) => {
+                console.log(doc.get('url'));
+                return from(this.storage.storage.refFromURL(doc.get('url')).getDownloadURL());
+            }),
+            concatMap((url) => {
+                console.log(url);
+            return this.http.get(url, {responseType: 'json'}).pipe(
+                //TODO remove stringify and add compression to google file storage 
+                map( (data) =>  JSON.stringify(data))
+            )
+            })
+            );
     }
 
     getReviewById(id: string): Observable<firebase.firestore.DocumentSnapshot> {

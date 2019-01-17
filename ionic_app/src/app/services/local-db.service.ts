@@ -1,36 +1,43 @@
-
-import { RequestFileCacheService } from './cache/request-file-cache.service';
-import { Injectable } from '@angular/core';
+import { database } from 'firebase';
 import * as Loki from 'lokijs';
 import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
-import { Observable, pipe, merge} from 'rxjs';
-import { map, mapTo, filter, concatMap, switchMap, flatMap, tap} from 'rxjs/operators'
+import { merge, Observable, pipe } from 'rxjs';
+import {
+    catchError, concat, concatMap, filter, flatMap, map, mapTo, switchMap, tap
+} from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
+
+import { RequestFileCacheService } from './cache/request-file-cache.service';
 import { DataService } from './data.service';
-import { database } from 'firebase';
+import { GpsService } from './gps.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class LocalDbService {
- 
- private db: Loki;
- private adapter;
- private readyObservable;
- private cols = {'restaurants': null, 'items': null};
+  private db: Loki;
+  private adapter;
+  private readyObservable;
+  private cols = { restaurants: null, items: null };
+  private gridKey: Observable<any>;
 
-
-   constructor(private fileCache: RequestFileCacheService, private dataService: DataService) {
+  constructor(
+    private fileCache: RequestFileCacheService,
+    private dataService: DataService,
+    private gpsService: GpsService
+  ) {
+    this.gridKey = this.gpsService.getGridKey().pipe(filter((val) => val !== null  ));
     this.adapter = new LokiIndexedAdapter();
-    this.db = new Loki('localData', {
+    this.db = new Loki("localData", {
       verbose: true,
-      destructureDelimiter: '='
+      destructureDelimiter: "="
     });
   }
 
-
   public getCollection(name: string) {
-    this.initDb(name).subscribe(() => {
-      // After restaurants Db has been loaded
+    this.gridKey.subscribe((key) => {
+      console.log(key);
+      this.loadDb(key).subscribe((r) => console.log('db done!'))
       console.log(this.db);
-      return this.db.getCollection(name);
     });
   }
 
@@ -38,64 +45,61 @@ export class LocalDbService {
     return this.fileCache.writeFile(fileName, this.db.seralize());
   }
 
-  private initDb(fileName: string) {
+  private loadDb(key: string) {
 
-     const fileCacheCheck = this.fileCache.checkIfFileCached(fileName);
-     const fileNotCached = fileCacheCheck.pipe(
-       filter((res) => res.code === 1),
-       concatMap( () => {
-        return this.getFromServer();
-       }),
-     );
-     const fileIsCached = fileCacheCheck.pipe(
-       filter((res) => res === true),
-       concatMap( () => {
-        return this.getFromFile(fileName);
-       })
-     );
-
-    return merge(fileNotCached, fileIsCached).pipe(
-    concatMap((jsonData) => {
-      return this.loadJsonIntoCollection(jsonData);
-    })
+    const fileNotCached$ = this.getFromServer(key).pipe(
+      tap(() => console.log('file not cached')),
+      // write data to file storage
+      tap(db => {
+        this.fileCache.writeFile(key, db);
+      })
     );
-   }
 
+    const tryFileCached$ = this.getFromFile(key).pipe(
+      catchError((err) => {
+        console.log(err);
+        return fileNotCached$;
+      }),
+      tap(() => console.log('file is cached')),
+    );
+
+    return tryFileCached$.pipe(
+      concatMap((data) => {
+        return this.loadJsonIntoCollection(data)
+      })
+    )
+  }
+
+
+  
   private getFromFile(colName: string) {
+    console.log(colName);
+    console.log('getting from file')
     return this.fileCache.readAsText(colName);
   }
 
-  private getFromServer() {
-    return this.dataService.getGridById();
+  private getFromServer(key) {
+    console.log('getting from server')
+    return this.dataService.getGridByKey(key);
   }
 
   private loadJsonIntoCollection(jsonData) {
-    console.log(jsonData);
-    return Observable.create((observer) => {
-      observer.next(this.db.loadJSON((jsonData))); 
+    return Observable.create(observer => {
+      observer.next(this.db.loadJSON(jsonData));
     });
   }
 
-
-  private checkVersion() {
-
-  }
+  private checkVersion() {}
 
   testFunc() {
-    console.log('fire');
+    console.log("fire");
   }
-  
-
-
-
 
   // Check Cache and File, Load if exists
   // If don't exist download file from server and open into collection
 
-// TODO integrate file cache
+  // TODO integrate file cache
 
-//TODO verify local db against version from firestore. If outdated download update and reload collections
-// TODO any fileRead errors should
-
-
+  //TODO verify local db against version from firestore. If outdated download update and reload collections
+  // TODO any fileRead errors should
 }
