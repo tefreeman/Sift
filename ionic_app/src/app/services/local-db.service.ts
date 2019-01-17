@@ -1,4 +1,5 @@
-import * as Loki from 'lokijs';
+//import * as Loki from 'lokijs';
+import {Loki} from 'lokijs'
 import { merge, Observable, pipe } from 'rxjs';
 import {
     catchError, concat, concatMap, filter, flatMap, map, mapTo, switchMap, tap
@@ -20,7 +21,6 @@ interface InterfaceCollection {
 export class LocalDbService {
   
   private db: Loki;
-
   constructor(
     private fileCache: RequestFileCacheService,
     private dataService: DataService,
@@ -28,7 +28,7 @@ export class LocalDbService {
   ) {
     this.db = new Loki("localData", {
       verbose: true,
-      destructureDelimiter: "="
+      destructureDelimiter: "=",
     });
     this.gpsService.getGridKey().pipe(
       filter((val) => val !== null  ),
@@ -39,7 +39,8 @@ export class LocalDbService {
 
 
   public getCollection(collectionName: string) {
-    return this.db.getCollection(collectionName)
+    this.db.getTest();
+    return this.db.getCollection(collectionName);
   }
 
 

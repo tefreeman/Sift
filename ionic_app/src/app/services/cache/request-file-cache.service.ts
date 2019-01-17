@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import {File, IWriteOptions} from '@ionic-native/file/ngx';
 import { from, Observable, of } from 'rxjs';
-import { map, mapTo, filter, concatMap, merge, switchMap} from 'rxjs/operators'
+import { concatMap, filter, map, mapTo, merge, switchMap } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
+import { File, IWriteOptions } from '@ionic-native/file/ngx';
+
 @Injectable({ providedIn: 'root' })
 export class RequestFileCacheService {
     private directory;

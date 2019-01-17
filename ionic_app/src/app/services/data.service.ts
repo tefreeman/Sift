@@ -2,14 +2,17 @@ import { auth } from 'firebase/app';
 import { from, Observable, of, zip } from 'rxjs';
 import {
     concatMap, distinctUntilChanged, first, flatMap, map, switchMap, tap
+// tslint:disable-next-line: no-submodule-imports
 } from 'rxjs/operators';
 
+// tslint:disable-next-line: no-submodule-imports
 import { HttpClient } from '@angular/common/http';
 import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
     AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument
+// tslint:disable-next-line: no-submodule-imports
 } from '@angular/fire/firestore';
 import { AngularFireStorage, StorageBucket } from '@angular/fire/storage';
 import { Router } from '@angular/router';
@@ -77,9 +80,9 @@ constructor(
             concatMap((url) => {
                 console.log(url);
             return this.http.get(url, {responseType: 'json'}).pipe(
-                //TODO remove stringify and add compression to google file storage 
+                // TODO remove stringify and add compression to google file storage
                 map( (data) =>  JSON.stringify(data))
-            )
+            );
             })
             );
     }
