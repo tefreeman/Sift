@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { GpsService } from '../services/gps.service';
 import { LocalDbService } from '../services/local-db.service';
+import {RequestFileCacheService} from '../services/cache/request-file-cache.service'
+import { TestBed } from '@angular/core/testing';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
@@ -9,12 +11,18 @@ import { LocalDbService } from '../services/local-db.service';
 })
 export class MainViewComponent implements OnInit {
   
-  constructor(private auth: AuthService, private localDb: LocalDbService) { }
+  constructor(private auth: AuthService, private localDb: LocalDbService, private requestFileCacheService: RequestFileCacheService) { 
+
+  }
 
   ngOnInit() {
-    this.localDb.getCollection('testb1');
+    //this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));
   }
 
   testLogout() {
+    let col = this.localDb.getCollection('restaurants');
+    let result = col.find({'name' : 'Isologica'});
+    console.log(result);
+  // this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));
   }
 }

@@ -25,6 +25,9 @@ export class RequestFileCacheService {
         }));
     }
 
+    removeFile(fileName) {
+        return from(this.fileStorage.removeFile(this.directory, fileName));
+    }
     readAsText(fileName) {
         return from(this.fileStorage.readAsBinaryString(this.directory, fileName));
 

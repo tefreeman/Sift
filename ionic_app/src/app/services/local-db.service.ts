@@ -1,6 +1,4 @@
-import { database } from 'firebase';
 import * as Loki from 'lokijs';
-import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
 import { merge, Observable, pipe } from 'rxjs';
 import {
     catchError, concat, concatMap, filter, flatMap, map, mapTo, switchMap, tap
@@ -12,38 +10,40 @@ import { RequestFileCacheService } from './cache/request-file-cache.service';
 import { DataService } from './data.service';
 import { GpsService } from './gps.service';
 
+
+
+interface InterfaceCollection {
+  
+}
+
 @Injectable({ providedIn: "root" })
 export class LocalDbService {
+  
   private db: Loki;
-  private adapter;
-  private readyObservable;
-  private cols = { restaurants: null, items: null };
-  private gridKey: Observable<any>;
 
   constructor(
     private fileCache: RequestFileCacheService,
     private dataService: DataService,
     private gpsService: GpsService
   ) {
-    this.gridKey = this.gpsService.getGridKey().pipe(filter((val) => val !== null  ));
-    this.adapter = new LokiIndexedAdapter();
     this.db = new Loki("localData", {
       verbose: true,
       destructureDelimiter: "="
     });
+    this.gpsService.getGridKey().pipe(
+      filter((val) => val !== null  ),
+      concatMap((val) => this.loadDb(val)),
+      tap(() => {console.log(this.db)})
+      ).subscribe();
   }
 
-  public getCollection(name: string) {
-    this.gridKey.subscribe((key) => {
-      console.log(key);
-      this.loadDb(key).subscribe((r) => console.log('db done!'))
-      console.log(this.db);
-    });
+
+  public getCollection(collectionName: string) {
+    return this.db.getCollection(collectionName)
   }
 
-  public saveDB(fileName: string) {
-    return this.fileCache.writeFile(fileName, this.db.seralize());
-  }
+
+
 
   private loadDb(key: string) {
 
@@ -71,7 +71,6 @@ export class LocalDbService {
   }
 
 
-  
   private getFromFile(colName: string) {
     console.log(colName);
     console.log('getting from file')
