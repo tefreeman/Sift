@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { GpsService } from '../services/gps.service';
 import { LocalDbService } from '../services/local-db.service';
 import {RequestFileCacheService} from '../services/cache/request-file-cache.service'
-import { TestBed } from '@angular/core/testing';
+
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
@@ -20,6 +20,7 @@ export class MainViewComponent implements OnInit {
   }
 
   testLogout() {
+    this.auth.signOut();
     let col = this.localDb.getCollection('restaurants');
     let result = col.find({'name' : 'Isologica'});
     console.log(result);

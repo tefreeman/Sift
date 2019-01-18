@@ -1,6 +1,4 @@
-//import * as Loki from 'lokijs';
-import {Loki} from 'lokijs'
-import { merge, Observable, pipe } from 'rxjs';
+import { merge, Observable, pipe, of } from 'rxjs';
 import {
     catchError, concat, concatMap, filter, flatMap, map, mapTo, switchMap, tap
 } from 'rxjs/operators';
@@ -10,17 +8,11 @@ import { Injectable } from '@angular/core';
 import { RequestFileCacheService } from './cache/request-file-cache.service';
 import { DataService } from './data.service';
 import { GpsService } from './gps.service';
-
-
-
-interface InterfaceCollection {
-  
-}
+import * as Loki from "lokijs"
 
 @Injectable({ providedIn: "root" })
 export class LocalDbService {
-  
-  private db: Loki;
+  private db: Loki
   constructor(
     private fileCache: RequestFileCacheService,
     private dataService: DataService,
@@ -28,7 +20,7 @@ export class LocalDbService {
   ) {
     this.db = new Loki("localData", {
       verbose: true,
-      destructureDelimiter: "=",
+      destructureDelimiter: "="
     });
     this.gpsService.getGridKey().pipe(
       filter((val) => val !== null  ),
@@ -37,13 +29,9 @@ export class LocalDbService {
       ).subscribe();
   }
 
-
   public getCollection(collectionName: string) {
-    this.db.getTest();
-    return this.db.getCollection(collectionName);
+   return this.db.getCollection(collectionName);
   }
-
-
 
 
   private loadDb(key: string) {
@@ -90,11 +78,9 @@ export class LocalDbService {
   }
 
   private checkVersion() {}
-
-  testFunc() {
+    testFunc() {
     console.log("fire");
   }
-
   // Check Cache and File, Load if exists
   // If don't exist download file from server and open into collection
 

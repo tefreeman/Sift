@@ -1,19 +1,16 @@
-
-
-export as namespace loki;
-export = Loki;
-
-declare class Loki {
+declare module 'lokijs' {
+    class Loki {
     constructor(
         filename:string,
         options?: optionsLokiConfig
     );
 
+
     configureOptions(options: optionsLokiConfig, initialConfig: boolean): void
     copy(options: {removeNonSerializable: boolean}): Loki
-    addCollection(name:string, Options?: optionsAddCollection): Collection
-    getCollection(collectionName: string): Collection
-    renameCollection(oldName:string, newName:string): Collection
+    addCollection(name:string, Options?: optionsAddCollection): CollectionTest
+    getCollection(collectionName: string): CollectionTest
+    renameCollection(oldName:string, newName:string): CollectionTest
     listCollections(): Array<{name: string, type: string, count: number}>
     removeCollection(collectionName: string): void
     serialize(): string
@@ -33,15 +30,19 @@ declare class Loki {
 
 }
 
-declare class LokiMemoryAdapter {
+
+   export interface CollectionTest extends Collection {}
+
+ class LokiMemoryAdapter {
     constructor(options: {asyncResponses: boolean, asyncTimeout: number})
 }
 
-declare class DynamicView {
+   class DynamicView {
 
 }
 
-declare class Collection {
+
+  export class Collection {
     constructor(
         name: string,
         options?: optionsCollection
@@ -93,25 +94,25 @@ declare class Collection {
     median(field: string): number
 }
 
-interface queryObject {
+ interface queryObject {
 }
 
-interface optionsEqJoin {
+ interface optionsEqJoin {
     removeMeta?: boolean
     forceClones?: boolean
     forceCloneMethod?: 'parse-stringify'| 'jquery-extend-deep' | 'shallow' | 'shallow-assign'
 }
-interface optionsDynamicView {
+ interface optionsDynamicView {
     persistent?: boolean,
     sortPriority?:  'passive' | 'active',
     minRebuildInterval?: number
 }
-interface optionsCollectionIndex {
+ interface optionsCollectionIndex {
     randomSampling?: boolean,
     randomSamplingFactor?: number,
     repair?: boolean
 }
-interface optionsCollection {
+ interface optionsCollection {
     unique?: Array<string>
     exact?: Array<string>
     indices?: Array<string>
@@ -127,13 +128,13 @@ interface optionsCollection {
     ttl?: number,
     ttlInterval?: number
 }
-interface optionsCustomSerialize {
+ interface optionsCustomSerialize {
     partitioned?: boolean,
     partition?: number,
     delimited?: boolean,
     delimiter?: string 
 }
-interface optionsAddCollection {
+ interface optionsAddCollection {
     unique?: Array<string>
     exact?: Array<string>
     indices?: Array<string>
@@ -148,7 +149,7 @@ interface optionsAddCollection {
     ttlInterval?: number
 
 }
-interface optionsLokiConfig {
+ interface optionsLokiConfig {
     env?:optenv,
     verbose?: boolean,
     autosave?: boolean,
@@ -157,7 +158,7 @@ interface optionsLokiConfig {
     autoloadCallback?: () => void,
     adapter?: any, //TODO
     serializationMethod?: serialmethod,
-    destructureDelimter?: string,
+    destructureDelimiter?: string,
     throttledSaves?: boolean
 }
 
@@ -165,14 +166,6 @@ type oneOrMany = object | Array<object>
 type serialmethod = 'normal' | 'pretty' | 'destructured';
 
 type optenv = 'NODEJS' | 'BROWSER' | 'CORDOVA';
-
-/*~ If you want to expose types from your module as well, you can
- *~ place them in this block.
- */
-declare namespace Loki {
-    export interface MyClassMethodOptions {
-        width?: number;
-        height?: number;
-    }
-    
+namespace Loki{}
+export = Loki;
 }
