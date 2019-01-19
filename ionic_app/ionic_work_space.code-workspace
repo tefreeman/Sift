@@ -10,5 +10,39 @@
 			"path": "C:\\Users\\trevo\\Documents\\foodApp\\custom_modules"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"workbench.iconTheme": "vscode-icons",
+		"typescript.updateImportsOnFileMove.enabled": "always",
+		"python.jediEnabled": false,
+		"window.zoomLevel": 2,
+		"vsicons.projectDetection.autoReload": true,
+		"javascript.implicitProjectConfig.checkJs": true,
+		"typescript.disableAutomaticTypeAcquisition": true,
+		"typescript.implementationsCodeLens.enabled": true,
+		"typescript.referencesCodeLens.enabled": true,
+		"editor.codeLens": false,
+		"files.associations": {
+			"*.ts": "typescript"
+		},
+		"importSorter.generalConfiguration.sortOnBeforeSave": true,
+		"typescript.autoClosingTags": false,
+		"auto-close-tag.activationOnLanguage": [
+			"xml",
+			"php",
+			"blade",
+			"ejs",
+			"jinja",
+			"javascript",
+			"javascriptreact",
+			"typescriptreact",
+			"plaintext",
+			"markdown",
+			"vue",
+			"liquid",
+			"erb",
+			"lang-cfml",
+			"cfml",
+			"HTML (Eex)"
+		]
+	}
 }

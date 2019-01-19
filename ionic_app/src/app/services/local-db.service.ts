@@ -11,7 +11,7 @@ import { DataService } from './data.service';
 import { GpsService } from './gps.service';
 import { log } from './logger.service';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class LocalDbService {
   private db$: BehaviorSubject<Loki> = new BehaviorSubject(null);
   constructor(
@@ -27,7 +27,7 @@ export class LocalDbService {
         concatMap(val => this.loadDb(val))
       )
       .subscribe(newDb => {
-        log("this.db$.next", "", newDb);
+        log('this.db$.next', '', newDb);
         this.db$.next(newDb);
       });
   }
@@ -35,38 +35,38 @@ export class LocalDbService {
   public deleteDatabase(fileName) {
     this.fileCache.removeFile(fileName).subscribe();
   }
-  public getCollection$(collectionName: string) {
+  public getCollection$(collectionName: string): Observable<Collection<any>> {
     return this.db$.pipe(
       filter(db => db !== null),
+      map(db => {return db.getCollection(collectionName)}),
       tap(db => {
-        log("getCollection$", "", db);
+        log('getCollection$', '', db);
       }),
-      map(currentDb => currentDb.getCollection(collectionName))
     );
   }
 
   private loadDb(key: string) {
     const localKey = key;
-    const db = new Loki("localData", {
+    const db = new Loki('localData', {
       verbose: true,
-      destructureDelimiter: "="
+      destructureDelimiter: '='
     });
 
     const fileNotCached$ = this.getFromServer$(localKey).pipe(
       // write data to file storage
-      tap( (dbData)=> {
-        log("getFromServer$", 'then filecache.writeFile', {'key': localKey, 'db': dbData});
+      tap( (dbData) => {
+        log('getFromServer$', 'then filecache.writeFile', {'key': localKey, 'db': dbData});
         this.fileCache.writeFile(localKey, dbData);
       }),
       catchError(err => {
         log('filenotCached$', 'error after filecache.writeFile', err);
-        return of(null); //TODO error handeling
+        return of(null); // TODO error handeling
       })
     );
 
     const tryFileCached$ = this.getFromFile$(localKey).pipe(
       catchError(err => {
-        log("tryFileCached$", "catchError", err);
+        log('tryFileCached$', 'catchError', err);
         return fileNotCached$;
       })
     );
@@ -80,12 +80,12 @@ export class LocalDbService {
   }
 
   private getFromFile$(colName: string) {
-    log("getFromFile", "", colName);
+    log('getFromFile', '', colName);
     return this.fileCache.readAsText(colName);
   }
 
   private getFromServer$(key) {
-    log("getFromServer", "", key);
+    log('getFromServer', '', key);
     return this.dataService.getDataByGridKey$(key);
   }
   private checkVersion() {}
@@ -95,6 +95,6 @@ export class LocalDbService {
 
   // TODO integrate file cache
 
-  //TODO verify local db against version from firestore. If outdated download update and reload collections
+  // TODO verify local db against version from firestore. If outdated download update and reload collections
   // TODO any fileRead errors should
 }

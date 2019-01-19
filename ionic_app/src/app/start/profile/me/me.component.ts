@@ -1,4 +1,3 @@
-import { ProfileFormService } from './../services/profile.form.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MeComponent implements OnInit {
 
-  constructor(profileForm: ProfileFormService) { }
+  constructor() { }
 
   ngOnInit() {
   }

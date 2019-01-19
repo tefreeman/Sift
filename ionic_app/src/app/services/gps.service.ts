@@ -23,9 +23,9 @@ function distance(a, b) {
   return R * c;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class GpsService {
-  //TODO set var from cloud store config
+  // TODO set var from cloud store config
   private MIN_DIST_TO_GRID_EDGE = 20;
 
   private $watch: Observable<Geoposition>;
@@ -35,7 +35,7 @@ export class GpsService {
 
   constructor(private geolocation: Geolocation) {
     this.$watch = this.geolocation.watchPosition();
-    
+
     const $firstGpsObs = this.$watch.pipe(
       first(),
       map(geoPosition => {
@@ -58,8 +58,8 @@ export class GpsService {
         this.currentGridCoords.lon = geoPosition.coords.longitude;
         return this.transformToUrlKey(geoPosition);
       }),
-      tap(newKey => {log("key")})
-     
+      tap(newKey => {log('key');})
+
     );
     // behaviorSubject used so that every observer has the same value
     this.$grid =  new BehaviorSubject(null).asObservable().pipe(
@@ -68,19 +68,19 @@ export class GpsService {
 
   // detect if user has left max grid bounds and fire new value to the this.grid stream
   private isOutOfGrid(geoPosition: Geoposition) {
-    try{
+    try {
       if (distance(this.currentGridCoords,
          {'lat': geoPosition.coords.latitude, 'lon': geoPosition.coords.longitude }) > this.MIN_DIST_TO_GRID_EDGE) {
           return true;
       } else {
         return false;
       }
-    } catch(error) {
+    } catch (error) {
       log('isOutOfGrid failed: ');
       log(error);
     }
   }
-  // Method to transform gps to an url key. 
+  // Method to transform gps to an url key.
   private transformToUrlKey(geoPosition: Geoposition): string {
     const factor = 0.25;
     const long  = (Math.round(geoPosition.coords.longitude / factor) * factor).toFixed(2);
