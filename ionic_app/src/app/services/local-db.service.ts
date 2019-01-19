@@ -1,4 +1,5 @@
-import { merge, Observable, pipe, of } from 'rxjs';
+import * as Loki from 'lokijs';
+import { BehaviorSubject, merge, Observable, of, pipe } from 'rxjs';
 import {
     catchError, concat, concatMap, filter, flatMap, map, mapTo, switchMap, tap
 } from 'rxjs/operators';
@@ -8,79 +9,87 @@ import { Injectable } from '@angular/core';
 import { RequestFileCacheService } from './cache/request-file-cache.service';
 import { DataService } from './data.service';
 import { GpsService } from './gps.service';
-import * as Loki from "lokijs"
+import { log } from './logger.service';
 
 @Injectable({ providedIn: "root" })
 export class LocalDbService {
-  private db: Loki
+  private db$: BehaviorSubject<Loki> = new BehaviorSubject(null);
   constructor(
     private fileCache: RequestFileCacheService,
     private dataService: DataService,
     private gpsService: GpsService
   ) {
-    this.db = new Loki("localData", {
+    this.gpsService
+      .getGridKey$()
+      .pipe(
+        // TODO checked for previous cached gps data (if its faster than waiting for gps to init)
+        filter(val => val !== null),
+        concatMap(val => this.loadDb(val))
+      )
+      .subscribe(newDb => {
+        log("this.db$.next", "", newDb);
+        this.db$.next(newDb);
+      });
+  }
+
+  public deleteDatabase(fileName) {
+    this.fileCache.removeFile(fileName).subscribe();
+  }
+  public getCollection$(collectionName: string) {
+    return this.db$.pipe(
+      filter(db => db !== null),
+      tap(db => {
+        log("getCollection$", "", db);
+      }),
+      map(currentDb => currentDb.getCollection(collectionName))
+    );
+  }
+
+  private loadDb(key: string) {
+    const localKey = key;
+    const db = new Loki("localData", {
       verbose: true,
       destructureDelimiter: "="
     });
-    this.gpsService.getGridKey().pipe(
-      filter((val) => val !== null  ),
-      concatMap((val) => this.loadDb(val)),
-      tap(() => {console.log(this.db)})
-      ).subscribe();
-  }
 
-  public getCollection(collectionName: string) {
-   return this.db.getCollection(collectionName);
-  }
-
-
-  private loadDb(key: string) {
-
-    const fileNotCached$ = this.getFromServer(key).pipe(
-      tap(() => console.log('file not cached')),
+    const fileNotCached$ = this.getFromServer$(localKey).pipe(
       // write data to file storage
-      tap(db => {
-        this.fileCache.writeFile(key, db);
+      tap( (dbData)=> {
+        log("getFromServer$", 'then filecache.writeFile', {'key': localKey, 'db': dbData});
+        this.fileCache.writeFile(localKey, dbData);
+      }),
+      catchError(err => {
+        log('filenotCached$', 'error after filecache.writeFile', err);
+        return of(null); //TODO error handeling
       })
     );
 
-    const tryFileCached$ = this.getFromFile(key).pipe(
-      catchError((err) => {
-        console.log(err);
+    const tryFileCached$ = this.getFromFile$(localKey).pipe(
+      catchError(err => {
+        log("tryFileCached$", "catchError", err);
         return fileNotCached$;
-      }),
-      tap(() => console.log('file is cached')),
+      })
     );
 
     return tryFileCached$.pipe(
-      concatMap((data) => {
-        return this.loadJsonIntoCollection(data)
-      })
-    )
+      concatMap(data => {
+        return of(db.loadJSON(data));
+      }),
+      map(() => db)
+    );
   }
 
-
-  private getFromFile(colName: string) {
-    console.log(colName);
-    console.log('getting from file')
+  private getFromFile$(colName: string) {
+    log("getFromFile", "", colName);
     return this.fileCache.readAsText(colName);
   }
 
-  private getFromServer(key) {
-    console.log('getting from server')
-    return this.dataService.getGridByKey(key);
+  private getFromServer$(key) {
+    log("getFromServer", "", key);
+    return this.dataService.getDataByGridKey$(key);
   }
-
-  private loadJsonIntoCollection(jsonData) {
-    return Observable.create(observer => {
-      observer.next(this.db.loadJSON(jsonData));
-    });
-  }
-
   private checkVersion() {}
-    testFunc() {
-    console.log("fire");
-  }
+
   // Check Cache and File, Load if exists
   // If don't exist download file from server and open into collection
 

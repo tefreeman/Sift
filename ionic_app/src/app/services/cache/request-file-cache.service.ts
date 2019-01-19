@@ -4,6 +4,8 @@ import { concatMap, filter, map, mapTo, merge, switchMap } from 'rxjs/operators'
 import { Injectable } from '@angular/core';
 import { File, IWriteOptions } from '@ionic-native/file/ngx';
 
+import { log } from '../logger.service';
+
 @Injectable({ providedIn: 'root' })
 export class RequestFileCacheService {
     private directory;
@@ -36,6 +38,7 @@ export class RequestFileCacheService {
     }
     //default overwrites
     writeFile(fileName, data) {
+        log('writeFile', 'replace true', data);
         return from(this.fileStorage.writeFile(this.directory, fileName, data, {'replace': true} ));
     }
 

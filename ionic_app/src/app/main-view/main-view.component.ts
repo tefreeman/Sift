@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+
 import { AuthService } from '../services/auth.service';
+import { RequestFileCacheService } from '../services/cache/request-file-cache.service';
 import { GpsService } from '../services/gps.service';
 import { LocalDbService } from '../services/local-db.service';
-import {RequestFileCacheService} from '../services/cache/request-file-cache.service'
 
 @Component({
   selector: 'app-main-view',
@@ -20,10 +21,12 @@ export class MainViewComponent implements OnInit {
   }
 
   testLogout() {
-    this.auth.signOut();
-    let col = this.localDb.getCollection('restaurants');
-    let result = col.find({'name' : 'Isologica'});
-    console.log(result);
+    this.localDb.getCollection$('restaurants').subscribe( (col) => {
+      let result = col.find({'name' : 'Isologica'});
+      console.log(result);
+    }
+    )
+
   // this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));
   }
 }

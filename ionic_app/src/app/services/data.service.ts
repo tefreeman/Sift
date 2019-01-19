@@ -2,7 +2,6 @@ import { auth } from 'firebase/app';
 import { from, Observable, of, zip } from 'rxjs';
 import {
     concatMap, distinctUntilChanged, first, flatMap, map, switchMap, tap
-// tslint:disable-next-line: no-submodule-imports
 } from 'rxjs/operators';
 
 // tslint:disable-next-line: no-submodule-imports
@@ -12,12 +11,12 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
     AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument
-// tslint:disable-next-line: no-submodule-imports
 } from '@angular/fire/firestore';
 import { AngularFireStorage, StorageBucket } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 
 import { GpsService } from './gps.service';
+import { log } from './logger.service';
 
 interface User {
     uid: string;
@@ -69,8 +68,8 @@ constructor(
 
     }
 
-    getGridByKey(key): Observable<any> {
-
+    getDataByGridKey$(key): Observable<any> {
+    log('getDataByGridKey$', '', key);
 
         return this.afs.collection('grid').doc(key).get().pipe(
             concatMap( (doc) => {
