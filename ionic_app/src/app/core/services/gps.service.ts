@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { sortedChanges } from '@angular/fire/firestore';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 
-import { log } from './logger.service';
+import { log } from '../logger.service';
 
 const R = 6378137;
 const PI_360 = Math.PI / 360;

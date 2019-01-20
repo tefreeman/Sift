@@ -6,10 +6,10 @@ import {
 
 import { Injectable } from '@angular/core';
 
+import { log } from '../logger.service';
 import { RequestFileCacheService } from './cache/request-file-cache.service';
 import { DataService } from './data.service';
 import { GpsService } from './gps.service';
-import { log } from './logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class LocalDbService {
@@ -38,7 +38,7 @@ export class LocalDbService {
   public getCollection$(collectionName: string): Observable<Collection<any>> {
     return this.db$.pipe(
       filter(db => db !== null),
-      map(db => {return db.getCollection(collectionName)}),
+      map(db => db.getCollection(collectionName)),
       tap(db => {
         log('getCollection$', '', db);
       }),

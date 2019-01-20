@@ -7,6 +7,13 @@
     "node_modules/codelyzer"
   ],
   "rules": {
+    // added
+    "no-default-export": true,
+    "no-implicit-dependencies": [true],
+    "no-submodule-imports": false,
+    "no-relative-imports": true,
+    "export-name": false,
+    // above
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,

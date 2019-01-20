@@ -1,10 +1,12 @@
 import { from, Observable, of } from 'rxjs';
+// tslint:disable-next-line: no-submodule-imports
 import { concatMap, filter, map, mapTo, merge, switchMap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
+// tslint:disable-next-line: no-submodule-imports
 import { File, IWriteOptions } from '@ionic-native/file/ngx';
 
-import { log } from '../logger.service';
+import { log } from '../../logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class RequestFileCacheService {
@@ -36,7 +38,7 @@ export class RequestFileCacheService {
         return from(this.fileStorage.readAsBinaryString(this.directory, fileName));
 
     }
-    //default overwrites
+    // default overwrites
     writeFile(fileName, data) {
         log('writeFile', 'replace true', data);
         return from(this.fileStorage.writeFile(this.directory, fileName, data, {'replace': true} ));

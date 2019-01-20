@@ -5,16 +5,12 @@
 		},
 		{
 			"path": "C:\\Users\\trevo\\Documents\\foodApp\\test"
-		},
-		{
-			"path": "C:\\Users\\trevo\\Documents\\foodApp\\custom_modules"
 		}
 	],
 	"settings": {
 		"workbench.iconTheme": "vscode-icons",
 		"typescript.updateImportsOnFileMove.enabled": "always",
-		"python.jediEnabled": false,
-		"window.zoomLevel": 2,
+		"window.zoomLevel": 1,
 		"vsicons.projectDetection.autoReload": true,
 		"javascript.implicitProjectConfig.checkJs": true,
 		"typescript.disableAutomaticTypeAcquisition": true,
@@ -43,6 +39,14 @@
 			"lang-cfml",
 			"cfml",
 			"HTML (Eex)"
-		]
+		],
+		"javascript.updateImportsOnFileMove.enabled": "always",
+		"typescript.preferences.importModuleSpecifier": "relative",
+		"typescript.preferences.quoteStyle": "single",
+		"sync.autoDownload": true,
+		"sync.autoUpload": true,
+		"prettier.printWidth": 100,
+		"prettier.tslintIntegration": true,
+		"prettier.singleQuote": true
 	}
 }

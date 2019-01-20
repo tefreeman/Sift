@@ -1,4 +1,4 @@
-import { LandingModule } from './start/landing.module';
+import { LandingModule } from './modules/start/landing.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';

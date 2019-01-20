@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AuthService } from '../services/auth.service';
-import { RequestFileCacheService } from '../services/cache/request-file-cache.service';
-import { GpsService } from '../services/gps.service';
-import { LocalDbService } from '../services/local-db.service';
-import { log } from '../services/logger.service';
+import { AuthService } from '../core/authentication/auth.service';
+import { RequestFileCacheService } from '../core/services/cache/request-file-cache.service';
+import { GpsService } from '../../core/services/gps.service';
+import { LocalDbService } from '../../core/services/local-db.service';
+import { log } from '../core/logger.service';
 
 @Component({
   selector: 'app-main-view',

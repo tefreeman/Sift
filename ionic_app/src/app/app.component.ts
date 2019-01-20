@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './core/authentication/auth.service';
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';

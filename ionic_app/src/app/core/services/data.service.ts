@@ -6,7 +6,6 @@ import {
 
 // tslint:disable-next-line: no-submodule-imports
 import { HttpClient } from '@angular/common/http';
-import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
@@ -15,8 +14,8 @@ import {
 import { AngularFireStorage, StorageBucket } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 
+import { log } from '../logger.service';
 import { GpsService } from './gps.service';
-import { log } from './logger.service';
 
 interface User {
     uid: string;
