@@ -1,5 +1,5 @@
-export type activityLevel = 'sedentary' |'LightlyActive'| 'active' | 'veryActive'
-export type activities =
+export type TactivityLevel = 'sedentary' |'LightlyActive'| 'active' | 'veryActive'
+export type Tactivities =
     'aerobics'|
     'americanFootball'|
     'badminton'|

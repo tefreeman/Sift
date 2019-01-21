@@ -1,9 +1,10 @@
-export interface Ingredients {
+export interface IIngredients {
     ingredients: Array<{ id: number; name: string; val: number }>;
   }
 
-export interface Ingredient {
+export interface IIngredient {
     id: number;
     name: string;
     val: number;
+    per: number;
 }

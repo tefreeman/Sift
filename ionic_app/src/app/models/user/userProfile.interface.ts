@@ -1,40 +1,40 @@
-import { Cuisines } from '../food/cuisines.interface';
-import { Review } from '../review/review.interface';
-import { Health } from './userHealth.interface';
-import { History } from './userProfile.interface';
+import { ICuisines } from '../food/cuisines.interface';
+import { IReview } from '../review/review.interface';
+import { IHealth } from './userHealth.interface';
+import { IHistory } from './userProfile.interface';
 
-export interface Taste {
-    cuisinesPref: Cuisines;
+export interface ITaste {
+    cuisinesPref: ICuisines;
     favoriteIngredients: string[];
   }
-  export interface Goal {
+  export interface IGoal {
     tasteVsHealth: number; // TODO should I move this only into filters?
     goalAmt: number;
     goalTimeline: number;
     timeStamp: number;
   }
   
-  export interface Personal {
+  export interface IPersonal {
     age: number;
     displayName: string;
     gender: string;
     ethnicity: string;
     photoUrl: string;
   }
-  export interface Profile {
+  export interface IProfile {
     email: string;
     filterIds: string[];
     quickSetup: boolean;
-    profile: Personal;
-    Health: Health;
-    history: History;
-    goal: Goal;
-    taste: Taste;
+    profile: IPersonal;
+    Health: IHealth;
+    history: IHistory;
+    goal: IGoal;
+    taste: ITaste;
   }
 
-  export interface History {
+  export interface IHistory {
     userCreated: number;
     userTimeSpent: number;
-    ProfileChanges: Profile[]
+    ProfileChanges: IProfile[]
     reviewIds: number[]
   }

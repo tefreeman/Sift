@@ -1,5 +1,5 @@
 
-export interface Cuisines {
+export interface ICuisines {
     mexican: number;
     italian: number;
     chinese: number;

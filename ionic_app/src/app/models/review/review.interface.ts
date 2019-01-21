@@ -1,4 +1,4 @@
-export interface Review {
+export interface IReview {
     isApproved: boolean;
     itemId: string;
     placeId: string;
@@ -10,6 +10,6 @@ export interface Review {
     timeStamp: number;
 }
 
-export interface ReviewHidden extends Review {
+export interface IReviewHidden extends IReview {
     timeSpent: number;
 }

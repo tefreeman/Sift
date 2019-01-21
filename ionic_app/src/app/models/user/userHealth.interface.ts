@@ -1,16 +1,16 @@
-import { activities, activityLevel } from '../activities/activity.interface';
-import { Nutrition } from '../nutrition/nutrition.interface';
+import { Tactivities, TactivityLevel } from '../activities/activity.interface';
+import { INutrition } from '../nutrition/nutrition.interface';
 
-export interface ChildHealthHistory {
-    childSports: activities[];
-    childActivityLvl: activityLevel;
+export interface IChildHealthHistory {
+    childSports: Tactivities[];
+    childActivityLvl: TactivityLevel;
     childHoodBodyType: number;
   }
 
-  export interface CurrentHealth {
+  export interface ICurrentHealth {
     weightKg: number;
     heightCm: number;
-    activityLevel: activityLevel;
+    activityLevel: TactivityLevel;
     workoutFreq: number;
     workoutType: number;
     appetiteLvl: number;
@@ -18,15 +18,16 @@ export interface ChildHealthHistory {
     basalMetabolicRate: number;
     gymExperience: number;
     bodyFatPer: number;
+    bodType: EbodyType;
     leanBodyMass: number;
     skeletalMuscleMass: number;
-    macroGoal: Nutrition;
+    macroGoal: INutrition;
   }
-  export interface Health extends CurrentHealth {
-    healthHistory: ChildHealthHistory;
+  export interface IHealth extends ICurrentHealth {
+    healthHistory: IChildHealthHistory;
   }
 
-  export enum bodyType {
+  export enum EbodyType {
     slim,
     average,
     large,

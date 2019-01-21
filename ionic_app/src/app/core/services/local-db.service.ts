@@ -1,10 +1,13 @@
+import { Observer } from 'firebase';
 import * as Loki from 'lokijs';
-import { BehaviorSubject, merge, Observable, of, pipe } from 'rxjs';
+import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
+import { BehaviorSubject, merge, Observable, observable, of, pipe } from 'rxjs';
 import {
     catchError, concat, concatMap, filter, flatMap, map, mapTo, switchMap, tap
 } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
+import { DomAdapter } from '@angular/platform-browser/src/dom/dom_adapter';
 
 import { log } from '../logger.service';
 import { RequestFileCacheService } from './cache/request-file-cache.service';
@@ -14,11 +17,13 @@ import { GpsService } from './gps.service';
 @Injectable({ providedIn: 'root' })
 export class LocalDbService {
   private db$: BehaviorSubject<Loki> = new BehaviorSubject(null);
+  private adapter;
   constructor(
     private fileCache: RequestFileCacheService,
     private dataService: DataService,
     private gpsService: GpsService
   ) {
+    this.adapter =  new LokiIndexedAdapter();
     this.gpsService
       .getGridKey$()
       .pipe(
@@ -45,39 +50,70 @@ export class LocalDbService {
     );
   }
 
+
   private loadDb(key: string) {
     const localKey = key;
     const db = new Loki('localData', {
+      adapter: this.adapter,
       verbose: true,
-      destructureDelimiter: '='
+      destructureDelimiter: '=',
+      autosave: true,
     });
 
     const fileNotCached$ = this.getFromServer$(localKey).pipe(
       // write data to file storage
       tap( (dbData) => {
         log('getFromServer$', 'then filecache.writeFile', {'key': localKey, 'db': dbData});
-        this.fileCache.writeFile(localKey, dbData);
-      }),
-      catchError(err => {
-        log('filenotCached$', 'error after filecache.writeFile', err);
-        return of(null); // TODO error handeling
+        this.adapter.saveDatabase(localKey, dbData, (result) => {
+          log('saveDatabase', '', result);
+        })
+        //this.fileCache.writeFile(localKey, dbData);
       })
-    );
+    )
 
-    const tryFileCached$ = this.getFromFile$(localKey).pipe(
-      catchError(err => {
-        log('tryFileCached$', 'catchError', err);
+
+    const tryIndexedDb$: Observable<string> = Observable.create( (observer: Observer<string>) => {
+      this.adapter.getDatabaseList((result) => {
+        let match = false;
+        log('getDatabaseList', '', result);
+        for ( let dbName of result) {
+          if (dbName === localKey) {
+              match = true;
+            }
+          }
+        if (match) { 
+          this.adapter.loadDatabase(localKey, (serializedDb: string) => {
+            log('loadDatabase', `success at ${localKey}`, serializedDb)
+            observer.next(serializedDb);
+          });
+        }
+        else { 
+          observer.error(new Error('cannot find indexed db')); 
+        }
+      });
+    });
+
+    return tryIndexedDb$.pipe(
+      catchError( (err) => {
+        log('tryIndexedDb$', 'ERROR', err);
         return fileNotCached$;
-      })
-    );
-
-    return tryFileCached$.pipe(
+      }),
       concatMap(data => {
         return of(db.loadJSON(data));
       }),
       map(() => db)
     );
+
+
+
+
   }
+
+
+
+
+
+
 
   private getFromFile$(colName: string) {
     log('getFromFile', '', colName);

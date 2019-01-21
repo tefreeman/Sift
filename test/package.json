@@ -1,0 +1,9 @@
+{
+  "name": "ionic_app",
+  "version": "0.0.1",
+  "author": "Ionic Framework",
+  "homepage": "http://ionicframework.com/",
+  "scripts": {
+    "start": "ts-node db.builder.ts"
+  }
+}

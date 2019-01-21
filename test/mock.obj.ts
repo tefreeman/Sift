@@ -4,13 +4,11 @@ interface ITags {
     tag: string, func: any
 }
 
-export function generateObject(obj: any): any {
+export function GenerateObject(obj: any): any {
     let str: any = JSON.stringify(obj);
-    str = str.replace(/\[\[.+?\]\]/gi, repeater);
-    console.log(str);
+    str = str.replace(/\[\[.+\]\]/gi, repeater);
     str = str.replace(/{{.+?}}/gi, replacer);
-    console.log(str);
-    return JSON.parse(str);
+    return  JSON.parse(str);
 }
 
     function repeater(str: any) {
@@ -20,7 +18,9 @@ export function generateObject(obj: any): any {
         let numLength = match[0].length;
         if(match != null)
             num = parseInt(match[0]);
-        else return str;
+        else {
+            return str; 
+        }
         str = str.slice(numLength + 5, -2);
         let oldStr = str;
         for(let i = 0; i < num; i++) {
@@ -45,17 +45,27 @@ function rBool(){
 function rText(amt: string[]): string{
     return makeText(parseInt(amt[0]), parseInt(amt[1]));
 }
+function rPhone(): string{
+    return makePhone();
+}
 
 function rChar(amt: string[]): string{
+        if (amt.length == 1)
     return makeid(Number(amt[0]));
+        else
+        return makeid(Number(amt[0]),Number(amt[1]));
 }
+
 
 function rDate(){
    return (new Date().getTime() * Math.random()).toString()
 }
 
+function rList<T>(arr: T[]){
+    return String(getRandomItemList(arr));
+ }
 function rFloat(arr: number[]){
-   return getRandomFloat(arr[0], arr[1]).toPrecision(4).toString();
+   return getRandomFloat(Number(arr[0]), Number(arr[1])).toFixed(arr[2]);
 }
 
 function rInt(arr: string[]) {
@@ -74,15 +84,30 @@ function getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
   }
 
-  function makeid(length: number) {
+  function getRandomItemList<T>(arr: Array<T>) {
+      return arr[getRandomInt(0, arr.length)];
+  }
+  function makeid(length: number, max?: number) {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  
+    if(max) {
+        length = getRandomInt(length, max);
+    }
     for (var i = 0; i < length; i++)
       text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
     return text;
   }
+
+  function makePhone() {
+    var text = "";
+    var possible1 = "123456789";
+    var possible = "0123456789";
+    text += possible1.charAt(Math.floor(Math.random() * possible1.length));
+    for (var i = 0; i < 9; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+  }
+
 
   function makeText(minWords: number, maxWords: number) {
     let tlt = getRandomInt(minWords, maxWords)
@@ -110,7 +135,11 @@ function getRandomInt(min: number, max: number) {
         }},
         { tag: 'text', func: (arr: Array<any>) => {
             return rText(arr);
-        }}
+        }}, 
+        { tag: 'phone', func: rPhone},
+        { tag: 'list', func:<T> (arr: Array<T>) => {
+            return rList(arr);
+        }}, 
     ]
 
     let start = str.search(/\{{2}/);
