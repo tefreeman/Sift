@@ -1,14 +1,14 @@
-import { MainViewComponent } from './main-view.component';
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
+import { HomeComponent } from './home.component';
 
 // { path: '', loadChildren: './tabs/tabs.module#TabsPageModule' }
 const routes: Routes = [
-  { path: '', component: MainViewComponent }
+  { path: '', component: HomeComponent }
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class MainViewRoutingModule {}
+export class HomeRoutingModule {}

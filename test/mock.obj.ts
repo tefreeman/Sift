@@ -3,14 +3,17 @@ type Type = 'number' | 'text' | 'object' | 'array';
 interface ITags {
     tag: string, func: any
 }
-export class MockService {
 
-    constructor(){}
+export function generateObject(obj: any): any {
+    let str: any = JSON.stringify(obj);
+    str = str.replace(/\[\[.+?\]\]/gi, repeater);
+    console.log(str);
+    str = str.replace(/{{.+?}}/gi, replacer);
+    console.log(str);
+    return JSON.parse(str);
+}
 
-
-
-
-    public repeater(str: any) {
+    function repeater(str: any) {
         let num: number;
         let returnString: any = "";
         let match = str.match(/(?!\[)(\d+)(?=])/);
@@ -29,19 +32,7 @@ export class MockService {
         return result;
 
     }
-    public generateObject(obj: any): any {
-        let str: any = JSON.stringify(obj);
-        str = str.replace(/\[\[.+?\]\]/gi, this.repeater);
-        console.log(str);
-        str = str.replace(/{{.+?}}/gi, replacer);
-        console.log(str);
-        return JSON.parse(str);
-    }
 
-
-
-
-}
 
 function rBool(){
     let num = getRandomInt(0,1);
@@ -153,8 +144,3 @@ function getRandomInt(min: number, max: number) {
 
 
 }
-
-let test = new MockService()
-let obj = {test: '{{bool}}', val: '{{char(10)}}', items: [[20],[{'test1': '{{char(5)}}'}]], 'test1': 'blah'};
-
-console.log(test.generateObject(obj));

@@ -13,6 +13,8 @@ export class RequestFileCacheService {
     private directory;
     constructor(private fileStorage: File) {
         this.directory = fileStorage.dataDirectory;
+        console.log(this.directory);
+        setTimeout(()=>{},2000);
     }
 
     cache(fileName: string, obj: any) {

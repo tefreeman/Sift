@@ -1,7 +1,9 @@
-import { AuthService } from '../../core/authentication/auth.service';
 import { Component, OnInit } from '@angular/core';
-import {ReactiveFormsModule, FormGroup, FormBuilder, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
+
+import { AuthService } from '../../../core/authentication/auth.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
