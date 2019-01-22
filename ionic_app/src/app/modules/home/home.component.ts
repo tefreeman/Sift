@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../core/authentication/auth.service';
 import { log } from '../../core/logger.service';
 import { RequestFileCacheService } from '../../core/services/cache/request-file-cache.service';
+import { FiltersService } from '../../core/services/filters.service';
 import { GpsService } from '../../core/services/gps.service';
 import { LocalDbService } from '../../core/services/local-db.service';
 
@@ -13,8 +14,8 @@ import { LocalDbService } from '../../core/services/local-db.service';
 })
 export class HomeComponent implements OnInit {
   
-  constructor(private auth: AuthService, private localDb: LocalDbService, private requestFileCacheService: RequestFileCacheService) { 
-
+  constructor(private auth: AuthService, private filtersService: FiltersService) { 
+    log('homeComponent Constructed', '', {});
   }
 
   ngOnInit() {
@@ -22,6 +23,8 @@ export class HomeComponent implements OnInit {
   }
 
   testLogout() {
+    this.filtersService.getActiveFilter();
+    //this.auth.signOut();
   }
   
 

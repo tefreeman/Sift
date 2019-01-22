@@ -24,25 +24,28 @@ export class LocalDbService {
     private gpsService: GpsService
   ) {
     this.adapter =  new LokiIndexedAdapter();
-    this.gpsService
-      .getGridKey$()
+    this.gpsService.getGridKey$()
       .pipe(
         // TODO checked for previous cached gps data (if its faster than waiting for gps to init)
         filter(val => val !== null),
         concatMap(val => this.loadDb(val))
       )
       .subscribe(newDb => {
-        log('this.db$.next', '', newDb);
         this.db$.next(newDb);
+        log('this.db$.next', '', newDb);
       });
   }
 
   public deleteDatabase(fileName) {
     this.fileCache.removeFile(fileName).subscribe();
   }
+
+
   public getCollection$(collectionName: string): Observable<Collection<any>> {
+    log('getCollection$', '', {});
     return this.db$.pipe(
       filter(db => db !== null),
+      tap( (val) => {log('DPPIPETEST', '', val)}),
       map(db => db.getCollection(collectionName)),
       tap(db => {
         log('getCollection$', '', db);
@@ -57,7 +60,8 @@ export class LocalDbService {
       adapter: this.adapter,
       verbose: true,
       destructureDelimiter: '=',
-      autosave: true,
+      autosave: false,
+      autoload: false
     });
 
     const fileNotCached$ = this.getFromServer$(localKey).pipe(
@@ -73,6 +77,7 @@ export class LocalDbService {
 
 
     const tryIndexedDb$: Observable<string> = Observable.create( (observer: Observer<string>) => {
+      log('getDatabaseList', '', {})
       this.adapter.getDatabaseList((result) => {
         let match = false;
         log('getDatabaseList', '', result);
@@ -103,7 +108,6 @@ export class LocalDbService {
       }),
       map(() => db)
     );
-
 
 
 

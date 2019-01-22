@@ -1,5 +1,5 @@
 import { Tactivities, TactivityLevel } from '../activities/activity.interface';
-import { INutrition } from '../nutrition/nutrition.interface';
+import { INutrients } from '../nutrition/nutrition.interface';
 
 export interface IChildHealthHistory {
     childSports: Tactivities[];
@@ -21,7 +21,7 @@ export interface IChildHealthHistory {
     bodType: EbodyType;
     leanBodyMass: number;
     skeletalMuscleMass: number;
-    macroGoal: INutrition;
+    macroGoal: INutrients;
   }
   export interface IHealth extends ICurrentHealth {
     healthHistory: IChildHealthHistory;

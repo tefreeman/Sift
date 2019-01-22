@@ -51,6 +51,7 @@
     "fs": "0.0.1-security",
     "lokijs": "^1.5.6",
     "prettier": "^1.15.3",
+    "run": "1.4.0",
     "rxjs": "^6.3.3",
     "tslint-config-standard": "^8.0.1",
     "vscode-css-languageservice": "^3.0.12",
