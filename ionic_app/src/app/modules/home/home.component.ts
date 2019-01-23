@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
 
   testLogout() {
     this.filtersService.getActiveFilter();
-    //this.auth.signOut();
+    this.auth.signOut();
   }
   
 

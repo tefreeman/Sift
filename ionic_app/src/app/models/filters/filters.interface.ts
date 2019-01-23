@@ -27,3 +27,21 @@ type TRestaurantFilter = 'distance' | 'price' | 'tag' | 'reviewScore' | 'reviewC
 export interface IRestaurantsFilter extends IFilter {
   key: TRestaurantFilter;
 }
+
+export interface INutrientFilter extends IFilter {
+  key: string;
+  min: number;
+  max: number;
+}
+
+/**
+ *
+ * Ingredient Filter interface. HasVal is a an ingredient_id
+ * @export
+ * @interface IIngredientFilter
+ * @extends {IFilter}
+ */
+export interface IIngredientFilter extends IFilter {
+  key: string;
+  hasVal: number; 
+}

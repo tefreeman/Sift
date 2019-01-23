@@ -1,7 +1,7 @@
 [
   {
     "origin": ["*"],
-    "responseHeader": ["Content-Type"],
+    "responseHeader": ["Content-Type, Content-Encoding"],
     "method": ["GET"],
     "maxAgeSeconds": 3600
   }

@@ -3,9 +3,11 @@ import { Observable, of, pipe, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { log } from 'src/app/core/logger.service';
 
-import { Injectable } from '@angular/core';
+import { Injectable, Query } from '@angular/core';
 
-import { IFilter, IFilterObj, IRestaurantsFilter } from '../../models/filters/filters.interface';
+import {
+    IFilter, IFilterObj, IIngredientFilter, INutrientFilter, IRestaurantsFilter
+} from '../../models/filters/filters.interface';
 import { LocalDbService } from './local-db.service';
 
 @Injectable({ providedIn: 'root' })
@@ -33,7 +35,7 @@ export class FiltersService {
             lastActive: 14124142,
             filterIngredients: [],
             filterNutrients: [],
-            filterRestaurants: [{key : 'prices', min: 2, max: 4}, {key: 'areviewScore', min: 4.6}],
+            filterRestaurants: [{key : 'price', min: 2, max: 4}, {key: 'reviewScore', min: 4.6}],
             // Create your own diet?
             diet: {},
         };
@@ -109,8 +111,32 @@ export class FiltersService {
         );
     }
 
-    private filterDistance(col: DynamicView<any>, filter: IFilter) {
+    private nutrientFilters$(filters: INutrientFilter[], name: string): Observable<DynamicView<any>> {
+        return this.localDbService.getCollection$('nutrients').pipe (
+            map( (col) => {
+            let dView = col.addDynamicView(name);
+            for (const filter of filters) {
+            if (filter.hasVal) {
+                dView = dView.applyFind({ [filter.key]: {'$eq': filter.hasVal}});
+            }
+        }
+        return dView;
+        })
+        );
+    }
 
+    private ingredientFilters$(filters: IIngredientFilter[], name: string): Observable<DynamicView<any>> {
+        return this.localDbService.getCollection$('ingredients').pipe (
+            map( (col) => {
+            let dView = col.addDynamicView(name);
+            for (const filter of filters) {
+            if (filter.min && filter.max) {
+                dView = dView.applyFind({ [filter.key]: {'$eq': filter.hasVal}});
+            }
+        }
+        return dView;
+        })
+        );
     }
 
     private filterNutrient(col: DynamicView<any>, filter: IFilter): DynamicView<any> {
