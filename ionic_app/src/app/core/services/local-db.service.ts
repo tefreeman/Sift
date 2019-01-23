@@ -45,7 +45,7 @@ export class LocalDbService {
     log('getCollection$', '', {});
     return this.db$.pipe(
       filter(db => db !== null),
-      tap( (val) => {log('DPPIPETEST', '', val)}),
+      tap( (val) => {log('DPPIPETEST', '', val); }),
       map(db => db.getCollection(collectionName)),
       tap(db => {
         log('getCollection$', '', db);
@@ -70,30 +70,29 @@ export class LocalDbService {
         log('getFromServer$', 'then filecache.writeFile', {'key': localKey, 'db': dbData});
         this.adapter.saveDatabase(localKey, dbData, (result) => {
           log('saveDatabase', '', result);
-        })
-        //this.fileCache.writeFile(localKey, dbData);
+        });
+        // this.fileCache.writeFile(localKey, dbData);
       })
-    )
+    );
 
 
     const tryIndexedDb$: Observable<string> = Observable.create( (observer: Observer<string>) => {
-      log('getDatabaseList', '', {})
+      log('getDatabaseList', '', {});
       this.adapter.getDatabaseList((result) => {
         let match = false;
         log('getDatabaseList', '', result);
-        for ( let dbName of result) {
+        for ( const dbName of result) {
           if (dbName === localKey) {
               match = true;
             }
           }
-        if (match) { 
+        if (match) {
           this.adapter.loadDatabase(localKey, (serializedDb: string) => {
-            log('loadDatabase', `success at ${localKey}`, serializedDb)
+            log('loadDatabase', `success at ${localKey}`, serializedDb);
             observer.next(serializedDb);
           });
-        }
-        else { 
-          observer.error(new Error('cannot find indexed db')); 
+        } else {
+          observer.error(new Error('cannot find indexed db'));
         }
       });
     });

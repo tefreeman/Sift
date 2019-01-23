@@ -8,41 +8,22 @@ export interface IFilterObj {
     public: boolean;
     timestamp: number;
     lastActive: number;
-    filterArray: TFilter[];
+    filterRestaurants:  IRestaurantsFilter[];
+    filterIngredients: IFilter[];
+    filterNutrients:  IFilter[];
     // Create your own diet?
     diet: {};
     // Need to add preset diets to automatically set health and food filters
   }
 
-type TFilter = INutrientFilter | IIngredientFilter | IPriceFilter | IDistanceFilter | ITagFilter;
-
-interface INutrientFilter {
-  type: 'nutrient';
-  prop: string;
-  max: number;
-  min: number;
+export interface IFilter {
+  key?: any;
+  max?: number;
+  min?: number;
+  has?: boolean;
+  hasVal?: string | number;
 }
-
-interface  IIngredientFilter {
-  type: 'ingredient';
-  name: string;
-  has: boolean;
-}
-
-interface IPriceFilter {
-  type: 'price';
-  $: boolean;
-  $$: boolean;
-  $$$: boolean;
-  $$$$: boolean;
-}
-
-interface IDistanceFilter {
-  type: 'distance';
-  max: number;
-}
-
-interface ITagFilter {
-  type: 'tag';
-  name: 'string';
+type TRestaurantFilter = 'distance' | 'price' | 'tag' | 'reviewScore' | 'reviewCount';
+export interface IRestaurantsFilter extends IFilter {
+  key: TRestaurantFilter;
 }

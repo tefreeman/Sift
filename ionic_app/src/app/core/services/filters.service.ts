@@ -1,34 +1,28 @@
 import * as Lokijs from 'lokijs';
 import { Observable, of, pipe, Subject } from 'rxjs';
-import { map, tap, timestamp } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { log } from 'src/app/core/logger.service';
 
-import { NONE_TYPE } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 
-import { IFilterObj } from '../../models/filters/filters.interface';
+import { IFilter, IFilterObj, IRestaurantsFilter } from '../../models/filters/filters.interface';
 import { LocalDbService } from './local-db.service';
 
 @Injectable({ providedIn: 'root' })
 export class FiltersService {
-    private itemsCollection$: Observable<Collection<any>>;
-    private nutrientsCollection$: Observable<Collection<any>>;
-    private restaurantsCollection$: Observable<Collection<any>>;
+
     private filters: IFilterObj[];
     private activeFilter$: Subject<IFilterObj> = new Subject();
     private activeFilterItems$: Subject<any> = new Subject();
 
     constructor(private localDbService: LocalDbService) {
-        this.itemsCollection$ = localDbService.getCollection$('items');
-        this.nutrientsCollection$ = localDbService.getCollection$('nutrients');
-        this.restaurantsCollection$ = localDbService.getCollection$('restaurants');
-
-
 
         this.activeFilter$.subscribe( (filterObj) => {
             log('activeFilter$', '', filterObj);
-            let result = this.processFilter(filterObj);
-            this.activeFilterItems$.next(of(result));
+             this.processFilters(filterObj).subscribe((result) => {
+                log('result$', '', result);
+                this.activeFilterItems$.next(of(result));
+            });
         });
 
         const filter: IFilterObj = {
@@ -37,7 +31,9 @@ export class FiltersService {
             public: true,
             timestamp: 12313123,
             lastActive: 14124142,
-            filterArray: [{type: 'nutrient', prop: 'protein', max: 41, min: 40, }],
+            filterIngredients: [],
+            filterNutrients: [],
+            filterRestaurants: [{key : 'prices', min: 2, max: 4}, {key: 'areviewScore', min: 4.6}],
             // Create your own diet?
             diet: {},
         };
@@ -81,24 +77,45 @@ export class FiltersService {
         return this.activeFilterItems$;
     }
 
-    private processFilter(filterObj: IFilterObj): any[] {
-        for (const filter of filterObj.filterArray) {
-            if (filter.type === 'nutrient') {
-                this.nutrientsCollection$.subscribe((col) => {
-                    const result = col.find({[filter.prop]: {'$between': [30, 31]}});
-                    if (result.length > 0) {
-                        log('processFilter', 'greater than 0', result);
-                        return result;
-                    }
-                });
-            }
-        }
-        return [];
+    private processFilters(filterObj: IFilterObj): Observable<any[]> {
+        return this.restaurantFilters$(filterObj.filterRestaurants, filterObj.name)
+        .pipe(
+            map( (view) => {
+                log('processFilters!');
+                return view.data();
+            })
+        );
     }
 
+    private restaurantFilters$(filters: IRestaurantsFilter[], name: string): Observable<DynamicView<any>> {
+        return this.localDbService.getCollection$('restaurants').pipe (
+            map( (col) => {
+            let dView = col.addDynamicView(name);
+            for (const filter of filters) {
+            if (filter.min && filter.max) {
+                dView = dView.applyFind({ [filter.key]: {'$between': [filter.min, filter.max]}});
+            } else if (filter.max && !filter.max) {
+                dView = dView.applyFind({ [filter.key]: {'$lte': filter.max}});
+            } else if (filter.min && !filter.max) {
+                dView = dView.applyFind({ [filter.key]: {'$gte': filter.min}});
+            } else if (filter.has && !filter.hasVal) {
+                dView = dView.applyFind({ [filter.key]: filter.has});
+            } else if (filter.hasVal && !filter.has) {
+                dView = dView.applyFind({ [filter.key]: filter.hasVal});
+            }
+        }
+        return dView;
+        })
+        );
+    }
 
+    private filterDistance(col: DynamicView<any>, filter: IFilter) {
 
+    }
 
+    private filterNutrient(col: DynamicView<any>, filter: IFilter): DynamicView<any> {
+        return col.applyFind({[filter.key]: {'$between': [filter.min, filter.max]}});
+    }
 
     private findFilter(filter: object | string): number | void {
         const name = typeof filter === 'object' ? filter['name'] : filter;

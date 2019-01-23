@@ -13,7 +13,7 @@
 	"settings": {
 		"workbench.iconTheme": "vscode-icons",
 		"typescript.updateImportsOnFileMove.enabled": "always",
-		"window.zoomLevel": 0,
+		"window.zoomLevel": 1,
 		"vsicons.projectDetection.autoReload": true,
 		"javascript.implicitProjectConfig.checkJs": true,
 		"typescript.disableAutomaticTypeAcquisition": true,
