@@ -9,8 +9,8 @@ export interface IFilterObj {
     timestamp: number;
     lastActive: number;
     filterRestaurants:  IRestaurantsFilter[];
-    filterIngredients: IFilter[];
-    filterNutrients:  IFilter[];
+    filterIngredients: IIngredientFilter [];
+    filterNutrients:  INutrientFilter[];
     // Create your own diet?
     diet: {};
     // Need to add preset diets to automatically set health and food filters

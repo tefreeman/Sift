@@ -114,13 +114,35 @@ let ingredientCol = db.addCollection('ingredients', {
     indices: ['name']
 });
 
+// This function handles arrays and objects
 
+function tryNumber(mainObject: object) {
+
+
+}
+
+var tryToNumber = function (obj) {
+    for (var property in obj) {
+        if (obj.hasOwnProperty(property) && obj[property] != null) {
+            if (obj[property].constructor == Object) {
+                tryToNumber(obj[property]);
+            } else if (obj[property].constructor == Array) {
+                for (var i = 0; i < obj[property].length; i++) {
+                    tryToNumber(obj[property][i]);
+                }
+            } else {
+                obj[property] = (isNaN(obj[property])) ? obj[property] : Number(obj[property]);
+            }
+        }
+    }
+    return obj;
+}
 let amtTlt = 500;
 let itemAmt = 60;
 let ingredientIndex = 1000;
 
 for (let p = 0; p < ingredientIndex; p++) {
-    ingredientCol.insert(GenerateObject(ingredients));
+    ingredientCol.insert(tryToNumber(GenerateObject(ingredients)));
 }
 
 for (let i = 0; i < amtTlt; i++) {
@@ -132,20 +154,20 @@ for (let i = 0; i < amtTlt; i++) {
             ingredientIdsArr.push(getRandomInt(1,1000));
         }
 
-        let nutrient = GenerateObject(nutrients);
+        let nutrient = tryToNumber(GenerateObject(nutrients));
         let nutriID = nutrientsCol.insert(nutrient)['$loki'];
 
         let itemWId = item;
         itemWId['nutrition_id'] = nutriID;
         itemWId['ingredient_ids'] = ingredientIdsArr;
 
-        let itemObj = GenerateObject(itemWId)
+        let itemObj = tryToNumber(GenerateObject(itemWId))
         let tempItem_id = itemsCol.insert(itemObj)['$loki'];
         restaurantsItemsArr.push(tempItem_id);
     }
     let restaurantWId = restaurant;
     restaurantWId['items_id'] = restaurantsItemsArr;
-    let restaurantObj = GenerateObject(restaurantWId);
+    let restaurantObj = tryToNumber(GenerateObject(restaurantWId));
     restaurantsCol.insert(restaurantObj);
 }
 
@@ -153,6 +175,6 @@ itemsCol.ensureAllIndexes(true);
 nutrientsCol.ensureAllIndexes(true);
 restaurantsCol.ensureAllIndexes(true);
 let textDb = db.serialize();
-fs.writeFileSync('jsonTestFile500.bin', textDb);
+fs.writeFileSync('jsonTestFile500', textDb);
 
 db.close();

@@ -42,14 +42,9 @@ export class LocalDbService {
 
 
   public getCollection$(collectionName: string): Observable<Collection<any>> {
-    log('getCollection$', '', {});
     return this.db$.pipe(
       filter(db => db !== null),
-      tap( (val) => {log('DPPIPETEST', '', val); }),
       map(db => db.getCollection(collectionName)),
-      tap(db => {
-        log('getCollection$', '', db);
-      }),
     );
   }
 

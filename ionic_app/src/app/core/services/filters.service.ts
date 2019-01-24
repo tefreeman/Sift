@@ -1,6 +1,6 @@
 import * as Lokijs from 'lokijs';
-import { Observable, of, pipe, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of, pipe, Subject } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { log } from 'src/app/core/logger.service';
 
 import { Injectable, Query } from '@angular/core';
@@ -80,68 +80,100 @@ export class FiltersService {
     }
 
     private processFilters(filterObj: IFilterObj): Observable<any[]> {
-        return this.restaurantFilters$(filterObj.filterRestaurants, filterObj.name)
+        const restaurantTransform = this.genRestaurantTransformArr(filterObj.filterRestaurants);
+        const nutrientTransform = this.genNutrientTransformArr(filterObj.filterNutrients);
+        const ingredientTransform = this.genIngredientTransformArr(filterObj.filterIngredients);
+
+        const seperateFilteredItems = forkJoin(
+        this.getRestaurantsByFilter$(restaurantTransform),
+      //  this.getNutrientsByFilter$(nutrientTransform),
+      //  this.getIngredientsByFilter$(ingredientTransform) 
+      ).pipe(
+           map( (filteredItems) =>  {
+               log('filteredItems', '', filteredItems);
+               return filteredItems[0];
+           })
+        );
+
+        return seperateFilteredItems;
+
+
+
+
+    }
+
+    private getRestaurantsByFilter$(transformations: any[]): Observable<any[]> {
+        return this.localDbService.getCollection$('restaurants')
         .pipe(
-            map( (view) => {
-                log('processFilters!');
-                return view.data();
-            })
+            map((col) => {
+                let test = col.chain(transformations).data();
+                log('test', '', test);
+                return test;
+                }
+            )
+        );
+    }
+    private getNutrientsByFilter$(transformations: any[]): Observable<any[]> {
+        return this.localDbService.getCollection$('nutrients')
+        .pipe(
+            map((col) => {
+                return col.chain(transformations).data();
+                }
+            )
+        );
+    }
+    private getIngredientsByFilter$(transformations: any[]): Observable<any[]> {
+        return this.localDbService.getCollection$('ingredients')
+        .pipe(
+            map((col) => {
+                return col.chain(transformations).data();
+                }
+            )
         );
     }
 
-    private restaurantFilters$(filters: IRestaurantsFilter[], name: string): Observable<DynamicView<any>> {
-        return this.localDbService.getCollection$('restaurants').pipe (
-            map( (col) => {
-            let dView = col.addDynamicView(name);
+
+
+    private genRestaurantTransformArr(filters: IRestaurantsFilter[]): any[] {
+            const filterArr = [];
             for (const filter of filters) {
             if (filter.min && filter.max) {
-                dView = dView.applyFind({ [filter.key]: {'$between': [filter.min, filter.max]}});
+                filterArr.push([[filter.key], {'find': { [filter.key]: {'$between': [filter.min, filter.max]}}}]);
             } else if (filter.max && !filter.max) {
-                dView = dView.applyFind({ [filter.key]: {'$lte': filter.max}});
+                filterArr.push([[filter.key], {'find': { [filter.key]: {'$lte': filter.max}}}]);
             } else if (filter.min && !filter.max) {
-                dView = dView.applyFind({ [filter.key]: {'$gte': filter.min}});
+                filterArr.push([[filter.key], {'find': { [filter.key]: {'$gte': filter.min}}}]);
             } else if (filter.has && !filter.hasVal) {
-                dView = dView.applyFind({ [filter.key]: filter.has});
+                filterArr.push([[filter.key], {'find': { [filter.key]: filter.has}}]);
             } else if (filter.hasVal && !filter.has) {
-                dView = dView.applyFind({ [filter.key]: filter.hasVal});
+                filterArr.push([[filter.key], {'find':{  [filter.key]: filter.hasVal}}]);
             }
         }
-        return dView;
-        })
-        );
+        return filterArr;
+
     }
 
-    private nutrientFilters$(filters: INutrientFilter[], name: string): Observable<DynamicView<any>> {
-        return this.localDbService.getCollection$('nutrients').pipe (
-            map( (col) => {
-            let dView = col.addDynamicView(name);
+    private genNutrientTransformArr(filters: INutrientFilter[]): any[] {
+        const filterArr = [];
             for (const filter of filters) {
             if (filter.hasVal) {
-                dView = dView.applyFind({ [filter.key]: {'$eq': filter.hasVal}});
+                filterArr.push([[filter.key], {'find': { [filter.key]: {'$eq': filter.hasVal}}}]);
             }
         }
-        return dView;
-        })
-        );
+        return filterArr;
+
     }
 
-    private ingredientFilters$(filters: IIngredientFilter[], name: string): Observable<DynamicView<any>> {
-        return this.localDbService.getCollection$('ingredients').pipe (
-            map( (col) => {
-            let dView = col.addDynamicView(name);
+    private genIngredientTransformArr(filters: IIngredientFilter[]): any[] {
+        const filterArr = [];
             for (const filter of filters) {
             if (filter.min && filter.max) {
-                dView = dView.applyFind({ [filter.key]: {'$eq': filter.hasVal}});
+                filterArr.push([[filter.key], {'find': { [filter.key]: {'$between': [filter.min, filter.max]}}}]);
             }
         }
-        return dView;
-        })
-        );
+        return filterArr;
     }
 
-    private filterNutrient(col: DynamicView<any>, filter: IFilter): DynamicView<any> {
-        return col.applyFind({[filter.key]: {'$between': [filter.min, filter.max]}});
-    }
 
     private findFilter(filter: object | string): number | void {
         const name = typeof filter === 'object' ? filter['name'] : filter;
