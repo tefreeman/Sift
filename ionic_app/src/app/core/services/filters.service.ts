@@ -6,7 +6,7 @@ import { log } from 'src/app/core/logger.service';
 import { Injectable, Query } from '@angular/core';
 
 import {
-    IFilter, IFilterObj, IIngredientFilter, INutrientFilter, IRestaurantsFilter
+    IFilter, IFilterObj, IIngredientFilter, IItemsFilter, INutrientFilter, IRestaurantsFilter
 } from '../../models/filters/filters.interface';
 import { LocalDbService } from './local-db.service';
 
@@ -33,10 +33,9 @@ export class FiltersService {
             public: true,
             timestamp: 12313123,
             lastActive: 14124142,
-            filterIngredients: [],
-            filterNutrients: [{key: 'protein', min: 40, max: 100}, {key: 'carb', min: 20, max: 30},
-             {key: 'iron', min: 1, max: 20}, {key: 'fat', min: 1, max: 10}],
-            filterRestaurants: [{key : 'reviewScore', hasVal: 4.86}],
+            filterItems: [{key: 'price', min: 4.99, max: 40.00}],
+            filterNutrients: [{key: 'protein', min: 40, max: 100}],
+            filterRestaurants: [{key : 'reviewScore', min: 1.5, max: 4.0}],
             // Create your own diet?
             diet: {},
         };
@@ -83,59 +82,87 @@ export class FiltersService {
     private processFilters(filterObj: IFilterObj): Observable<any[]> {
         const restaurantTransform = this.genRestaurantTransformArr(filterObj.filterRestaurants);
         const nutrientTransform = this.genNutrientTransformArr(filterObj.filterNutrients);
-        const ingredientTransform = this.genIngredientTransformArr(filterObj.filterIngredients);
+        const itemTransform = this.genItemsTransformArr(filterObj.filterItems)
 
         const seperateFilteredItems = combineLatest(
         this.getRestaurantsByFilter$(restaurantTransform),
-        this.getNutrientsByFilter$(nutrientTransform),
-        this.getIngredientsByFilter$(ingredientTransform)
+        this.getItemsByFilter$(itemTransform),
+        this.getNutrientsByFilter$(nutrientTransform)
         )
       .pipe(
-           map( (filteredItems) =>  {
-               log('filteredItems', '', filteredItems);
-               return filteredItems[0];
+           map( (sets) =>  {
+               log('start');
+           let items = this.mergeTwoViewsById(sets[1], sets[0], 'items_id');
+            items = this.mergeTwoViewsById(items, sets[2], '$loki');
+           log('end', '', items);
+              return items.data();
+
            })
         );
 
         return seperateFilteredItems;
 
+    }
 
-
+    private mergeTwoViewsById(view: Resultset<any>, viewHas: Resultset<any>, idProp: string): Resultset<any> {
+        let ids = [];
+        if (viewHas.data()[0][idProp].constructor === Array) {
+            for (const arr of (viewHas.data())) {
+                for (let i = 0; i < arr[idProp].length; i++) {
+                    ids.push(arr[idProp][i])
+                }
+          }
+        } else {
+            for (const arr of (viewHas.data())) {
+                ids.push(arr[idProp]);
+            }
+        }
+      return view.find({'$loki': {'$in': ids}});
 
     }
 
-    private getRestaurantsByFilter$(transformations: any[]): Observable<any[]> {
+    private mergeResults$() {}
+
+    private getRestaurantsByFilter$(transformations: any[]): Observable<Resultset<any>> {
         return this.localDbService.getCollection$('restaurants')
         .pipe(
             map((col) => {
-                let test = col.chain(transformations).data();
-                log('test', '', test);
-                return test;
+                return col.chain(transformations);
                 }
             )
         );
     }
 
     //TODO add Item Filter
-    private getNutrientsByFilter$(transformations: any[]): Observable<any[]> {
-        return this.localDbService.getCollection$('nutrients')
+    private getItemsByFilter$(transformations: any[]): Observable<Resultset<any>> {
+        return this.localDbService.getCollection$('items')
         .pipe(
             map((col) => {
-                return col.chain(transformations).data();
-                }
-            )
-        );
-    }
-    private getIngredientsByFilter$(transformations: any[]): Observable<any[]> {
-        return this.localDbService.getCollection$('ingredients')
-        .pipe(
-            map((col) => {
-                return col.chain(transformations).data();
+                return col.chain(transformations);
                 }
             )
         );
     }
 
+    private getNutrientsByFilter$(transformations: any[]): Observable<Resultset<any>> {
+        return this.localDbService.getCollection$('nutrients')
+        .pipe(
+            map((col) => {
+                return col.chain(transformations);
+                }
+            )
+        );
+    }
+    
+    private getIngredientsByFilter$(transformations: any[]): Observable<Resultset<any>> {
+        return this.localDbService.getCollection$('ingredients')
+        .pipe(
+            map((col) => {
+                return col.chain(transformations);
+                }
+            )
+        );
+    }
 
 
 
@@ -156,6 +183,26 @@ export class FiltersService {
         }
         log('filterArray', '', filterArr);
         return filterArr;
+
+    }
+
+    private genItemsTransformArr(filters: IItemsFilter[]) {
+        const filterArr = [];
+        for (const filter of filters) {
+        if (filter.min && filter.max) {
+            filterArr.push({type: 'find', value: { [filter.key]: {'$between': [filter.min, filter.max]}} });
+        } else if (filter.max && !filter.max) {
+            filterArr.push({type: 'find', value: { [filter.key]: {'$lte': filter.max}}});
+        } else if (filter.min && !filter.max) {
+            filterArr.push({type: 'find', value: { [filter.key]:{'$gte': filter.min}}});
+        } else if (filter.has && !filter.hasVal) {
+            filterArr.push({type: 'find', value: { [filter.key]: filter.has}});
+        } else if (filter.hasVal && !filter.has) {
+            filterArr.push({type: 'find', value: { [filter.key]: filter.hasVal}});
+        }
+    }
+    log('filterArray', '', filterArr);
+    return filterArr;
 
     }
 

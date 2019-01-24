@@ -62,9 +62,7 @@ export class LocalDbService {
     const fileNotCached$ = this.getFromServer$(localKey).pipe(
       // write data to file storage
       tap( (dbData) => {
-        log('getFromServer$', 'then filecache.writeFile', {'key': localKey, 'db': dbData});
         this.adapter.saveDatabase(localKey, dbData, (result) => {
-          log('saveDatabase', '', result);
         });
         // this.fileCache.writeFile(localKey, dbData);
       })
@@ -72,10 +70,8 @@ export class LocalDbService {
 
 
     const tryIndexedDb$: Observable<string> = Observable.create( (observer: Observer<string>) => {
-      log('getDatabaseList', '', {});
       this.adapter.getDatabaseList((result) => {
         let match = false;
-        log('getDatabaseList', '', result);
         for ( const dbName of result) {
           if (dbName === localKey) {
               match = true;
@@ -83,7 +79,6 @@ export class LocalDbService {
           }
         if (match) {
           this.adapter.loadDatabase(localKey, (serializedDb: string) => {
-            log('loadDatabase', `success at ${localKey}`, serializedDb);
             observer.next(serializedDb);
           });
         } else {

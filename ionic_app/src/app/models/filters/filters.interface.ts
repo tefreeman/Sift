@@ -9,8 +9,8 @@ export interface IFilterObj {
     timestamp: number;
     lastActive: number;
     filterRestaurants:  IRestaurantsFilter[];
-    filterIngredients: IIngredientFilter [];
-    filterNutrients:  INutrientFilter[];
+    filterNutrients: INutrientFilter [];
+    filterItems:  IItemsFilter[];
     // Create your own diet?
     diet: {};
     // Need to add preset diets to automatically set health and food filters
@@ -23,9 +23,15 @@ export interface IFilter {
   has?: boolean;
   hasVal?: string | number;
 }
-type TRestaurantFilter = 'distance' | 'price' | 'tag' | 'reviewScore' | 'reviewCount';
+type TRestaurantFilter = 'distance' | 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
+
 export interface IRestaurantsFilter extends IFilter {
   key: TRestaurantFilter;
+}
+
+type TItemsFilter = 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
+export interface IItemsFilter extends IFilter {
+  key: TItemsFilter;
 }
 
 export interface INutrientFilter extends IFilter {
