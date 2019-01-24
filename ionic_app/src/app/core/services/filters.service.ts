@@ -1,5 +1,5 @@
 import * as Lokijs from 'lokijs';
-import { forkJoin, Observable, of, pipe, Subject } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, pipe, Subject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { log } from 'src/app/core/logger.service';
 
@@ -34,8 +34,9 @@ export class FiltersService {
             timestamp: 12313123,
             lastActive: 14124142,
             filterIngredients: [],
-            filterNutrients: [],
-            filterRestaurants: [{key : 'price', min: 2, max: 4}, {key: 'reviewScore', min: 4.6}],
+            filterNutrients: [{key: 'protein', min: 40, max: 100}, {key: 'carb', min: 20, max: 30},
+             {key: 'iron', min: 1, max: 20}, {key: 'fat', min: 1, max: 10}],
+            filterRestaurants: [{key : 'reviewScore', hasVal: 4.86}],
             // Create your own diet?
             diet: {},
         };
@@ -84,11 +85,12 @@ export class FiltersService {
         const nutrientTransform = this.genNutrientTransformArr(filterObj.filterNutrients);
         const ingredientTransform = this.genIngredientTransformArr(filterObj.filterIngredients);
 
-        const seperateFilteredItems = forkJoin(
+        const seperateFilteredItems = combineLatest(
         this.getRestaurantsByFilter$(restaurantTransform),
-      //  this.getNutrientsByFilter$(nutrientTransform),
-      //  this.getIngredientsByFilter$(ingredientTransform) 
-      ).pipe(
+        this.getNutrientsByFilter$(nutrientTransform),
+        this.getIngredientsByFilter$(ingredientTransform)
+        )
+      .pipe(
            map( (filteredItems) =>  {
                log('filteredItems', '', filteredItems);
                return filteredItems[0];
@@ -113,6 +115,8 @@ export class FiltersService {
             )
         );
     }
+
+    //TODO add Item Filter
     private getNutrientsByFilter$(transformations: any[]): Observable<any[]> {
         return this.localDbService.getCollection$('nutrients')
         .pipe(
@@ -134,21 +138,23 @@ export class FiltersService {
 
 
 
+
     private genRestaurantTransformArr(filters: IRestaurantsFilter[]): any[] {
             const filterArr = [];
             for (const filter of filters) {
             if (filter.min && filter.max) {
-                filterArr.push([[filter.key], {'find': { [filter.key]: {'$between': [filter.min, filter.max]}}}]);
+                filterArr.push({type: 'find', value: { [filter.key]: {'$between': [filter.min, filter.max]}} });
             } else if (filter.max && !filter.max) {
-                filterArr.push([[filter.key], {'find': { [filter.key]: {'$lte': filter.max}}}]);
+                filterArr.push({type: 'find', value: { [filter.key]: {'$lte': filter.max}}});
             } else if (filter.min && !filter.max) {
-                filterArr.push([[filter.key], {'find': { [filter.key]: {'$gte': filter.min}}}]);
+                filterArr.push({type: 'find', value: { [filter.key]:{'$gte': filter.min}}});
             } else if (filter.has && !filter.hasVal) {
-                filterArr.push([[filter.key], {'find': { [filter.key]: filter.has}}]);
+                filterArr.push({type: 'find', value: { [filter.key]: filter.has}});
             } else if (filter.hasVal && !filter.has) {
-                filterArr.push([[filter.key], {'find':{  [filter.key]: filter.hasVal}}]);
+                filterArr.push({type: 'find', value: { [filter.key]: filter.hasVal}});
             }
         }
+        log('filterArray', '', filterArr);
         return filterArr;
 
     }
@@ -156,8 +162,8 @@ export class FiltersService {
     private genNutrientTransformArr(filters: INutrientFilter[]): any[] {
         const filterArr = [];
             for (const filter of filters) {
-            if (filter.hasVal) {
-                filterArr.push([[filter.key], {'find': { [filter.key]: {'$eq': filter.hasVal}}}]);
+            if (filter.min && filter.max) {
+                filterArr.push({type: 'find', value: { [filter.key]: {'$between': [filter.min, filter.max]}} });
             }
         }
         return filterArr;
@@ -167,8 +173,8 @@ export class FiltersService {
     private genIngredientTransformArr(filters: IIngredientFilter[]): any[] {
         const filterArr = [];
             for (const filter of filters) {
-            if (filter.min && filter.max) {
-                filterArr.push([[filter.key], {'find': { [filter.key]: {'$between': [filter.min, filter.max]}}}]);
+            if (filter.hasVal) {
+                filterArr.push([[filter.key], {'find': { [filter.key]: {'$eq': filter.hasVal}}}]);
             }
         }
         return filterArr;
