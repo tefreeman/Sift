@@ -1,5 +1,6 @@
 import { throws } from 'assert';
 import * as fs from 'fs';
+import { normalize } from 'path';
 
 import { GenerateObject, getRandomInt } from './mock.obj';
 
@@ -124,90 +125,12 @@ const db: LokiConstructor = new Loki('localData', {
   destructureDelimiter: '='
 });
 
-let itemsCol = db.addCollection('items', {
-    indices: ['name', 'price', 'reviewCount', 'reviewScore', 'nutrition_id', 'tag_ids', 'ingredient_ids' ]
-});
-let restaurantsCol = db.addCollection('restaurants', {
-    indices: ['price', 'reviewCount', 'reviewScore', 'name', 'item_ids', 'tag_ids', 'type', 'distance']
-});
-let nutrientsCol = db.addCollection('nutrients', {
-    indices: 
-    [
-        'calories',
-        'fat',
-        'fatTrans',
-        'fatSat',
-        'monoUnsaturated',
-        'polyUnsaturated',
-        'carb',
-        'protein',
-        'fiber',
-        'cholesterol',
-        'vitaminA',
-        'vitaminB6',
-        'vitaminB12',
-        'vitaminC',
-        'vitaminD',
-        'vitaminE',
-        'vitaminK',
-        'thiamin',
-        'riboflavin',
-        'niacin',
-        'pantothenicAcid',
-        'folate',
-        'calcium',
-        'iron',
-        'magnesium',
-        'phosphorus',
-        'potassium',
-        'sodium',
-        'zinc', 
-    ]
-});
-
-let c_nutrientsCol =  db.addCollection('nutrients', {
-    indices: 
-    [
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f',
-        'g',
-        'h',
-        'i',
-        'j',
-        'k',
-        'l',
-        'm',
-        'o',
-        'p',
-        'q',
-        'r',
-        's',
-        't',
-        'u',
-        'v',
-        'w',
-        'y',
-        'x',
-        'z',
-        '0',
-        '1',
-        '2',
-        'zinc', 
-    ]
-});
- 
-let ingredientCol = db.addCollection('ingredients', {
-    indices: ['name']
-});
-
-
-let tagsCol = db.addCollection('tags', {
-    indices: ['name']
-});
+let itemsCol = db.addCollection('items');
+let restaurantsCol = db.addCollection('restaurants');
+let nutrientsCol = db.addCollection('nutrients');
+let ingredientCol = db.addCollection('ingredients');
+let tagsCol = db.addCollection('tags');
+let cacheCol = db.addCollection('cache');
 
 
 // This function handles arrays and objects
@@ -228,8 +151,8 @@ var tryToNumber = function (obj) {
     }
     return obj;
 }
-let amtTlt = 500;
-let itemAmt = 60;
+let amtTlt = 10;
+let itemAmt = 10;
 let ingredientIndex = 1000;
 
 for (let p = 0; p < ingredientIndex; p++) {
@@ -267,21 +190,137 @@ for (let i = 0; i < amtTlt; i++) {
     }
 
     let restaurantWId = restaurant;
-    restaurantWId['items_id'] = restaurantsItemsArr;
+    restaurantWId['item_ids'] = restaurantsItemsArr;
     restaurantWId['tag_ids'] = tagIdsArr1;
 
     let restaurantObj = tryToNumber(GenerateObject(restaurantWId));
     restaurantsCol.insert(restaurantObj);
 }
 
+
+console.log('starting normailization');
+normalizeDB([itemsCol, restaurantsCol, nutrientsCol]);
+console.log('done normalizing');
+
+let itemIndices = ['name', 'price', 'reviewCount', 'reviewScore', 'nutrition_id', 'tag_ids', 'ingredient_ids' ]
+let restaurantIndices =['price', 'reviewCount', 'reviewScore', 'name', 'item_ids', 'tag_ids', 'type', 'distance']
+let nutrientIndices =
+[
+    'calories',
+    'fat',
+    'fatTrans',
+    'fatSat',
+    'monoUnsaturated',
+    'polyUnsaturated',
+    'carb',
+    'protein',
+    'fiber',
+    'cholesterol',
+    'vitaminA',
+    'vitaminB6',
+    'vitaminB12',
+    'vitaminC',
+    'vitaminD',
+    'vitaminE',
+    'vitaminK',
+    'thiamin',
+    'riboflavin',
+    'niacin',
+    'pantothenicAcid',
+    'folate',
+    'calcium',
+    'iron',
+    'magnesium',
+    'phosphorus',
+    'potassium',
+    'sodium',
+    'zinc', 
+]
+let ingredientIndices = ['name'];
+let tagsIndices = ['name'];
+let cacheIndices = ['name', 'type'];
+
+addIndices(itemsCol, itemIndices);
+addIndices(restaurantsCol, restaurantIndices);
+addIndices(nutrientsCol,nutrientIndices);
+
+addIndices(ingredientCol, ingredientIndices);
+addIndices(tagsCol, tagsIndices);
+addIndices(cacheCol, cacheIndices);
+
+cacheCol.ensureAllIndexes(true);
 itemsCol.ensureAllIndexes(true);
 nutrientsCol.ensureAllIndexes(true);
 restaurantsCol.ensureAllIndexes(true);
 tagsCol.ensureAllIndexes(true);
 ingredientCol.ensureAllIndexes(true);
 
-
 let textDb = db.serialize();
 fs.writeFileSync('jsonTestFile500', textDb);
 
 db.close();
+
+
+
+function normalizeDB(collection: Collection<any>[]) {
+    for (const col of collection ) {
+        let obj = col.data[0];
+    for (let prop in obj) {
+        if (typeof(obj[prop]) === 'number' && prop !== '$loki' && prop.substr(prop.length - 2) !== 'id') {
+            normalizeProp(col, prop);
+        }
+    }
+}
+}
+
+function normalizeProp(col: Collection<any>, field: string) {
+
+    let min = col.min(field);
+    let max = col.max(field);
+    let mode = col.mode(field);
+    let stdDev = col.stdDev(field);
+    let median = col.median(field);
+    let avg = col.avg(field);
+    
+   if (isNaN(min) || isNaN(max) || isNaN(stdDev) || isNaN(median) || isNaN(avg) || avg <= 1) {
+       return;
+   }
+
+    let roundTo = (numDigits(max) - numDigits(min)) + 2
+    col.findAndUpdate({}, (obj) => { obj[field] = Number(normalizeVar(obj[field], min, max).toFixed(roundTo)); return obj})
+
+    let dataCache = roundObject({name: col.name + '.' + field, type: 'dataCache', collection: col.name, field: field, min: min, max: max, mode: mode, stdDev: stdDev, median: median, avg: avg }, 6);
+    cacheCol.insert(dataCache);
+    return;
+}
+
+
+function normalizeVar(x: number, min: number, max: number) {
+    return (x - min) / (max - min);
+}
+
+function roundObject(obj: object, dPts: number) {
+    for (let prop in obj) {
+        if (typeof(obj[prop]) === 'number') {
+            obj[prop] = Number(obj[prop].toFixed(dPts));
+        }
+    }
+    console.log(obj);
+    return obj;
+}
+
+function numDigits(x) {
+    x = Number(String(x).replace(/[^0-9]/g, ''));
+    return (log10((x ^ (x >> 31)) - (x >> 31)) | 0) + 1;
+  }
+
+  function log10(val) {
+    return Math.log(val) / Math.log(10);
+  }
+
+  function addIndices(col: Collection<any>, indices: Array<string>) {
+      console.log('adding ' + indices +  ' Indices');
+      for (const string of indices) {
+      col.ensureIndex(string, true);
+      }
+  }

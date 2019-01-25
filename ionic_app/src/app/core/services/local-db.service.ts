@@ -17,6 +17,8 @@ import { GpsService } from './gps.service';
 @Injectable({ providedIn: 'root' })
 export class LocalDbService {
   private db$: BehaviorSubject<Loki> = new BehaviorSubject(null);
+  private dataStats$: BehaviorSubject<any[]> = new BehaviorSubject(null);
+
   private adapter;
   constructor(
     private fileCache: RequestFileCacheService,
@@ -32,6 +34,7 @@ export class LocalDbService {
       )
       .subscribe(newDb => {
         this.db$.next(newDb);
+        this.dataStats.next(newDb.getCollection('cache').find({'type': {'$eq': 'itemStats'}}))
         log('this.db$.next', '', newDb);
       });
   }
@@ -48,11 +51,9 @@ export class LocalDbService {
     );
   }
   
-  public getMinMaxDbInfo$(): Observable<object[]> {
-    return this.db$.pipe(
-      filter(db => db !== null),
-     // map(db => db.getCollection('cache').find({'name': {'$eq': 'minMaxItems'}})),
-     map(() => [{prop: 'reviewScore', min: 0, max: 5},{prop: 'reviewCount', min: 0, max: 1000} ])
+  public getItemStats$(): Observable<object[]> {
+    return this.dataStats$.pipe(
+      filter(stats => stats !== null)
     );
   }
 
