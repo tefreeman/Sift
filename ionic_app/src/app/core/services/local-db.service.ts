@@ -47,6 +47,14 @@ export class LocalDbService {
       map(db => db.getCollection(collectionName)),
     );
   }
+  
+  public getMinMaxDbInfo$(): Observable<object[]> {
+    return this.db$.pipe(
+      filter(db => db !== null),
+     // map(db => db.getCollection('cache').find({'name': {'$eq': 'minMaxItems'}})),
+     map(() => [{prop: 'reviewScore', min: 0, max: 5},{prop: 'reviewCount', min: 0, max: 1000} ])
+    );
+  }
 
 
   private loadDb(key: string) {

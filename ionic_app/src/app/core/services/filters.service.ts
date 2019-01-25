@@ -91,10 +91,10 @@ export class FiltersService {
         )
       .pipe(
            map( (sets) =>  {
-               log('start');
            let items = this.mergeTwoViewsById(sets[1], sets[0], 'items_id');
             items = this.mergeTwoViewsById(items, sets[2], '$loki');
-           log('end', '', items);
+            log('items', '', items);
+            this.sortItems(items).subscribe(() => {});
               return items.data();
 
            })
@@ -102,6 +102,32 @@ export class FiltersService {
 
         return seperateFilteredItems;
 
+    }
+
+    private sortItems(set: Resultset<any>) {
+      return  this.localDbService.getMinMaxDbInfo$().pipe(
+            map ( (minMaxObj) => {
+                log('sortItems', '', minMaxObj);
+              set = set.update((doc) => { doc['tasteScore'] = this.normalizeSet(doc, minMaxObj); return doc});
+                log('SET', '', set);
+                return set;
+            }
+        )
+        );
+    }
+    
+
+    private normalizeSet(item: object, minMaxArr: object[]): any {
+            let normalizedItem = {};
+            for (const minMax of minMaxArr) {
+            normalizedItem[minMax['prop']] = this.normalize(item[minMax['prop']], minMax['min'], minMax['max']);
+            }
+            normalizedItem['$loki'] = item['$loki'];
+        return normalizedItem;
+    }
+
+    private normalize(x: number, min: number, max: number) {
+        return (x - min) / (max - min);
     }
 
     private mergeTwoViewsById(view: Resultset<any>, viewHas: Resultset<any>, idProp: string): Resultset<any> {
@@ -259,4 +285,11 @@ export class FiltersService {
     }
 
 
+}
+
+
+interface IMinMax {
+    prop: string;
+    min: number;
+    max: number;
 }
