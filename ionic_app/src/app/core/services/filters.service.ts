@@ -8,22 +8,25 @@ import { Injectable, Query } from '@angular/core';
 import {
     IFilter, IFilterObj, IIngredientFilter, IItemsFilter, INutrientFilter, IRestaurantsFilter
 } from '../../models/filters/filters.interface';
+import { distance } from '../../shared/functions/helpers.functions';
+import { GpsService } from './gps.service';
 import { LocalDbService } from './local-db.service';
+import { NormalizeService } from './normalize.service';
 
 @Injectable({ providedIn: 'root' })
 export class FiltersService {
 
     private filters: IFilterObj[];
     private activeFilter$: Subject<IFilterObj> = new Subject();
-    private activeFilterItems$: Subject<any> = new Subject();
+    private activeFilterItemsResult$: Subject<Resultset<any>> = new Subject();
 
-    constructor(private localDbService: LocalDbService) {
+    constructor(private localDbService: LocalDbService, private normalizeService: NormalizeService, private gpsService: GpsService) {
 
         this.activeFilter$.subscribe( (filterObj) => {
             log('activeFilter$', '', filterObj);
              this.processFilters(filterObj).subscribe((result) => {
                 log('result$', '', result);
-                this.activeFilterItems$.next(of(result));
+                this.activeFilterItemsResult$.next(result);
             });
         });
 
@@ -40,7 +43,10 @@ export class FiltersService {
             diet: {},
         };
 
-        this.setActiveFilter(filter);
+        normalizeService.normalizeFilterObj(filter).subscribe( (res) => {
+            log('normalizedService', 'result', res);
+            this.setActiveFilter(res);
+        });
 
     }
 
@@ -75,11 +81,11 @@ export class FiltersService {
         return this.activeFilter$;
     }
 
-    public getActiveItems() {
-        return this.activeFilterItems$;
+    public getActiveItemsResultset$(): Subject<Resultset<any>> {
+        return this.activeFilterItemsResult$;
     }
 
-    private processFilters(filterObj: IFilterObj): Observable<any[]> {
+    private processFilters(filterObj: IFilterObj): Observable<Resultset<any>> {
         const restaurantTransform = this.genRestaurantTransformArr(filterObj.filterRestaurants);
         const nutrientTransform = this.genNutrientTransformArr(filterObj.filterNutrients);
         const itemTransform = this.genItemsTransformArr(filterObj.filterItems)
@@ -91,10 +97,11 @@ export class FiltersService {
         )
       .pipe(
            map( (sets) =>  {
-           let items = this.mergeTwoViewsById(sets[1], sets[0], 'items_id');
+               log('sets', '', sets);
+           let items = this.mergeTwoViewsById(sets[1], sets[0], 'item_ids');
             items = this.mergeTwoViewsById(items, sets[2], '$loki');
             log('items', '', items);
-              return items.data();
+              return items;
 
            })
         );

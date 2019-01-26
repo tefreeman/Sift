@@ -131,6 +131,7 @@ let nutrientsCol = db.addCollection('nutrients');
 let ingredientCol = db.addCollection('ingredients');
 let tagsCol = db.addCollection('tags');
 let cacheCol = db.addCollection('cache');
+let filtersCol = db.addCollection('filters');
 
 
 // This function handles arrays and objects
@@ -151,8 +152,8 @@ var tryToNumber = function (obj) {
     }
     return obj;
 }
-let amtTlt = 10;
-let itemAmt = 10;
+let amtTlt = 300;
+let itemAmt = 40;
 let ingredientIndex = 1000;
 
 for (let p = 0; p < ingredientIndex; p++) {
@@ -247,6 +248,8 @@ addIndices(nutrientsCol,nutrientIndices);
 addIndices(ingredientCol, ingredientIndices);
 addIndices(tagsCol, tagsIndices);
 addIndices(cacheCol, cacheIndices);
+
+addIndices(filtersCol, ['name']);
 
 cacheCol.ensureAllIndexes(true);
 itemsCol.ensureAllIndexes(true);

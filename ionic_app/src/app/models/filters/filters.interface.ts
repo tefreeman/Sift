@@ -17,23 +17,26 @@ export interface IFilterObj {
   }
 
 export interface IFilter {
-  key?: any;
+  key: any;
   max?: number;
   min?: number;
   has?: boolean;
   hasVal?: string | number;
 }
-type TRestaurantFilter = 'distance' | 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
+type TRestaurantFilterKey = 'distance' | 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
 
 export interface IRestaurantsFilter extends IFilter {
-  key: TRestaurantFilter;
+  key: TRestaurantFilterKey;
 }
 
-type TItemsFilter = 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
+type TItemsFilterKey = 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
 export interface IItemsFilter extends IFilter {
-  key: TItemsFilter;
+  key: TItemsFilterKey;
 }
 
+type TNutrientFilterKey =     'calories'|'fat' | 'fatTrans' | 'fatSat' | 'monoUnsaturated' | 'polyUnsaturated' | 'carb' | 'protein' |
+ 'fiber' | 'cholesterol' | 'vitaminA' | 'vitaminB6' | 'vitaminB12' | 'vitaminC' | 'vitaminD' | 'vitaminE' | 'vitaminK' | 'thiamin' |
+  'riboflavin' | 'niacin' | 'pantothenicAcid' | 'folate' | 'calcium' | 'iron' | 'magnesium' | 'phosphorus' | 'potassium' | 'sodium' | 'zinc'
 export interface INutrientFilter extends IFilter {
   key: string;
   min: number;
@@ -49,5 +52,5 @@ export interface INutrientFilter extends IFilter {
  */
 export interface IIngredientFilter extends IFilter {
   key: string;
-  hasVal: number; 
+  hasVal: number;
 }

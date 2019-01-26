@@ -1,29 +1,33 @@
 import { Observer } from 'firebase';
 import * as Loki from 'lokijs';
 import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
-import { BehaviorSubject, merge, Observable, observable, of, pipe } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, observable, of, pipe } from 'rxjs';
 import {
-    catchError, concat, concatMap, filter, flatMap, map, mapTo, switchMap, tap
+    catchError, concat, concatMap, debounceTime, filter, flatMap, map, mapTo, switchMap, tap,
+    throttleTime
 } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import { DomAdapter } from '@angular/platform-browser/src/dom/dom_adapter';
 
+import { IItemStats } from '../../models/normalization/normalization.interface';
+import { distance } from '../../shared/functions/helpers.functions';
 import { log } from '../logger.service';
 import { RequestFileCacheService } from './cache/request-file-cache.service';
 import { DataService } from './data.service';
 import { GpsService } from './gps.service';
+import { NormalizeService } from './normalize.service';
 
 @Injectable({ providedIn: 'root' })
 export class LocalDbService {
   private db$: BehaviorSubject<Loki> = new BehaviorSubject(null);
-  private dataStats$: BehaviorSubject<any[]> = new BehaviorSubject(null);
+  private dataStats$: BehaviorSubject<Collection<any>> = new BehaviorSubject(null);
 
   private adapter;
   constructor(
     private fileCache: RequestFileCacheService,
     private dataService: DataService,
-    private gpsService: GpsService
+    private gpsService: GpsService,
   ) {
     this.adapter =  new LokiIndexedAdapter();
     this.gpsService.getGridKey$()
@@ -34,9 +38,10 @@ export class LocalDbService {
       )
       .subscribe(newDb => {
         this.db$.next(newDb);
-        this.dataStats.next(newDb.getCollection('cache').find({'type': {'$eq': 'itemStats'}}))
+        this.dataStats$.next(newDb.getCollection('cache'))
         log('this.db$.next', '', newDb);
       });
+
   }
 
   public deleteDatabase(fileName) {
@@ -51,10 +56,39 @@ export class LocalDbService {
     );
   }
   
-  public getItemStats$(): Observable<object[]> {
+  public getCollectionCache$(): Observable<Collection<any>> {
     return this.dataStats$.pipe(
-      filter(stats => stats !== null)
+      filter(col => col !== null)
     );
+  }
+
+  public setUpdateDistance() {
+    const getRestaurants$ = this.db$.pipe(
+    tap( (userPos) => { log('','', userPos) }),
+    concatMap((db) => {
+      return this.getCollection$('restaurants');
+    })
+    );
+
+    const getUserPos$ = this.gpsService.getGpsCoords$().pipe(
+      tap( (userPos) => { log('','', userPos) }),
+      filter(userPos => userPos !== null),
+      map((userPos) => userPos.coords)
+    );
+
+   return combineLatest(getUserPos$, getRestaurants$).pipe(
+    debounceTime(20000),
+    map ( (valArr) => {
+      log('start distance');
+      valArr[1].findAndUpdate({}, (obj) => {
+        obj['distance'] = distance(
+          {'lat': valArr[0].latitude, 'lon': valArr[0].longitude},
+          {'lat': obj['coords']['lat'], 'lon': obj['coords']['lat']
+        });
+      });
+      return valArr[1];
+    } )
+   );
   }
 
 
