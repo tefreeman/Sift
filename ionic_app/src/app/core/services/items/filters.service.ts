@@ -2,6 +2,7 @@ import * as Lokijs from 'lokijs';
 import { combineLatest, forkJoin, Observable, of, pipe, Subject, zip } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { log } from 'src/app/core/logger.service';
+import { sort } from 'timsort';
 
 import { Injectable, Query } from '@angular/core';
 
@@ -36,7 +37,7 @@ export class FiltersService {
         const testObj: ISort = {
           items: [
             { key: 'reviewScore', weight: 1.0 },
-            { key: 'reviewCount', weight: 0.2 }
+            { key: 'reviewCount', weight: 0.2 },
           ],
           restaurants: [
           { key: 'reviewScore', weight: 0.1 },
@@ -56,7 +57,7 @@ export class FiltersService {
       public: true,
       timestamp: 12313123,
       lastActive: 14124142,
-      filterItems: [{ key: 'reviewCount', min: 10, max: 500 }, {key: 'reviewScore', min: 1, max: 5.0}],
+      filterItems: [{ key: 'reviewCount', min: 10, max: 500 }, {key: 'reviewScore', min: 1, max: 5.0}, {key: 'tag_ids', hasVal: 433}],
       filterNutrients: [{ key: 'protein', min: 78, max: 100 }],
       filterRestaurants: [{ key: 'reviewScore', min: 1.5, max: 5.0 }],
       // Create your own diet?
@@ -102,7 +103,12 @@ export class FiltersService {
   }
 
   public setActiveFilter(filterObj: IFilterObj) {
-    this.activeFilter$.next(filterObj);
+    this.efficientFilterSort(filterObj).subscribe( (sortedFilter) => {
+      log('sortedFilter!', '', sortedFilter);
+      this.activeFilter$.next(sortedFilter);
+   }
+
+    );
   }
 
   public getActiveFilter() {
@@ -141,7 +147,38 @@ export class FiltersService {
     return seperateFilteredItems;
   }
 
-  
+  private efficientFilterSort(filterObj: IFilterObj): Observable<IFilterObj>{
+
+   return this.localDbService.getCollection$('tags').pipe(
+      map( (col) => {
+
+      for (const r of filterObj.filterRestaurants) {
+        if (r.key === 'tag_ids') {
+            r.prob = col.findOne({'$loki': {'$eq': r.hasVal }})['prob'];
+        }
+      }
+
+      for (const i of filterObj.filterItems) {
+        if (i.key === 'tag_ids') {
+          i.prob = col.findOne({'$loki': {'$eq': i.hasVal }})['prob'];
+      }
+      }
+
+      sort(filterObj.filterRestaurants, (a: IFilter, b: IFilter) => {
+        return  a.prob - b.prob;
+      })
+
+      sort(filterObj.filterItems, (a: IFilter, b: IFilter) => {
+        return  a.prob - b.prob;
+      })
+
+      sort(filterObj.filterNutrients, (a: IFilter, b: IFilter) => {
+        return   a.prob - b.prob;
+      })
+      return filterObj;
+    }));
+
+  }
 
   private getRestaurantsByFilter$(
     transformations: any[]
@@ -207,7 +244,7 @@ export class FiltersService {
       } else if (filter.hasVal && !filter.has) {
         filterArr.push({
           type: 'find',
-          value: { [filter.key]: filter.hasVal }
+          value: { [filter.key]: {'$contains': filter.hasVal} }
         });
       }
     }
@@ -237,7 +274,7 @@ export class FiltersService {
       } else if (filter.hasVal && !filter.has) {
         filterArr.push({
           type: 'find',
-          value: { [filter.key]: filter.hasVal }
+          value: { [filter.key]: {'$contains': filter.hasVal} }
         });
       }
     }

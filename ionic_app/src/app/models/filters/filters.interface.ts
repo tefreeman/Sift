@@ -20,17 +20,17 @@ export interface IFilter {
   key: any;
   max?: number;
   min?: number;
-  has?: boolean;
-  hasVal?: string | number;
-  zAvg?: number;
+  has?: string | number| boolean;
+  hasVal?: number | string;
+  prob?: number;
 }
-type TRestaurantFilterKey = 'distance' | 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
+type TRestaurantFilterKey = 'distance' | 'price' | 'tag_ids' | 'reviewScore' | 'reviewCount' | 'name';
 
 export interface IRestaurantsFilter extends IFilter {
   key: TRestaurantFilterKey;
 }
 
-type TItemsFilterKey = 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
+type TItemsFilterKey = 'price' | 'tag_ids' | 'reviewScore' | 'reviewCount' | 'name';
 export interface IItemsFilter extends IFilter {
   key: TItemsFilterKey;
 }

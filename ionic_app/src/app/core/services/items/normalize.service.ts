@@ -36,18 +36,6 @@ export class NormalizeService {
           filterObj.filterNutrients,
           cacheCol
         );
-
-        sort(filterObj.filterRestaurants, (a: IFilter, b: IFilter) => {
-          return  a.zAvg - b.zAvg;
-        })
-
-        sort(filterObj.filterItems, (a: IFilter, b: IFilter) => {
-          return  a.zAvg - b.zAvg;
-        })
-
-        sort(filterObj.filterNutrients, (a: IFilter, b: IFilter) => {
-          return   a.zAvg - b.zAvg;
-        })
         return filterObj;
       })
     );
@@ -155,16 +143,16 @@ export class NormalizeService {
       filter.min = this.normalize(filter.min, stats.min, stats.max);
     }
     if (filter.hasVal) {
-      if (typeof filter.hasVal === 'number') {
-        numArr.push(this.calculateZScore(filter.hasVal, stats.avg, stats.stdDev));
-        filter.hasVal = this.normalize(filter.hasVal, stats.min, stats.max);
+      if (typeof filter.has === 'number') {
+        numArr.push(this.calculateZScore(filter.has, stats.avg, stats.stdDev));
+        filter.has = this.normalize(filter.has, stats.min, stats.max);
       }
     }
     if (numArr.length === 1) {
-      filter.zAvg = zScore(numArr[0]);
+      filter.prob = zScore(numArr[0]);
       return filter;
     } else if (numArr.length === 2) {
-      filter.zAvg = Math.abs(zScore(numArr[1]) - zScore(numArr[0]));
+      filter.prob = Math.abs(zScore(numArr[1]) - zScore(numArr[0]));
     }
   }
 }

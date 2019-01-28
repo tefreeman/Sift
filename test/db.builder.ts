@@ -7,7 +7,7 @@ import { GenerateObject, getRandomInt } from './mock.obj';
 const Loki = require('lokijs');
 const brotli = require('brotli');
 
-const nutrients = {
+let nutrients = {
     calories:  '{{int(300,1400)}}', //Kcal
     fat:  '{{int(0,60)}}', //g
     fatTrans:  '{{int(0,60)}}', //g
@@ -39,46 +39,17 @@ const nutrients = {
     zinc:   '{{int(0,500)}}', //mg]
 }
 
-const c_nutrients = {
-    a:  '{{int(300,1400)}}', //Kcal
-    b:  '{{int(0,60)}}', //g
-    c:  '{{int(0,60)}}', //g
-    d:   '{{int(0,60)}}', //g
-    e:  '{{int(0,60)}}', //g
-    f:  '{{int(0,60)}}', //g
-    g:  '{{int(0,100)}}', //g
-    h:  '{{int(0,80)}}', //g
-    i:  '{{int(0, 25)}}', //g/ Liters
-    j:  '{{int(0,500)}}', //mg
-    k:  '{{int(0,500)}}', // iu
-    l:  '{{int(0,500)}}', //mg
-    m:  '{{int(0,500)}}', //mcg
-    o:  '{{int(0,500)}}', //mg
-    p:  '{{int(0,500)}}', // iu
-    q:  '{{int(0,500)}}', // mg
-    r:  '{{int(0,500)}}', //mcg
-    s:  '{{int(0,500)}}', //mg
-    t: '{{int(0,500)}}', //mg
-    u: '{{int(0,500)}}', //mg
-    v:  '{{int(0,500)}}', //mg
-    w:  '{{int(0,500)}}', //mcg
-    y:  '{{int(0,500)}}', // mg
-    x:  '{{int(0,500)}}', // mg
-    z:  '{{int(0,500)}}', //mg
-    0:  '{{int(0,500)}}', //mg
-    1:  '{{int(0,500)}}', //mg
-    2:  '{{int(0,3000)}}', //mg
-    3:   '{{int(0,500)}}', //mg]
-}
-const ingredients = {
+let ingredients = {
     'name': '{{char(4,14)}}',
+    'prob': '{{float(0.001, 0.15)}}'
 }
 
-const tags = {
+let tags = {
     'name': '{{char(4,14)}}',
+    'prob': '{{float(0.001, 0.15)}}'
 }
 
-const item = {
+let item = {
     'name': '{{char(5,14)}}',
     'price': '{{float(4.0, 30.0)}}',
     'reviewCount': '{{int(1,1000)}}',
@@ -94,7 +65,7 @@ const item = {
     'ingredient_ids': []
 }
 
-const restaurant =
+let restaurant =
     {
     'name': '{{char(5,14)}}',
     'phone': '{{phone()}}',
@@ -112,8 +83,6 @@ const restaurant =
     },
     'tag_ids': [],
 }
-
-
 
 //let text = brotli.decompress(fs.readFileSync('jsonTestFile500'));
 
@@ -152,12 +121,13 @@ var tryToNumber = function (obj) {
     }
     return obj;
 }
-let amtTlt = 400;
-let itemAmt = 50;
+let amtTlt = 200;
+let itemAmt = 60;
 let ingredientIndex = 1000;
 
 for (let p = 0; p < ingredientIndex; p++) {
     ingredientCol.insert(tryToNumber(GenerateObject(ingredients)));
+    tagsCol.insert(tryToNumber(GenerateObject(tags)));
 }
 
 for (let i = 0; i < amtTlt; i++) {
@@ -192,7 +162,6 @@ for (let i = 0; i < amtTlt; i++) {
 
     let restaurantWId = restaurant;
     restaurantWId['tag_ids'] = tagIdsArr1;
-
     let restaurantObj = tryToNumber(GenerateObject(restaurantWId));
     restaurantsCol.insert(restaurantObj);
 }
@@ -307,7 +276,7 @@ function roundObject(obj: object, dPts: number) {
             obj[prop] = Number(obj[prop].toFixed(dPts));
         }
     }
-    console.log(obj);
+ //   console.log(obj);
     return obj;
 }
 
@@ -321,7 +290,7 @@ function numDigits(x) {
   }
 
   function addIndices(col, indices: Array<string>) {
-      console.log('adding ' + indices +  ' Indices');
+   //   console.log('adding ' + indices +  ' Indices');
       for (const string of indices) {
       col.ensureIndex(string, true);
       }
