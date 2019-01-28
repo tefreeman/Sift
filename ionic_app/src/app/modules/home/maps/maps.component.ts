@@ -18,9 +18,7 @@ import { GpsService } from '../../../core/services/gps.service';
 export class MapsComponent implements OnInit {
   marker: Marker;
   map: GoogleMap;
-  constructor(private platform: Platform, private gpsService: GpsService) { 
-  
-  }
+  constructor(private platform: Platform, private gpsService: GpsService) {}
 
   async ngOnInit() {
     log('waiting platform rdy');
@@ -29,42 +27,48 @@ export class MapsComponent implements OnInit {
     await this.loadMap();
     log('loadMap');
 
-    this.gpsService.getGpsCoords$().pipe(first()).subscribe(geoPosition => { 
-      this.marker = this.map.addMarkerSync({
-        title: 'You',
-        icon: 'blue',
-        animation: 'BOUNCE',
-        position: {
+    this.gpsService
+      .getLiveGpsCoords$()
+      .pipe(first())
+      .subscribe(geoPosition => {
+        this.marker = this.map.addMarkerSync({
+          title: 'You',
+          icon: 'blue',
+          animation: 'BOUNCE',
+          position: {
+            lat: geoPosition.coords.latitude,
+            lng: geoPosition.coords.longitude
+          }
+        });
+        this.map
+          .moveCamera({
+            target: {
+              lat: geoPosition.coords.latitude,
+              lng: geoPosition.coords.longitude
+            },
+            zoom: 11,
+            tilt: 30
+          })
+          .then(() => {});
+      });
+
+    this.gpsService
+      .getLiveGpsCoords$()
+      .pipe(skip(1))
+      .subscribe(geoPosition => {
+        this.marker.setPosition({
           lat: geoPosition.coords.latitude,
           lng: geoPosition.coords.longitude
-        }
+        });
       });
-      this.map.moveCamera({
-      target: {lat:geoPosition.coords.latitude, lng: geoPosition.coords.longitude},
-      zoom: 11,
-      tilt: 30,
-    }).then(() => {}); 
-
-  });
-
-  this.gpsService.getGpsCoords$().pipe(skip(1)).subscribe(geoPosition => {
-    this.marker.setPosition({'lat': geoPosition.coords.latitude, 'lng': geoPosition.coords.longitude })
-  })
-
-
-}
-
-  
-  loadMap() {
-    Environment.setEnv({
-      'API_KEY_FOR_BROWSER_RELEASE': 'AIzaSyCnpxUKLVpYuLOXAtm_nYeKvNsVH3vgDNk',
-      'API_KEY_FOR_BROWSER_DEBUG': 'AIzaSyCnpxUKLVpYuLOXAtm_nYeKvNsVH3vgDNk'
-    });
-
-
-    this.map = GoogleMaps.create('map_canvas');
-
-
   }
 
+  loadMap() {
+    Environment.setEnv({
+      API_KEY_FOR_BROWSER_RELEASE: 'AIzaSyCnpxUKLVpYuLOXAtm_nYeKvNsVH3vgDNk',
+      API_KEY_FOR_BROWSER_DEBUG: 'AIzaSyCnpxUKLVpYuLOXAtm_nYeKvNsVH3vgDNk'
+    });
+
+    this.map = GoogleMaps.create('map_canvas');
+  }
 }

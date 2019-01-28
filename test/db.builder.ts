@@ -90,6 +90,7 @@ const item = {
     'isApproved': '{{int(0 ,1)}}',
     'tag_ids': [],
     'nutrition_id': -1,
+    'restaurant_id': -1,
     'ingredient_ids': []
 }
 
@@ -110,14 +111,13 @@ const restaurant =
         'lon': '{{float(-87.7642943, -87.3642943, 8)}}',
     },
     'tag_ids': [],
-    'item_ids': [],
 }
 
 
 
 //let text = brotli.decompress(fs.readFileSync('jsonTestFile500'));
 
-const db: LokiConstructor = new Loki('localData', {
+const db = new Loki('localData', {
   verbose: true,
   disableMeta: true,
   disableChangesApi: true,
@@ -152,8 +152,8 @@ var tryToNumber = function (obj) {
     }
     return obj;
 }
-let amtTlt = 300;
-let itemAmt = 40;
+let amtTlt = 400;
+let itemAmt = 50;
 let ingredientIndex = 1000;
 
 for (let p = 0; p < ingredientIndex; p++) {
@@ -177,11 +177,11 @@ for (let i = 0; i < amtTlt; i++) {
         let itemWId = item;
         itemWId['nutrition_id'] = nutriID;
         itemWId['ingredient_ids'] = ingredientIdsArr;
+        itemWId['restaurant_id'] = i;
         itemWId['tag_ids'] = tagIdsArr;
 
         let itemObj = tryToNumber(GenerateObject(itemWId))
         let tempItem_id = itemsCol.insert(itemObj)['$loki'];
-        restaurantsItemsArr.push(tempItem_id);
     }
     // for restaurants
     let tagIdsArr1 = []
@@ -191,7 +191,6 @@ for (let i = 0; i < amtTlt; i++) {
     }
 
     let restaurantWId = restaurant;
-    restaurantWId['item_ids'] = restaurantsItemsArr;
     restaurantWId['tag_ids'] = tagIdsArr1;
 
     let restaurantObj = tryToNumber(GenerateObject(restaurantWId));
@@ -203,7 +202,7 @@ console.log('starting normailization');
 normalizeDB([itemsCol, restaurantsCol, nutrientsCol]);
 console.log('done normalizing');
 
-let itemIndices = ['name', 'price', 'reviewCount', 'reviewScore', 'nutrition_id', 'tag_ids', 'ingredient_ids' ]
+let itemIndices = ['name', 'price', 'reviewCount', 'reviewScore', 'nutrition_id', 'restaurant_id', 'tag_ids', 'ingredient_ids' ]
 let restaurantIndices =['price', 'reviewCount', 'reviewScore', 'name', 'item_ids', 'tag_ids', 'type', 'distance']
 let nutrientIndices =
 [
@@ -265,7 +264,7 @@ db.close();
 
 
 
-function normalizeDB(collection: Collection<any>[]) {
+function normalizeDB(collection) {
     for (const col of collection ) {
         let obj = col.data[0];
     for (let prop in obj) {
@@ -276,7 +275,7 @@ function normalizeDB(collection: Collection<any>[]) {
 }
 }
 
-function normalizeProp(col: Collection<any>, field: string) {
+function normalizeProp(col, field: string) {
 
     let min = col.min(field);
     let max = col.max(field);
@@ -321,7 +320,7 @@ function numDigits(x) {
     return Math.log(val) / Math.log(10);
   }
 
-  function addIndices(col: Collection<any>, indices: Array<string>) {
+  function addIndices(col, indices: Array<string>) {
       console.log('adding ' + indices +  ' Indices');
       for (const string of indices) {
       col.ensureIndex(string, true);

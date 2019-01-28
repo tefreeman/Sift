@@ -22,6 +22,7 @@ export interface IFilter {
   min?: number;
   has?: boolean;
   hasVal?: string | number;
+  zAvg?: number;
 }
 type TRestaurantFilterKey = 'distance' | 'price' | 'tag' | 'reviewScore' | 'reviewCount' | 'name';
 

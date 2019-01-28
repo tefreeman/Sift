@@ -16,21 +16,24 @@ import { log } from '../logger.service';
 import { RequestFileCacheService } from './cache/request-file-cache.service';
 import { DataService } from './data.service';
 import { GpsService } from './gps.service';
-import { NormalizeService } from './normalize.service';
+import { NormalizeService } from './items/normalize.service';
 
 @Injectable({ providedIn: 'root' })
 export class LocalDbService {
   private db$: BehaviorSubject<Loki> = new BehaviorSubject(null);
-  private dataStats$: BehaviorSubject<Collection<any>> = new BehaviorSubject(null);
+  private dataStats$: BehaviorSubject<Collection<any>> = new BehaviorSubject(
+    null
+  );
 
   private adapter;
   constructor(
     private fileCache: RequestFileCacheService,
     private dataService: DataService,
-    private gpsService: GpsService,
+    private gpsService: GpsService
   ) {
-    this.adapter =  new LokiIndexedAdapter();
-    this.gpsService.getGridKey$()
+    this.adapter = new LokiIndexedAdapter();
+    this.gpsService
+      .getGridKey$()
       .pipe(
         // TODO checked for previous cached gps data (if its faster than waiting for gps to init)
         filter(val => val !== null),
@@ -38,59 +41,61 @@ export class LocalDbService {
       )
       .subscribe(newDb => {
         this.db$.next(newDb);
-        this.dataStats$.next(newDb.getCollection('cache'))
+        this.dataStats$.next(newDb.getCollection('cache'));
         log('this.db$.next', '', newDb);
       });
 
+    // Todo decouple this from local-db service. And add in updates only when user has moved x amount of meters.
+    this.setUpdateDistance().subscribe();
   }
 
   public deleteDatabase(fileName) {
     this.fileCache.removeFile(fileName).subscribe();
   }
 
-
   public getCollection$(collectionName: string): Observable<Collection<any>> {
     return this.db$.pipe(
       filter(db => db !== null),
-      map(db => db.getCollection(collectionName)),
+      map(db => db.getCollection(collectionName))
     );
   }
-  
+
   public getCollectionCache$(): Observable<Collection<any>> {
-    return this.dataStats$.pipe(
-      filter(col => col !== null)
-    );
+    return this.dataStats$.pipe(filter(col => col !== null));
   }
 
   public setUpdateDistance() {
     const getRestaurants$ = this.db$.pipe(
-    tap( (userPos) => { log('','', userPos) }),
-    concatMap((db) => {
-      return this.getCollection$('restaurants');
-    })
+      tap(userPos => {
+        log('', '', userPos);
+      }),
+      concatMap(db => {
+        return this.getCollection$('restaurants');
+      })
     );
 
-    const getUserPos$ = this.gpsService.getGpsCoords$().pipe(
-      tap( (userPos) => { log('','', userPos) }),
+    const getUserPos$ = this.gpsService.getLiveGpsCoords$().pipe(
+      tap(userPos => {
+        log('', '', userPos);
+      }),
       filter(userPos => userPos !== null),
-      map((userPos) => userPos.coords)
+      map(userPos => userPos.coords)
     );
 
-   return combineLatest(getUserPos$, getRestaurants$).pipe(
-    debounceTime(20000),
-    map ( (valArr) => {
-      log('start distance');
-      valArr[1].findAndUpdate({}, (obj) => {
-        obj['distance'] = distance(
-          {'lat': valArr[0].latitude, 'lon': valArr[0].longitude},
-          {'lat': obj['coords']['lat'], 'lon': obj['coords']['lat']
+    return combineLatest(getUserPos$, getRestaurants$).pipe(
+      map(valArr => {
+        log('start distance');
+        valArr[1].findAndUpdate({}, obj => {
+          obj['distance'] = distance(
+            { lat: valArr[0].latitude, lon: valArr[0].longitude },
+            { lat: obj['coords']['lat'], lon: obj['coords']['lat'] }
+          );
         });
-      });
-      return valArr[1];
-    } )
-   );
+        log('end distance');
+        return valArr[1];
+      })
+    );
   }
-
 
   private loadDb(key: string) {
     const localKey = key;
@@ -104,34 +109,34 @@ export class LocalDbService {
 
     const fileNotCached$ = this.getFromServer$(localKey).pipe(
       // write data to file storage
-      tap( (dbData) => {
-        this.adapter.saveDatabase(localKey, dbData, (result) => {
-        });
+      tap(dbData => {
+        this.adapter.saveDatabase(localKey, dbData, result => {});
         // this.fileCache.writeFile(localKey, dbData);
       })
     );
 
-
-    const tryIndexedDb$: Observable<string> = Observable.create( (observer: Observer<string>) => {
-      this.adapter.getDatabaseList((result) => {
-        let match = false;
-        for ( const dbName of result) {
-          if (dbName === localKey) {
+    const tryIndexedDb$: Observable<string> = Observable.create(
+      (observer: Observer<string>) => {
+        this.adapter.getDatabaseList(result => {
+          let match = false;
+          for (const dbName of result) {
+            if (dbName === localKey) {
               match = true;
             }
           }
-        if (match) {
-          this.adapter.loadDatabase(localKey, (serializedDb: string) => {
-            observer.next(serializedDb);
-          });
-        } else {
-          observer.error(new Error('cannot find indexed db'));
-        }
-      });
-    });
+          if (match) {
+            this.adapter.loadDatabase(localKey, (serializedDb: string) => {
+              observer.next(serializedDb);
+            });
+          } else {
+            observer.error(new Error('cannot find indexed db'));
+          }
+        });
+      }
+    );
 
     return tryIndexedDb$.pipe(
-      catchError( (err) => {
+      catchError(err => {
         log('tryIndexedDb$', 'ERROR', err);
         return fileNotCached$;
       }),
@@ -140,16 +145,7 @@ export class LocalDbService {
       }),
       map(() => db)
     );
-
-
-
   }
-
-
-
-
-
-
 
   private getFromFile$(colName: string) {
     log('getFromFile', '', colName);

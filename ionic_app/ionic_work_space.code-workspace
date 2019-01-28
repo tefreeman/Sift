@@ -23,7 +23,6 @@
 		"files.associations": {
 			"*.ts": "typescript"
 		},
-		"importSorter.generalConfiguration.sortOnBeforeSave": true,
 		"typescript.autoClosingTags": false,
 		"auto-close-tag.activationOnLanguage": [
 			"xml",
@@ -48,14 +47,17 @@
 		"typescript.preferences.quoteStyle": "single",
 		"sync.autoDownload": true,
 		"sync.autoUpload": true,
-		"prettier.printWidth": 100,
-		"prettier.tslintIntegration": true,
+		"prettier.printWidth": 140,
 		"prettier.singleQuote": true,
 		"cSpell.words": [
 			"autoload",
 			"autosave",
 			"delimiter",
 			"destructure"
-		]
+		],
+		"prettier.tabWidth": 4,
+		"importSorter.generalConfiguration.sortOnBeforeSave": true,
+		"prettier.stylelintIntegration": true,
+		"prettier.tslintIntegration": true
 	}
 }
