@@ -14,23 +14,17 @@ import {
 import { AngularFireStorage, StorageBucket } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 
+import { IFilterObj } from '../../models/filters/filters.interface';
+import { IProfile } from '../../models/user/userProfile.interface';
 import { log } from '../logger.service';
 import { GpsService } from './gps.service';
-
-interface User {
-    uid: string;
-    email: string;
-    photoURL?: string;
-    displayName?: string;
-    favoriteColor?: string;
-}
-
-
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
 
-    user: Observable<User>;
+
+    user: Observable<IProfile>;
+
 
     constructor(
         private afAuth: AngularFireAuth,
@@ -44,11 +38,13 @@ export class DataService {
         //// Get auth data, then get firestore user document || null
         this.user = this.afAuth.authState.pipe(
             switchMap(user => {
+
                 if (user) {
-                    return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+                    return this.afs.doc<IProfile>(`users/${user.uid}`).valueChanges();
                 } else {
                     return of(null);
                 }
+
             })
         );
     }
@@ -56,12 +52,8 @@ export class DataService {
         // Sets user data to firestore on login
         const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
 
-        const data: User = {
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL
-        };
+
+        const data = {};
 
         return userRef.set(data, { merge: true });
 
@@ -87,6 +79,21 @@ export class DataService {
 
     getReviewById(id: string): Observable<firebase.firestore.DocumentSnapshot> {
         return this.afs.collection('reviews').doc(id).get();
+    }
+
+    getFilters(): Observable<firebase.firestore.DocumentSnapshot> {
+        return this.user.pipe(
+            concatMap((user) => {
+                return from(user.filterIds);
+            }),
+            concatMap((filterId) => {
+                return this.afs.collection('filters').doc(filterId.id).get();
+            })
+        )
+    }
+
+    getCurrentUser(): Observable<IProfile> {
+        return this.user;
     }
 
 
