@@ -23,66 +23,66 @@ interface User {
     photoURL?: string;
     displayName?: string;
     favoriteColor?: string;
-  }
+}
 
 
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
 
-user: Observable<User>;
+    user: Observable<User>;
 
-constructor(
-    private afAuth: AngularFireAuth,
-    private afs: AngularFirestore,
-    private storage: AngularFireStorage,
-    private router: Router,
-    private http: HttpClient,
-    private gpsService: GpsService
-)  {
+    constructor(
+        private afAuth: AngularFireAuth,
+        private afs: AngularFirestore,
+        private storage: AngularFireStorage,
+        private router: Router,
+        private http: HttpClient,
+        private gpsService: GpsService
+    ) {
 
         //// Get auth data, then get firestore user document || null
         this.user = this.afAuth.authState.pipe(
             switchMap(user => {
-            if (user) {
-                return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
-            } else {
-                return of(null);
-            }
+                if (user) {
+                    return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+                } else {
+                    return of(null);
+                }
             })
         );
     }
     updateUserData(user) {
-    // Sets user data to firestore on login
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+        // Sets user data to firestore on login
+        const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
 
-    const data: User = {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL
-    };
+        const data: User = {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL
+        };
 
-    return userRef.set(data, { merge: true });
+        return userRef.set(data, { merge: true });
 
     }
 
     getDataByGridKey$(key): Observable<any> {
-    log('getDataByGridKey$', '', key);
+        log('getDataByGridKey$', '', key);
 
         return this.afs.collection('grid').doc(key).get().pipe(
-            concatMap( (doc) => {
+            concatMap((doc) => {
                 console.log(doc.get('url'));
                 return from(this.storage.storage.refFromURL(doc.get('url')).getDownloadURL());
             }),
             concatMap((url) => {
                 console.log(url);
-            return this.http.get(url).pipe(
-                // TODO remove stringify and add compression to google file storage
-                map( (data) =>  JSON.stringify(data))
-            );
+                return this.http.get(url).pipe(
+                    // TODO remove stringify and add compression to google file storage
+                    map((data) => JSON.stringify(data))
+                );
             })
-            );
+        );
     }
 
     getReviewById(id: string): Observable<firebase.firestore.DocumentSnapshot> {

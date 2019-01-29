@@ -1,24 +1,17 @@
-import { log } from 'src/app/core/logger.service';
 import * as Lokijs from 'lokijs';
+import { Observable, Subject, zip } from 'rxjs';
 import { concatMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { log } from 'src/app/core/logger.service';
+import { sort } from 'timsort';
 
-import { Injectable, Query } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import {
-    IFilter,
-    IFilterObj,
-    IIngredientFilter,
-    IItemsFilter,
-    INutrientFilter,
-    IRestaurantsFilter
+    IFilter, IFilterObj, IIngredientFilter, IItemsFilter, INutrientFilter, IRestaurantsFilter
 } from '../../../models/filters/filters.interface';
-import { ISort } from '../../../models/sort/sort.interface';
-import { distance } from '../../../shared/functions/helpers.functions';
 import { GpsService } from '../gps.service';
 import { LocalDbService } from '../local-db.service';
 import { NormalizeService } from './normalize.service';
-import { Subject, Observable, zip } from 'rxjs';
-import { sort } from 'timsort';
 
 @Injectable({ providedIn: 'root' })
 export class FiltersService {
@@ -206,14 +199,6 @@ export class FiltersService {
         );
     }
 
-    private getRestaurantsByFilter$(transformations: any[]): Observable<Resultset<any>> {
-        return this.localDbService.getCollection$('restaurants').pipe(
-            map(col => {
-                return col.chain(transformations);
-            })
-        );
-    }
-
     private applyFilter$(transformations: any[], colName: string): Observable<Resultset<any>> {
         return this.localDbService.getCollection$(colName).pipe(
             map(col => {
@@ -252,15 +237,15 @@ export class FiltersService {
         return filterArr;
     }
 
-    private initFilters() {}
+    private initFilters() { }
 
-    private getCachedFilters(filterObj) {}
+    private getCachedFilters(filterObj) { }
 
-    private uploadToServer(filterObj) {}
+    private uploadToServer(filterObj) { }
 
-    private cacheFilter(filterObj) {}
+    private cacheFilter(filterObj) { }
 
-    private isCached(filterObj) {}
+    private isCached(filterObj) { }
 }
 
 interface IMinMax {
