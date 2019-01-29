@@ -84,14 +84,12 @@ export class LocalDbService {
 
     return combineLatest(getUserPos$, getRestaurants$).pipe(
       map(valArr => {
-        log('start distance');
         valArr[1].findAndUpdate({}, obj => {
           obj['distance'] = distance(
             { lat: valArr[0].latitude, lon: valArr[0].longitude },
             { lat: obj['coords']['lat'], lon: obj['coords']['lat'] }
           );
         });
-        log('end distance');
         return valArr[1];
       })
     );

@@ -19,18 +19,21 @@ export class SortItemsService {
     }
 
     private sortAll(arrSorts: ISort, rView: Resultset<any>, itemArr: any[]) {
-        const restaurantsWeight =this.calcTotalWeight(arrSorts.restaurants);
+        const restaurantsWeight = this.calcTotalWeight(arrSorts.restaurants);
         const itemsWeight = this.calcTotalWeight(arrSorts.items);
         const itemTree = new AVLTree();
-        const cachedRestaurantTotals = new AVLTree();
         log('itemArrSortingStart');
         for (let item of itemArr) {
             try {
-            const rTotal = this.calcTotal(rView.collection.findOne({'$loki': {'$eq': item['restaurant_id']}}), arrSorts.restaurants);
+            const restaurantObj = rView.collection.findOne({'$loki': {'$eq': item['restaurant_id']}});
+            if (restaurantObj === null) {
+                log('null restaurant', '', item);
+            }
+            const rTotal = this.calcTotal(restaurantObj, arrSorts.restaurants);
             const key = rTotal + this.calcTotal(item, arrSorts.items);
             itemTree.insert(key, item);
             } catch(e) {
-                console.log(e);
+                log('error', '', {e: e, data: item});
             }
         }
         log('itemArrSortingEnd', '', itemTree);

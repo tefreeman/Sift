@@ -57,8 +57,8 @@ export class FiltersService {
       public: true,
       timestamp: 12313123,
       lastActive: 14124142,
-      filterItems: [{ key: 'reviewCount', min: 10, max: 500 }, {key: 'reviewScore', min: 1, max: 5.0}, {key: 'tag_ids', hasVal: 433}],
-      filterNutrients: [{ key: 'protein', min: 78, max: 100 }],
+      filterItems: [{ key: 'reviewCount', min: 10, max: 500 }, {key: 'reviewScore', min: 1, max: 5.0}],
+      filterNutrients: [{ key: 'protein', min: 40, max: 100 }],
       filterRestaurants: [{ key: 'reviewScore', min: 1.5, max: 5.0 }],
       // Create your own diet?
       diet: {}

@@ -147,7 +147,7 @@ for (let i = 0; i < amtTlt; i++) {
         let itemWId = item;
         itemWId['nutrition_id'] = nutriID;
         itemWId['ingredient_ids'] = ingredientIdsArr;
-        itemWId['restaurant_id'] = i;
+        itemWId['restaurant_id'] = i+1;
         itemWId['tag_ids'] = tagIdsArr;
 
         let itemObj = tryToNumber(GenerateObject(itemWId))
