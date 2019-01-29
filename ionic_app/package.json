@@ -61,6 +61,7 @@
     "timsort": "^0.3.0",
     "tslint-config-standard": "^8.0.1",
     "vscode-css-languageservice": "^3.0.12",
+    "yarn": "^1.13.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

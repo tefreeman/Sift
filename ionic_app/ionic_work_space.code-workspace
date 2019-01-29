@@ -58,6 +58,6 @@
 		"prettier.tabWidth": 4,
 		"importSorter.generalConfiguration.sortOnBeforeSave": true,
 		"prettier.stylelintIntegration": true,
-		"prettier.tslintIntegration": true
+		"editor.formatOnSave": true
 	}
 }

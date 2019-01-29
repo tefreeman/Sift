@@ -6,35 +6,39 @@ import { IHistory } from './userProfile.interface';
 export interface ITaste {
     cuisinesPref: ICuisines;
     favoriteIngredients: string[];
-  }
-  export interface IGoal {
+}
+export interface IGoal {
     tasteVsHealth: number; // TODO should I move this only into filters?
     goalAmt: number;
     goalTimeline: number;
     timeStamp: number;
-  }
-  
-  export interface IPersonal {
+}
+
+export interface IPersonal {
     age: number;
     displayName: string;
     gender: string;
     ethnicity: string;
     photoUrl: string;
-  }
-  export interface IProfile {
+}
+export interface IProfile {
     email: string;
-    filterIds: string[];
+    filterIds: IFilterWVer[];
     quickSetup: boolean;
     profile: IPersonal;
     Health: IHealth;
     history: IHistory;
     goal: IGoal;
     taste: ITaste;
-  }
+}
 
-  export interface IHistory {
+interface IFilterWVer {
+    id: string;
+    ver: number;
+}
+export interface IHistory {
     userCreated: number;
     userTimeSpent: number;
-    ProfileChanges: IProfile[]
-    reviewIds: number[]
-  }
+    ProfileChanges: IProfile[];
+    reviewIds: number[];
+}

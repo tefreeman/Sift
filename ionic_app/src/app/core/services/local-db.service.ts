@@ -2,10 +2,7 @@ import { Observer } from 'firebase';
 import * as Loki from 'lokijs';
 import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
 import { BehaviorSubject, combineLatest, merge, Observable, observable, of, pipe } from 'rxjs';
-import {
-    catchError, concat, concatMap, debounceTime, filter, flatMap, map, mapTo, switchMap, tap,
-    throttleTime
-} from 'rxjs/operators';
+import { catchError, concat, concatMap, debounceTime, filter, flatMap, map, mapTo, switchMap, tap, throttleTime } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import { DomAdapter } from '@angular/platform-browser/src/dom/dom_adapter';
@@ -20,147 +17,178 @@ import { NormalizeService } from './items/normalize.service';
 
 @Injectable({ providedIn: 'root' })
 export class LocalDbService {
-  private db$: BehaviorSubject<Loki> = new BehaviorSubject(null);
-  private dataStats$: BehaviorSubject<Collection<any>> = new BehaviorSubject(
-    null
-  );
+    private gridDbSubject$: BehaviorSubject<Loki> = new BehaviorSubject(null);
+    private gridDb$: Observable<Loki> = this.gridDbSubject$.asObservable().pipe(filter(db => db !== null));
 
-  private adapter;
-  constructor(
-    private fileCache: RequestFileCacheService,
-    private dataService: DataService,
-    private gpsService: GpsService
-  ) {
-    this.adapter = new LokiIndexedAdapter();
-    this.gpsService
-      .getGridKey$()
-      .pipe(
-        // TODO checked for previous cached gps data (if its faster than waiting for gps to init)
-        filter(val => val !== null),
-        concatMap(val => this.loadDb(val))
-      )
-      .subscribe(newDb => {
-        this.db$.next(newDb);
-        this.dataStats$.next(newDb.getCollection('cache'));
-        log('this.db$.next', '', newDb);
+    private userDbSubject$: BehaviorSubject<Loki> = new BehaviorSubject(null);
+    private userDb$: Observable<Loki> = this.gridDbSubject$.asObservable().pipe(filter(db => db !== null));
+
+    constructor(private fileCache: RequestFileCacheService, private dataService: DataService, private gpsService: GpsService) {
+        this.loadGridDb();
+
+        // Todo decouple this from local-db service. And add in updates only when user has moved x amount of meters.
+        this.setUpdateDistance().subscribe();
+    }
+
+    public deleteDatabase(fileName) {
+        this.fileCache.removeFile(fileName).subscribe();
+    }
+
+    public getCollection$(collectionName: string): Observable<Collection<any>> {
+        return this.gridDb$.pipe(map(db => db.getCollection(collectionName)));
+    }
+
+    public getCollectionCache$(): Observable<Collection<any>> {
+        return this.gridDb$.pipe(map(db => db.getCollection('cache')));
+    }
+
+    public setUpdateDistance() {
+        const getRestaurants$ = this.gridDb$.pipe(
+            tap(userPos => {
+                log('', '', userPos);
+            }),
+            concatMap(db => {
+                return this.getCollection$('restaurants');
+            })
+        );
+
+        const getUserPos$ = this.gpsService.getLiveGpsCoords$().pipe(
+            tap(userPos => {
+                log('', '', userPos);
+            }),
+            filter(userPos => userPos !== null),
+            map(userPos => userPos.coords)
+        );
+
+        return combineLatest(getUserPos$, getRestaurants$).pipe(
+            map(valArr => {
+                valArr[1].findAndUpdate({}, obj => {
+                    obj['distance'] = distance(
+                        { lat: valArr[0].latitude, lon: valArr[0].longitude },
+                        { lat: obj['coords']['lat'], lon: obj['coords']['lat'] }
+                    );
+                });
+                return valArr[1];
+            })
+        );
+    }
+
+    private loadGridDb() {
+        const lokiAdapter = new LokiIndexedAdapter();
+
+        let localKey;
+
+        const db = new Loki(localKey, {
+            adapter: lokiAdapter,
+            verbose: true,
+            destructureDelimiter: '=',
+            autosave: false,
+            autoload: false
+        });
+
+        this.gpsService
+            .getGridKey$()
+            .pipe(
+                // TODO checked for previous cached gps data (if its faster than waiting for gps to init)
+                filter(val => val !== null),
+                map(key => {
+                    localKey = key;
+                }),
+                concatMap(key => this.loadDbFromAdapter(localKey, lokiAdapter)),
+                catchError(err =>
+                    this.loadGridDbFromServer(localKey).pipe(
+                        tap(dbData => {
+                            this.saveDbAdapter(localKey, dbData, lokiAdapter);
+                        })
+                    )
+                )
+            )
+            .pipe(
+                map(dbData => {
+                    db.loadJSON(dbData);
+                    return db;
+                })
+            )
+            .subscribe(newDb => {
+                this.gridDbSubject$.next(newDb);
+                log('this.db$.next', '', newDb);
+            });
+    }
+
+    private loadUserDb(profileName) {
+        /*
+      const lokiAdapter = new LokiIndexedAdapter();
+
+      const db = new Loki(name, {
+          adapter: lokiAdapter,
+          verbose: true,
+          destructureDelimiter: '=',
+          autosave: true,
+          autoload: false
       });
 
-    // Todo decouple this from local-db service. And add in updates only when user has moved x amount of meters.
-    this.setUpdateDistance().subscribe();
-  }
+        
+      this.loadDbFromAdapter(profileName, lokiAdapter).pipe(
+              catchError(err =>
+                  this.loadUserDbFromServer(profileName).pipe(
+                      tap(dbData => {
+                          this.saveDbAdapter(profileName, dbData, lokiAdapter);
+                      })
+                  )
+              )
+          )
+          .pipe(
+              map(dbData => {
+                  db.loadJSON(dbData);
+                  return db;
+              })
+          )
+          .subscribe(newDb => {
+              this.gridDbSubject$.next(newDb);
+              log('this.db$.next', '', newDb);
+          });
+          */
+    }
 
-  public deleteDatabase(fileName) {
-    this.fileCache.removeFile(fileName).subscribe();
-  }
-
-  public getCollection$(collectionName: string): Observable<Collection<any>> {
-    return this.db$.pipe(
-      filter(db => db !== null),
-      map(db => db.getCollection(collectionName))
-    );
-  }
-
-  public getCollectionCache$(): Observable<Collection<any>> {
-    return this.dataStats$.pipe(filter(col => col !== null));
-  }
-
-  public setUpdateDistance() {
-    const getRestaurants$ = this.db$.pipe(
-      tap(userPos => {
-        log('', '', userPos);
-      }),
-      concatMap(db => {
-        return this.getCollection$('restaurants');
-      })
-    );
-
-    const getUserPos$ = this.gpsService.getLiveGpsCoords$().pipe(
-      tap(userPos => {
-        log('', '', userPos);
-      }),
-      filter(userPos => userPos !== null),
-      map(userPos => userPos.coords)
-    );
-
-    return combineLatest(getUserPos$, getRestaurants$).pipe(
-      map(valArr => {
-        valArr[1].findAndUpdate({}, obj => {
-          obj['distance'] = distance(
-            { lat: valArr[0].latitude, lon: valArr[0].longitude },
-            { lat: obj['coords']['lat'], lon: obj['coords']['lat'] }
-          );
-        });
-        return valArr[1];
-      })
-    );
-  }
-
-  private loadDb(key: string) {
-    const localKey = key;
-    const db = new Loki('localData', {
-      adapter: this.adapter,
-      verbose: true,
-      destructureDelimiter: '=',
-      autosave: false,
-      autoload: false
-    });
-
-    const fileNotCached$ = this.getFromServer$(localKey).pipe(
-      // write data to file storage
-      tap(dbData => {
-        this.adapter.saveDatabase(localKey, dbData, result => {});
-        // this.fileCache.writeFile(localKey, dbData);
-      })
-    );
-
-    const tryIndexedDb$: Observable<string> = Observable.create(
-      (observer: Observer<string>) => {
-        this.adapter.getDatabaseList(result => {
-          let match = false;
-          for (const dbName of result) {
-            if (dbName === localKey) {
-              match = true;
-            }
-          }
-          if (match) {
-            this.adapter.loadDatabase(localKey, (serializedDb: string) => {
-              observer.next(serializedDb);
+    private loadDbFromAdapter(name: string, adapter) {
+        return Observable.create((observer: Observer<string>) => {
+            adapter.getDatabaseList(result => {
+                let match = false;
+                for (const dbName of result) {
+                    if (dbName === name) {
+                        match = true;
+                    }
+                }
+                if (match) {
+                    adapter.loadDatabase(name, (serializedDb: string) => {
+                        observer.next(serializedDb);
+                    });
+                } else {
+                    observer.error(new Error('cannot find indexed db'));
+                }
             });
-          } else {
-            observer.error(new Error('cannot find indexed db'));
-          }
         });
-      }
-    );
+    }
 
-    return tryIndexedDb$.pipe(
-      catchError(err => {
-        log('tryIndexedDb$', 'ERROR', err);
-        return fileNotCached$;
-      }),
-      concatMap(data => {
-        return of(db.loadJSON(data));
-      }),
-      map(() => db)
-    );
-  }
+    private loadGridDbFromServer(key: string) {
+        return this.dataService.getDataByGridKey$(key);
+    }
 
-  private getFromFile$(colName: string) {
-    log('getFromFile', '', colName);
-    return this.fileCache.readAsText(colName);
-  }
+    private loadUserDbFromServer(userId: string) {
+        // TODO
+    }
 
-  private getFromServer$(key) {
-    log('getFromServer', '', key);
-    return this.dataService.getDataByGridKey$(key);
-  }
-  private checkVersion() {}
+    private saveDbAdapter(name, dbData, adapter) {
+        adapter.saveDatabase(name, dbData, result => {});
+    }
 
-  // Check Cache and File, Load if exists
-  // If don't exist download file from server and open into collection
+    private checkVersion() {}
 
-  // TODO integrate file cache
+    // Check Cache and File, Load if exists
+    // If don't exist download file from server and open into collection
 
-  // TODO verify local db against version from firestore. If outdated download update and reload collections
-  // TODO any fileRead errors should
+    // TODO integrate file cache
+
+    // TODO verify local db against version from firestore. If outdated download update and reload collections
+    // TODO any fileRead errors should
 }

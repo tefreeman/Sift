@@ -1,5 +1,6 @@
+import { FiltersService } from './filters.service';
 import AVLTree, * as AVL from 'avl';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { concatMap, filter, map, tap } from 'rxjs/operators';
 import * as timSort from 'timsort';
 
@@ -12,10 +13,21 @@ import { log } from '../../logger.service';
 @Injectable({ providedIn: 'root' })
 export class SortItemsService {
     private minItems = 100;
-    constructor() {}
+    private sortedAVLTree: Subject<AVLTree<{}, {}>>;
 
-    public sortItems(sortObj: ISort, viewSet: {itemView: Resultset<any>, restaurantView: Resultset<any>}) {
-        this.sortAll(sortObj, viewSet.restaurantView, viewSet.itemView.data());
+    constructor(private filterService: FiltersService) {
+        const testObj: ISort = {
+            items: [{ key: 'reviewScore', weight: 1.0 }, { key: 'reviewCount', weight: 0.2 }],
+            restaurants: [{ key: 'reviewScore', weight: 0.1 }, { key: 'reviewCount', weight: 0.1 }]
+        };
+
+        this.filterService.getActiveItemsResultset$().subscribe(views => {
+            this.sortedAVLTree.next(this.sortItems(testObj, views));
+        });
+    }
+
+    public sortItems(sortObj: ISort, viewSet: { itemView: Resultset<any>; restaurantView: Resultset<any> }) {
+        return this.sortAll(sortObj, viewSet.restaurantView, viewSet.itemView.data());
     }
 
     private sortAll(arrSorts: ISort, rView: Resultset<any>, itemArr: any[]) {
@@ -25,19 +37,18 @@ export class SortItemsService {
         log('itemArrSortingStart');
         for (let item of itemArr) {
             try {
-            const restaurantObj = rView.collection.findOne({'$loki': {'$eq': item['restaurant_id']}});
-            if (restaurantObj === null) {
-                log('null restaurant', '', item);
-            }
-            const rTotal = this.calcTotal(restaurantObj, arrSorts.restaurants);
-            const key = rTotal + this.calcTotal(item, arrSorts.items);
-            itemTree.insert(key, item);
-            } catch(e) {
-                log('error', '', {e: e, data: item});
+                const restaurantObj = rView.collection.findOne({ $loki: { $eq: item['restaurant_id'] } });
+                if (restaurantObj === null) {
+                    log('null restaurant', '', item);
+                }
+                const rTotal = this.calcTotal(restaurantObj, arrSorts.restaurants);
+                const key = rTotal + this.calcTotal(item, arrSorts.items);
+                itemTree.insert(key, item);
+            } catch (e) {
+                log('error', '', { e: e, data: item });
             }
         }
-        log('itemArrSortingEnd', '', itemTree);
-
+        return itemTree;
     }
 
     private calcTotal(doc: object, sortObj: ISortable[]) {
@@ -55,5 +66,4 @@ export class SortItemsService {
         }
         return total;
     }
-
 }
