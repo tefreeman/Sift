@@ -22,7 +22,6 @@ import { NormalizeService } from './normalize.service';
 
 @Injectable({ providedIn: 'root' })
 export class FiltersService {
-    private filters: IFilterObj[];
     private activeFilter$: Subject<IFilterObj> = new Subject();
     private activeFilterItemsResult$: Subject<{
         itemView: Resultset<any>;
@@ -37,16 +36,13 @@ export class FiltersService {
         private dataService: DataService
     ) {
         this.activeFilter$.subscribe(filterObj => {
-            log('startSeperateFilters', '', filterObj);
             this.processFilters(filterObj).subscribe(result => {
-                log('result$', '', result);
                 this.activeFilterItemsResult$.next(result);
             });
         });
 
         this.dataService.getAll('filters').subscribe(aFilter => {
-            log('getAll', '', aFilter);
-            this.setActiveFilter(aFilter.name);
+            this.setActiveFilter(aFilter.id);
         });
     }
 
@@ -102,10 +98,10 @@ export class FiltersService {
             .subscribe();
     }
 
-    private getFilter$(filterName: string): Observable<IFilterObj> {
+    private getFilter$(filterId: string): Observable<IFilterObj> {
         return this.cacheDB.getCollection$('filters').pipe(
             map(col => {
-                return col.findOne({ name: { $eq: filterName } });
+                return col.findOne({ id: { $eq: filterId } });
             })
         );
     }
@@ -118,8 +114,8 @@ export class FiltersService {
         );
     }
 
-    public setActiveFilter(filterName) {
-        this.getFilter$(filterName)
+    public setActiveFilter(filterId: string) {
+        this.getFilter$(filterId)
             .pipe(
                 concatMap(filterObj => {
                     return this.normalizeService.normalizeFilterObj(filterObj);

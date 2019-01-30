@@ -89,7 +89,7 @@ export class DataService {
             .subscribe();
     }
 
-    updateMergeUserArray(data, field: string) {
+    private updateMergeUserArray(data, field: string) {
         this.user
             .pipe(
                 map(user => {
@@ -98,6 +98,24 @@ export class DataService {
                 })
             )
             .subscribe();
+    }
+
+    private removeMergeUserArray(data, field: string) {
+        this.user
+            .pipe(
+                map(user => {
+                    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+                    return userRef.update({ [field]: firebase.firestore.FieldValue.arrayRemove(data) }).then();
+                })
+            )
+            .subscribe();
+    }
+
+    public remove(colName: string, id: string) {
+        this.afs
+            .collection(colName)
+            .doc(id)
+            .delete();
     }
 
     getDataByGridKey$(key): Observable<any> {
@@ -124,17 +142,14 @@ export class DataService {
 
     getAll(colName: string): Observable<any> {
         return this.user.pipe(
-            tap(user => log('user', '', user)),
             mergeMap(user => {
                 const arr: IMetaIdDoc[] = user[colName];
-                log('userFilters', '', user[colName]);
                 return from(arr);
             }),
             mergeMap(metaDoc => {
                 return this.cacheService.getCached(colName, metaDoc).pipe(
                     mergeMap(cached => {
                         if (cached) {
-                            log('getALL', 'cached', cached);
                             return of(cached);
                         } else {
                             return this.afs
@@ -183,7 +198,7 @@ export class DataService {
         );
     }
 
-    add(colName: string, doc: any) {
+    addOrUpdate(colName: string, doc: any) {
         let getTime = new Date().getTime();
         from(this.afs.collection(colName).add(doc))
             .pipe(
@@ -199,6 +214,14 @@ export class DataService {
                 })
             )
             .subscribe();
+    }
+
+    delete(colName: string, doc: IMetaIdDoc) {
+        this.cacheService.deleteCached(colName, doc.id);
+        this.remove(colName, doc.id);
+
+        const metaDoc: IMetaIdDoc = { id: doc.id, lastUpdate: doc.lastUpdate };
+        this.removeMergeUserArray(metaDoc, colName);
     }
 
     getCurrentUser(): Observable<IProfile> {

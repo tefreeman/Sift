@@ -92,6 +92,16 @@ export class CacheDbService {
         );
     }
 
+    public deleteCached(colName: string, id: string) {
+        return this.getCollection$(colName)
+            .pipe(
+                tap(collection => {
+                    collection.findAndRemove({ id: { $eq: id } });
+                })
+            )
+            .subscribe();
+    }
+
     private loadCacheDbFromAdapter(name: string, adapter): Observable<string> {
         return Observable.create((observer: Observer<string>) => {
             adapter.getDatabaseList(result => {
