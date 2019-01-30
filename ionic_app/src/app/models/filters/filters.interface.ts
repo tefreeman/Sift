@@ -7,7 +7,7 @@ export interface IFilterObj {
     public: boolean;
     timestamp: number;
     lastActive: number;
-    lastUpdate: number;
+    lastUpdate?: number;
     filterRestaurants: IRestaurantsFilter[];
     filterNutrients: INutrientFilter[];
     filterItems: IItemsFilter[];

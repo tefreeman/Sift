@@ -23,7 +23,8 @@ export interface IPersonal {
 }
 export interface IProfile {
     email: string;
-    filterIds: IFilterWVer[];
+    uid: string;
+    filters: IMetaIdDoc[];
     quickSetup: boolean;
     profile: IPersonal;
     Health: IHealth;
@@ -31,10 +32,11 @@ export interface IProfile {
     goal: IGoal;
     taste: ITaste;
 }
-
-interface IFilterWVer {
-    id: string;
-    ver: number;
+// the property name using IcachedId must match cached collection name
+export interface IMetaIdDoc {
+    id?: string;
+    lastUpdate?: number;
+    [key: string]: any;
 }
 export interface IHistory {
     userCreated: number;

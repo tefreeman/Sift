@@ -1,13 +1,19 @@
+import { CacheDbService } from './../cache/cache-db.service';
 import * as Lokijs from 'lokijs';
 import { Observable, Subject, zip } from 'rxjs';
-import { concatMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { concatMap, filter, map, switchMap, tap, concat } from 'rxjs/operators';
 import { log } from 'src/app/core/logger.service';
 import { sort } from 'timsort';
 
 import { Injectable } from '@angular/core';
 
 import {
-    IFilter, IFilterObj, IIngredientFilter, IItemsFilter, INutrientFilter, IRestaurantsFilter
+    IFilter,
+    IFilterObj,
+    IIngredientFilter,
+    IItemsFilter,
+    INutrientFilter,
+    IRestaurantsFilter
 } from '../../../models/filters/filters.interface';
 import { DataService } from '../data.service';
 import { GpsService } from '../gps.service';
@@ -23,21 +29,25 @@ export class FiltersService {
         restaurantView: Resultset<any>;
     }> = new Subject();
 
-    constructor(private localDbService: LocalDbService, private normalizeService: NormalizeService, private gpsService: GpsService, private dataService: DataService) {
+    constructor(
+        private localDbService: LocalDbService,
+        private normalizeService: NormalizeService,
+        private gpsService: GpsService,
+        private cacheDB: CacheDbService,
+        private dataService: DataService
+    ) {
         this.activeFilter$.subscribe(filterObj => {
             log('startSeperateFilters', '', filterObj);
             this.processFilters(filterObj).subscribe(result => {
                 log('result$', '', result);
                 this.activeFilterItemsResult$.next(result);
-                log('sort start');
             });
         });
 
-        this.dataService.getAllFilters().subscribe((filter) => {
-            this.addFilter(filter);
-            this.setActiveFilter(filter.name);
-        })
-
+        this.dataService.getAll('filters').subscribe(aFilter => {
+            log('getAll', '', aFilter);
+            this.setActiveFilter(aFilter.name);
+        });
     }
 
     public isValidName(filterName) {
@@ -93,7 +103,7 @@ export class FiltersService {
     }
 
     private getFilter$(filterName: string): Observable<IFilterObj> {
-        return this.localDbService.getCollection$('filters').pipe(
+        return this.cacheDB.getCollection$('filters').pipe(
             map(col => {
                 return col.findOne({ name: { $eq: filterName } });
             })
@@ -101,7 +111,7 @@ export class FiltersService {
     }
 
     public getAllFilters$(): Observable<IFilterObj[]> {
-        return this.localDbService.getCollection$('filters').pipe(
+        return this.cacheDB.getCollection$('filters').pipe(
             map(col => {
                 return col.find({});
             })
@@ -109,10 +119,16 @@ export class FiltersService {
     }
 
     public setActiveFilter(filterName) {
-        this.getFilter$(filterName).subscribe(filterObj => {
-            log('setActive', '', filterObj);
-            this.activeFilter$.next(filterObj);
-        });
+        this.getFilter$(filterName)
+            .pipe(
+                concatMap(filterObj => {
+                    return this.normalizeService.normalizeFilterObj(filterObj);
+                }),
+                tap(normalizedFilter => {
+                    this.activeFilter$.next(normalizedFilter);
+                })
+            )
+            .subscribe();
     }
 
     public getActiveFilter() {
@@ -229,15 +245,15 @@ export class FiltersService {
         return filterArr;
     }
 
-    private initFilters() { }
+    private initFilters() {}
 
-    private getCachedFilters(filterObj) { }
+    private getCachedFilters(filterObj) {}
 
-    private uploadToServer(filterObj) { }
+    private uploadToServer(filterObj) {}
 
-    private cacheFilter(filterObj) { }
+    private cacheFilter(filterObj) {}
 
-    private isCached(filterObj) { }
+    private isCached(filterObj) {}
 }
 
 interface IMinMax {

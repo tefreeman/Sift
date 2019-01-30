@@ -2,10 +2,7 @@ import { Observer } from 'firebase';
 import * as Loki from 'lokijs';
 import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
 import { BehaviorSubject, combineLatest, merge, Observable, observable, of, pipe } from 'rxjs';
-import {
-    catchError, concat, concatMap, debounceTime, filter, flatMap, map, mapTo, switchMap, tap,
-    throttleTime
-} from 'rxjs/operators';
+import { catchError, concat, concatMap, debounceTime, filter, flatMap, map, mapTo, switchMap, tap, throttleTime } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import { DomAdapter } from '@angular/platform-browser/src/dom/dom_adapter';
@@ -25,7 +22,7 @@ export class LocalDbService {
     private gridDb$: Observable<Loki> = this.gridDbSubject$.asObservable().pipe(filter(db => db !== null));
 
     private userDbSubject$: BehaviorSubject<Loki> = new BehaviorSubject(null);
-    private userDb$: Observable<Loki> = this.gridDbSubject$.asObservable().pipe(filter(db => db !== null));
+    private userDb$: Observable<Loki> = this.userDbSubject$.asObservable().pipe(filter(db => db !== null));
 
     constructor(private fileCache: RequestFileCacheService, private dataService: DataService, private gpsService: GpsService) {
         this.loadGridDb();
@@ -119,41 +116,6 @@ export class LocalDbService {
             });
     }
 
-    private loadUserDb() {
-
-        const lokiAdapter = new LokiIndexedAdapter();
-        const db = new Loki(name, {
-            adapter: lokiAdapter,
-            verbose: true,
-            destructureDelimiter: '=',
-            autosave: true,
-            autoload: false
-        });
-
-        const load$ = (user: IProfile): Observable<string> => this.loadDbFromAdapter(user.email, lokiAdapter).pipe(
-            catchError(err =>
-                this.createUserDb(user, db).pipe(
-                    tap(dbData => {
-                        this.saveDbAdapter(user.email, dbData, lokiAdapter);
-                    })
-                )
-            ));
-
-
-        this.dataService.getCurrentUser().pipe(
-            concatMap(user => {
-                return load$(user).pipe(
-                    map(dbData => {
-                        db.loadJSON(dbData);
-                        return db;
-                    })
-                );
-            })).subscribe(loadedDb => {
-                this.userDbSubject$.next(loadedDb);
-                log('this.db$.next', '', loadedDb);
-            })
-    }
-
     private loadDbFromAdapter(name: string, adapter): Observable<string> {
         return Observable.create((observer: Observer<string>) => {
             adapter.getDatabaseList(result => {
@@ -178,28 +140,11 @@ export class LocalDbService {
         return this.dataService.getDataByGridKey$(key);
     }
 
-    private createUserDb(user: IProfile, db: Loki) {
-        const newDb = new Loki(name, {
-            verbose: true,
-            destructureDelimiter: '=',
-            autosave: true,
-            autoload: false
-        });
-
-        // TODO init Db operations
-
-        newDb.addCollection('filters', { 'indices': ['name', 'lastUpdate'] });
-        newDb.addCollection('cache', { 'indices': ['name', 'lastUpdate'] });
-        newDb.addCollection('sort', { 'indices': ['name', 'lastUpdate'] });
-
-        return of(newDb.serialize());
-    }
-
     private saveDbAdapter(name, dbData, adapter) {
-        adapter.saveDatabase(name, dbData, result => { });
+        adapter.saveDatabase(name, dbData, result => {});
     }
 
-    private checkVersion() { }
+    private checkVersion() {}
 
     // Check Cache and File, Load if exists
     // If don't exist download file from server and open into collection

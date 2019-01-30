@@ -1,3 +1,4 @@
+import { ItemsService } from './../../core/services/items/items.service';
 import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from '../../core/authentication/auth.service';
@@ -8,26 +9,24 @@ import { FiltersService } from '../../core/services/items/filters.service';
 import { LocalDbService } from '../../core/services/local-db.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  
-  constructor(private auth: AuthService, private filtersService: FiltersService) { 
-    log('homeComponent Constructed', '', {});
-  }
+    constructor(private auth: AuthService, private filtersService: FiltersService, private itemsService: ItemsService) {
+        this.itemsService.getItems$(10, 10);
+        log('homeComponent Constructed', '', {});
+    }
 
-  ngOnInit() {
-    //this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));
-  }
+    ngOnInit() {
+        //this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));
+    }
 
-  testLogout() {
-    this.filtersService.getActiveFilter();
-    this.auth.signOut();
-  }
-  
+    testLogout() {
+        this.filtersService.getActiveFilter();
+        this.auth.signOut();
+    }
 
-  // this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));
-  }
-
+    // this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));
+}
