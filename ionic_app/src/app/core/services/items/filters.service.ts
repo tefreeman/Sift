@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 import {
     IFilter, IFilterObj, IIngredientFilter, IItemsFilter, INutrientFilter, IRestaurantsFilter
 } from '../../../models/filters/filters.interface';
+import { DataService } from '../data.service';
 import { GpsService } from '../gps.service';
 import { LocalDbService } from '../local-db.service';
 import { NormalizeService } from './normalize.service';
@@ -22,7 +23,7 @@ export class FiltersService {
         restaurantView: Resultset<any>;
     }> = new Subject();
 
-    constructor(private localDbService: LocalDbService, private normalizeService: NormalizeService, private gpsService: GpsService) {
+    constructor(private localDbService: LocalDbService, private normalizeService: NormalizeService, private gpsService: GpsService, private dataService: DataService) {
         this.activeFilter$.subscribe(filterObj => {
             log('startSeperateFilters', '', filterObj);
             this.processFilters(filterObj).subscribe(result => {
@@ -32,20 +33,11 @@ export class FiltersService {
             });
         });
 
-        const aFilter: IFilterObj = {
-            name: 'test',
-            public: true,
-            timestamp: 12313123,
-            lastActive: 14124142,
-            filterItems: [{ key: 'reviewCount', min: 10, max: 500 }, { key: 'reviewScore', min: 1, max: 5.0 }],
-            filterNutrients: [{ key: 'protein', min: 40, max: 100 }],
-            filterRestaurants: [{ key: 'reviewScore', min: 1.5, max: 5.0 }],
-            // Create your own diet?
-            diet: {}
-        };
+        this.dataService.getAllFilters().subscribe((filter) => {
+            this.addFilter(filter);
+            this.setActiveFilter(filter.name);
+        })
 
-        this.addFilter(aFilter);
-        this.setActiveFilter(aFilter.name);
     }
 
     public isValidName(filterName) {

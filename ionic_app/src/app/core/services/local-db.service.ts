@@ -2,12 +2,16 @@ import { Observer } from 'firebase';
 import * as Loki from 'lokijs';
 import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
 import { BehaviorSubject, combineLatest, merge, Observable, observable, of, pipe } from 'rxjs';
-import { catchError, concat, concatMap, debounceTime, filter, flatMap, map, mapTo, switchMap, tap, throttleTime } from 'rxjs/operators';
+import {
+    catchError, concat, concatMap, debounceTime, filter, flatMap, map, mapTo, switchMap, tap,
+    throttleTime
+} from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import { DomAdapter } from '@angular/platform-browser/src/dom/dom_adapter';
 
 import { IItemStats } from '../../models/normalization/normalization.interface';
+import { IProfile } from '../../models/user/userProfile.interface';
 import { distance } from '../../shared/functions/helpers.functions';
 import { log } from '../logger.service';
 import { RequestFileCacheService } from './cache/request-file-cache.service';
@@ -115,42 +119,42 @@ export class LocalDbService {
             });
     }
 
-    private loadUserDb(profileName) {
-        /*
-      const lokiAdapter = new LokiIndexedAdapter();
+    private loadUserDb() {
 
-      const db = new Loki(name, {
-          adapter: lokiAdapter,
-          verbose: true,
-          destructureDelimiter: '=',
-          autosave: true,
-          autoload: false
-      });
+        const lokiAdapter = new LokiIndexedAdapter();
+        const db = new Loki(name, {
+            adapter: lokiAdapter,
+            verbose: true,
+            destructureDelimiter: '=',
+            autosave: true,
+            autoload: false
+        });
 
-        
-      this.loadDbFromAdapter(profileName, lokiAdapter).pipe(
-              catchError(err =>
-                  this.loadUserDbFromServer(profileName).pipe(
-                      tap(dbData => {
-                          this.saveDbAdapter(profileName, dbData, lokiAdapter);
-                      })
-                  )
-              )
-          )
-          .pipe(
-              map(dbData => {
-                  db.loadJSON(dbData);
-                  return db;
-              })
-          )
-          .subscribe(newDb => {
-              this.gridDbSubject$.next(newDb);
-              log('this.db$.next', '', newDb);
-          });
-          */
+        const load$ = (user: IProfile): Observable<string> => this.loadDbFromAdapter(user.email, lokiAdapter).pipe(
+            catchError(err =>
+                this.createUserDb(user, db).pipe(
+                    tap(dbData => {
+                        this.saveDbAdapter(user.email, dbData, lokiAdapter);
+                    })
+                )
+            ));
+
+
+        this.dataService.getCurrentUser().pipe(
+            concatMap(user => {
+                return load$(user).pipe(
+                    map(dbData => {
+                        db.loadJSON(dbData);
+                        return db;
+                    })
+                );
+            })).subscribe(loadedDb => {
+                this.userDbSubject$.next(loadedDb);
+                log('this.db$.next', '', loadedDb);
+            })
     }
 
-    private loadDbFromAdapter(name: string, adapter) {
+    private loadDbFromAdapter(name: string, adapter): Observable<string> {
         return Observable.create((observer: Observer<string>) => {
             adapter.getDatabaseList(result => {
                 let match = false;
@@ -174,15 +178,28 @@ export class LocalDbService {
         return this.dataService.getDataByGridKey$(key);
     }
 
-    private loadUserDbFromServer(userId: string) {
-        // TODO
+    private createUserDb(user: IProfile, db: Loki) {
+        const newDb = new Loki(name, {
+            verbose: true,
+            destructureDelimiter: '=',
+            autosave: true,
+            autoload: false
+        });
+
+        // TODO init Db operations
+
+        newDb.addCollection('filters', { 'indices': ['name', 'lastUpdate'] });
+        newDb.addCollection('cache', { 'indices': ['name', 'lastUpdate'] });
+        newDb.addCollection('sort', { 'indices': ['name', 'lastUpdate'] });
+
+        return of(newDb.serialize());
     }
 
     private saveDbAdapter(name, dbData, adapter) {
-        adapter.saveDatabase(name, dbData, result => {});
+        adapter.saveDatabase(name, dbData, result => { });
     }
 
-    private checkVersion() {}
+    private checkVersion() { }
 
     // Check Cache and File, Load if exists
     // If don't exist download file from server and open into collection

@@ -1,7 +1,7 @@
-import { auth } from 'firebase/app';
+import { auth, firestore } from 'firebase/app';
 import { from, Observable, of, zip } from 'rxjs';
 import {
-    concatMap, distinctUntilChanged, first, flatMap, map, switchMap, tap
+    concat, concatMap, distinctUntilChanged, filter, first, flatMap, map, switchMap, tap
 } from 'rxjs/operators';
 
 // tslint:disable-next-line: no-submodule-imports
@@ -14,9 +14,10 @@ import {
 import { AngularFireStorage, StorageBucket } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 
-import { IFilterObj } from '../../models/filters/filters.interface';
+import { IFilter, IFilterObj } from '../../models/filters/filters.interface';
 import { IProfile } from '../../models/user/userProfile.interface';
 import { log } from '../logger.service';
+import { LocalStorageCacheService } from './cache/local-storage-cache.service';
 import { GpsService } from './gps.service';
 
 @Injectable({ providedIn: 'root' })
@@ -30,6 +31,7 @@ export class DataService {
         private afAuth: AngularFireAuth,
         private afs: AngularFirestore,
         private storage: AngularFireStorage,
+        private cachedStorage: LocalStorageCacheService,
         private router: Router,
         private http: HttpClient,
         private gpsService: GpsService
@@ -81,16 +83,23 @@ export class DataService {
         return this.afs.collection('reviews').doc(id).get();
     }
 
-    getFilters(): Observable<firebase.firestore.DocumentSnapshot> {
+    getAllFilters(): Observable<any> {
         return this.user.pipe(
             concatMap((user) => {
                 return from(user.filterIds);
             }),
             concatMap((filterId) => {
-                return this.afs.collection('filters').doc(filterId.id).get();
-            })
-        )
+                return this.afs.collection('filters').doc(filterId.id).get()
+            }),
+            map((res) => res.data())
+
+        );
     }
+
+    addFilter(filterObj: IFilterObj) {
+
+    }
+
 
     getCurrentUser(): Observable<IProfile> {
         return this.user;

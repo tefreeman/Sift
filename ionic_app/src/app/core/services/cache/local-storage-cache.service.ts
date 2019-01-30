@@ -1,4 +1,4 @@
-import { from } from 'rxjs';
+import { from, of } from 'rxjs';
 import { catchError, map, timeInterval } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
@@ -29,10 +29,6 @@ export class LocalStorageCacheService {
     }
     public get(key: string, date: number) {
         return from(this.nativeStorage.getItem(key)).pipe(
-            catchError((err) => {
-                log('error get cache', '', err);
-                return null;
-            }),
             map((data) => {
                 if (this.isExpired(data.lastUpdate, date)) {
                     this.nativeStorage.remove(key);
@@ -40,8 +36,12 @@ export class LocalStorageCacheService {
                 } else {
                     return data;
                 }
-            })
-        )
+            }),
+            catchError((err) => {
+                log('error get cache', '', err);
+                return of(null);
+            }),
+        );
 
     }
 
