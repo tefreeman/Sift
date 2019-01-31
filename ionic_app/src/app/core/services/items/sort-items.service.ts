@@ -11,26 +11,24 @@ import { log } from '../../logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class SortItemsService {
-    private minItems = 100;
-    constructor() { }
+    constructor() {}
 
-    public sortItems(sortObj: ISort, viewSet: { itemView: Resultset<any>, restaurantView: Resultset<any> }) {
-        this.sortAll(sortObj, viewSet.restaurantView, viewSet.itemView.data());
+    public sortItems(sortObj: ISort, viewSet: { itemView: Resultset<any>; restaurantView: Resultset<any> }) {
+        return this.sortAll(sortObj, viewSet.restaurantView, viewSet.itemView.data()).values();
     }
 
     private sortAll(arrSorts: ISort, rView: Resultset<any>, itemArr: any[]) {
         const restaurantsWeight = this.calcTotalWeight(arrSorts.restaurants);
         const itemsWeight = this.calcTotalWeight(arrSorts.items);
-        const itemTree = new AVLTree();
+        const itemTree = new AVLTree((a: number, b: number) => b - a);
         log('itemArrSortingStart');
         for (let item of itemArr) {
-            const restaurantObj = rView.collection.findOne({ '$loki': { '$eq': item['restaurant_id'] } });
+            const restaurantObj = rView.collection.findOne({ $loki: { $eq: item['restaurant_id'] } });
             const rTotal = this.calcTotal(restaurantObj, arrSorts.restaurants);
             const key = rTotal + this.calcTotal(item, arrSorts.items);
             itemTree.insert(key, item);
         }
-        log('itemArrSortingEnd', '', itemTree);
-
+        return itemTree;
     }
 
     private calcTotal(doc: object, sortObj: ISortable[]) {
@@ -48,5 +46,4 @@ export class SortItemsService {
         }
         return total;
     }
-
 }

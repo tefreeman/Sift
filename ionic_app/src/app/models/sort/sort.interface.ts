@@ -1,9 +1,10 @@
 export interface ISort {
-    restaurants: ISortable[]
-    items: ISortable[]
+    name: string;
+    restaurants: ISortable[];
+    items: ISortable[];
 }
 
 export interface ISortable {
-    key: string,
+    key: string;
     weight: number;
 }

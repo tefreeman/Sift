@@ -1,9 +1,8 @@
-import { CacheDbService } from './../cache/cache-db.service';
-import * as Lokijs from 'lokijs';
-import { Observable, Subject, zip } from 'rxjs';
-import { concatMap, filter, map, switchMap, tap, concat } from 'rxjs/operators';
-import { log } from 'src/app/core/logger.service';
+import { Observable, Subject, zip, BehaviorSubject } from 'rxjs';
+import { concat, concatMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { log } from '../../logger.service';
 import { sort } from 'timsort';
+import { CacheDbService } from './../cache/cache-db.service';
 
 import { Injectable } from '@angular/core';
 
@@ -22,11 +21,8 @@ import { NormalizeService } from './normalize.service';
 
 @Injectable({ providedIn: 'root' })
 export class FiltersService {
-    private activeFilter$: Subject<IFilterObj> = new Subject();
-    private activeFilterItemsResult$: Subject<{
-        itemView: Resultset<any>;
-        restaurantView: Resultset<any>;
-    }> = new Subject();
+    private activeFilter$$: BehaviorSubject<IFilterObj> = new BehaviorSubject<IFilterObj>(null);
+    private activeFilter$: Observable<IFilterObj> = this.activeFilter$$.pipe(filter(val => val !== null));
 
     constructor(
         private localDbService: LocalDbService,
@@ -35,19 +31,13 @@ export class FiltersService {
         private cacheDB: CacheDbService,
         private dataService: DataService
     ) {
-        this.activeFilter$.subscribe(filterObj => {
-            this.processFilters(filterObj).subscribe(result => {
-                this.activeFilterItemsResult$.next(result);
-            });
-        });
-
-        this.dataService.getAll('filters').subscribe(aFilter => {
-            this.setActiveFilter(aFilter.id);
+        this.getActiveFilter().subscribe(initActive => {
+            this.activeFilter$$.next(initActive);
         });
     }
 
     public isValidName(filterName) {
-        this.localDbService.getCollection$('filters').pipe(
+        this.cacheDB.getCollection$('filters').pipe(
             map(col => {
                 if (col.findOne({ name: { $eq: filterName } }) === null) {
                     return true;
@@ -59,43 +49,56 @@ export class FiltersService {
     }
 
     public updateFilter(filterObj: IFilterObj) {
-        this.prepareFilter$(filterObj).subscribe(processedFilterObj => {
-            this.localDbService
-                .getCollection$('filters')
-                .pipe(
-                    map(col => {
-                        col.findAndUpdate({ name: { eq: processedFilterObj.name } }, obj => {
-                            obj = processedFilterObj;
-                        });
-                    })
-                )
-                .subscribe();
-        });
+        this.dataService.addOrUpdate('filters', filterObj);
     }
+
     public addFilter(filterObj: IFilterObj): void {
-        this.prepareFilter$(filterObj).subscribe(processedFilterObj => {
-            log('prepared', '', processedFilterObj);
-            this.localDbService
-                .getCollection$('filters')
-                .pipe(
-                    filter(col => col.findOne({ name: { $eq: processedFilterObj.name } }) === null),
-                    map(col => {
-                        return col.insertOne(processedFilterObj);
-                    })
-                )
-                .subscribe();
+        this.dataService.addOrUpdate('filters', filterObj);
+    }
+
+    public deleteFilter(filterObj: IFilterObj): void | Error {
+        this.dataService.delete('filters', filterObj);
+    }
+
+    public getAllFilters$(): Observable<IFilterObj[]> {
+        return this.dataService.getAll('filters');
+    }
+
+    public setActiveFilter(filterId: string) {
+        this.getFilter$(filterId).subscribe(filterObj => {
+            filterObj.lastActive = new Date().getTime();
+            this.cacheDB.cache('filters', filterObj);
+            this.activeFilter$$.next(filterObj);
         });
     }
 
-    public deleteFilter(filterName: string): void | Error {
-        this.localDbService
-            .getCollection$('filters')
-            .pipe(
-                map(col => {
-                    return col.findAndRemove({ name: { $eq: filterName } });
-                })
-            )
-            .subscribe();
+    public getActiveFilter() {
+        return this.getAllFilters$().pipe(
+            map(filterObjs => {
+                filterObjs = this.sortByLastActive(filterObjs);
+                return filterObjs[0];
+            })
+        );
+    }
+    public getItemResultSet$() {
+        return this.activeFilter$.pipe(
+            concatMap(activeFilter => {
+                return this.prepareFilter$(activeFilter);
+            }),
+            concatMap(preparedActiveFilter => {
+                return this.processFilters(preparedActiveFilter);
+            })
+        );
+    }
+
+    private sortByLastActive(filterObjs: IFilterObj[]) {
+        if (filterObjs.length === 0) {
+            return [];
+        }
+        sort(filterObjs, (a: IFilterObj, b: IFilterObj) => {
+            return a.lastActive - b.lastActive;
+        });
+        return filterObjs;
     }
 
     private getFilter$(filterId: string): Observable<IFilterObj> {
@@ -104,38 +107,6 @@ export class FiltersService {
                 return col.findOne({ id: { $eq: filterId } });
             })
         );
-    }
-
-    public getAllFilters$(): Observable<IFilterObj[]> {
-        return this.cacheDB.getCollection$('filters').pipe(
-            map(col => {
-                return col.find({});
-            })
-        );
-    }
-
-    public setActiveFilter(filterId: string) {
-        this.getFilter$(filterId)
-            .pipe(
-                concatMap(filterObj => {
-                    return this.normalizeService.normalizeFilterObj(filterObj);
-                }),
-                tap(normalizedFilter => {
-                    this.activeFilter$.next(normalizedFilter);
-                })
-            )
-            .subscribe();
-    }
-
-    public getActiveFilter() {
-        return this.activeFilter$;
-    }
-
-    public getActiveItemsResultset$(): Subject<{
-        itemView: Resultset<any>;
-        restaurantView: Resultset<any>;
-    }> {
-        return this.activeFilterItemsResult$;
     }
 
     private prepareFilter$(filterObj: IFilterObj): Observable<IFilterObj> {
@@ -240,16 +211,6 @@ export class FiltersService {
         }
         return filterArr;
     }
-
-    private initFilters() {}
-
-    private getCachedFilters(filterObj) {}
-
-    private uploadToServer(filterObj) {}
-
-    private cacheFilter(filterObj) {}
-
-    private isCached(filterObj) {}
 }
 
 interface IMinMax {

@@ -14,18 +14,21 @@ import { LocalDbService } from '../../core/services/local-db.service';
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-    constructor(private auth: AuthService, private filtersService: FiltersService, private itemsService: ItemsService) {
-        this.itemsService.getItems$(10, 10);
-        log('homeComponent Constructed', '', {});
-    }
+    constructor(private auth: AuthService, private filtersService: FiltersService, private itemsService: ItemsService) {}
 
     ngOnInit() {
         //this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));
     }
 
     testLogout() {
-        this.filtersService.getActiveFilter();
-        this.auth.signOut();
+        const ISort = {
+            name: 'test',
+            restaurants: [{ key: 'reviewScore', weight: 0.9 }, { key: 'reviewCount', weight: 0.1 }],
+            items: [{ key: 'reviewScore', weight: 0.9 }, { key: 'reviewCount', weight: 0.1 }]
+        };
+        this.itemsService.getItems$(ISort).subscribe(vals => {
+            log('vals!', '', vals);
+        });
     }
 
     // this.requestFileCacheService.removeFile('long-87.50lat33.25').subscribe((e) => console.log(e));

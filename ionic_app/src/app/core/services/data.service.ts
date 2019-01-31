@@ -1,7 +1,7 @@
 import { IMetaIdDoc } from './../../models/user/userProfile.interface';
 import { CacheDbService } from './cache/cache-db.service';
 import { auth, firestore } from 'firebase/app';
-import { from, Observable, of, zip } from 'rxjs';
+import { from, Observable, of, zip, forkJoin } from 'rxjs';
 import {
     concat,
     concatMap,
@@ -141,36 +141,27 @@ export class DataService {
     }
 
     getAll(colName: string): Observable<any> {
-        return this.user.pipe(
-            mergeMap(user => {
-                const arr: IMetaIdDoc[] = user[colName];
-                return from(arr);
-            }),
-            mergeMap(metaDoc => {
-                return this.cacheService.getCached(colName, metaDoc).pipe(
-                    mergeMap(cached => {
-                        if (cached) {
-                            return of(cached);
-                        } else {
-                            return this.afs
-                                .collection(colName)
-                                .doc(metaDoc.id)
-                                .get()
-                                .pipe(
-                                    tap(fireData => {
-                                        log('getALL', 'server', fireData.data());
-                                        const freshMetaDoc = fireData.data();
-                                        freshMetaDoc['lastUpdate'] = metaDoc.lastUpdate;
-                                        freshMetaDoc['id'] = metaDoc.id;
-                                        this.cacheService.cache(colName, freshMetaDoc);
-                                    }),
-                                    map(res => res.data())
-                                );
+        return Observable.create(observer => {
+            let count = 0;
+            const dataArr = [];
+            this.user
+                .pipe(
+                    tap(user => {
+                        const arr: IMetaIdDoc[] = user[colName];
+                        for (const doc of arr) {
+                            this.get(colName, doc).subscribe(res => {
+                                dataArr.push(res);
+                                count++;
+                                if (count === arr.length) {
+                                    observer.next(dataArr);
+                                    observer.complete();
+                                }
+                            });
                         }
                     })
-                );
-            })
-        );
+                )
+                .subscribe();
+        });
     }
 
     get(colName: string, metaDoc: IMetaIdDoc) {
