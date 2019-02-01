@@ -1,0 +1,43 @@
+<ion-content>
+
+    <ion-searchbar
+        animated
+        id="homeSearchBar"
+    ></ion-searchbar>
+
+    <sg-home-maps></sg-home-maps>
+    <div class="fullWidthLine">
+
+    </div>
+
+    <ion-segment scrollable>
+        <ion-segment-button>
+            <ion-label> Price</ion-label>
+        </ion-segment-button>
+        <ion-segment-button >
+            <ion-label>Goal</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+                <ion-label>Close By</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+                <ion-label>Full Bar</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+                <ion-label>Delivery</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+                <ion-label>Open Now</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      
+    <ion-virtual-scroll [items]="items">
+        <ion-card *virtualItem="let item">
+            <ion-item>
+                <h2 text-capitalize>{{item.name}}</h2>
+            </ion-item>
+            <ion-card-content>{{item.price}}</ion-card-content>
+        </ion-card>
+    </ion-virtual-scroll>
+
+</ion-content>

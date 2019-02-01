@@ -1,63 +1,59 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "C:\\Users\\trevo\\Documents\\foodApp\\test"
-		},
-		{
-			"path": "C:\\Users\\trevo\\Documents\\projects\\foodApp\\test"
-		}
-	],
-	"settings": {
-		"workbench.iconTheme": "vscode-icons",
-		"typescript.updateImportsOnFileMove.enabled": "always",
-		"window.zoomLevel": 0,
-		"vsicons.projectDetection.autoReload": true,
-		"javascript.implicitProjectConfig.checkJs": true,
-		"typescript.disableAutomaticTypeAcquisition": true,
-		"typescript.implementationsCodeLens.enabled": true,
-		"typescript.referencesCodeLens.enabled": true,
-		"editor.codeLens": false,
-		"files.associations": {
-			"*.ts": "typescript"
-		},
-		"typescript.autoClosingTags": false,
-		"auto-close-tag.activationOnLanguage": [
-			"xml",
-			"php",
-			"blade",
-			"ejs",
-			"jinja",
-			"javascript",
-			"javascriptreact",
-			"typescriptreact",
-			"plaintext",
-			"markdown",
-			"vue",
-			"liquid",
-			"erb",
-			"lang-cfml",
-			"cfml",
-			"HTML (Eex)"
-		],
-		"javascript.updateImportsOnFileMove.enabled": "always",
-		"typescript.preferences.importModuleSpecifier": "relative",
-		"typescript.preferences.quoteStyle": "single",
-		"sync.autoDownload": true,
-		"sync.autoUpload": true,
-		"prettier.printWidth": 140,
-		"prettier.singleQuote": true,
-		"cSpell.words": [
-			"autoload",
-			"autosave",
-			"delimiter",
-			"destructure"
-		],
-		"prettier.tabWidth": 4,
-		"importSorter.generalConfiguration.sortOnBeforeSave": true,
-		"prettier.stylelintIntegration": true,
-		"editor.formatOnSave": true
-	}
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "C:\\Users\\trevo\\Documents\\foodApp\\test"
+        },
+        {
+            "path": "C:\\Users\\trevo\\Documents\\projects\\foodApp\\test"
+        }
+    ],
+    "settings": {
+        "workbench.iconTheme": "vscode-icons",
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "window.zoomLevel": 0,
+        "vsicons.projectDetection.autoReload": true,
+        "javascript.implicitProjectConfig.checkJs": true,
+        "typescript.disableAutomaticTypeAcquisition": true,
+        "typescript.implementationsCodeLens.enabled": true,
+        "typescript.referencesCodeLens.enabled": true,
+        "editor.codeLens": false,
+        "files.associations": {
+            "*.ts": "typescript"
+        },
+        "typescript.autoClosingTags": false,
+        "auto-close-tag.activationOnLanguage": [
+            "xml",
+            "php",
+            "blade",
+            "ejs",
+            "jinja",
+            "javascript",
+            "javascriptreact",
+            "typescriptreact",
+            "plaintext",
+            "markdown",
+            "vue",
+            "liquid",
+            "erb",
+            "lang-cfml",
+            "cfml",
+            "HTML (Eex)"
+        ],
+        "javascript.updateImportsOnFileMove.enabled": "always",
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "typescript.preferences.quoteStyle": "single",
+        "sync.autoDownload": true,
+        "sync.autoUpload": true,
+        "prettier.printWidth": 140,
+        "prettier.singleQuote": true,
+        "cSpell.words": ["autoload", "autosave", "delimiter", "destructure"],
+        "prettier.tabWidth": 4,
+        "importSorter.generalConfiguration.sortOnBeforeSave": true,
+        "prettier.stylelintIntegration": true,
+        "tslint.rulesDirectory": "./node_modules/codelyzer",
+        "html.format.enable": false
+    }
 }

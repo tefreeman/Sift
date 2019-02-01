@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 export class ItemsService {
     private itemLimit;
     private currentItems;
-    constructor(private sortService: SortItemsService, private filtersService: FiltersService) {
+    constructor(private sortService: SortItemsService, private filtersService: FiltersService, private localDbService: LocalDbService) {
         /*
         this.filtersService.getItemResultSet$().subscribe(views => {
             log('views', '', views);
@@ -30,5 +30,13 @@ export class ItemsService {
                 return this.sortService.sortItems(activeSort, views);
             })
         );
+    }
+
+    public getItemRestaurant(restaurantId: number) {
+        return this.localDbService.getCollection$('restaurants').pipe(
+            map( col => {
+               return col.findOne({loki$: {eq: restaurantId}})
+            })
+        )
     }
 }

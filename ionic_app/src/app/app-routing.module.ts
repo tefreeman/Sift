@@ -5,12 +5,12 @@ import { AppComponent } from './app.component';
 
 // { path: '', loadChildren: './tabs/tabs.module#TabsPageModule' }
 const routes: Routes = [
-  { path: '', component: AppComponent },
-  { path: 'start', loadChildren: './modules/start/landing.module#LandingModule' },
-  { path: 'home', loadChildren: './modules/home/home.module#HomeModule' }
+    { path: '', component: AppComponent },
+    { path: 'start', loadChildren: './modules/start/landing.module#LandingModule' },
+    { path: 'main', loadChildren: './modules/main/main.module#MainModule' }
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
