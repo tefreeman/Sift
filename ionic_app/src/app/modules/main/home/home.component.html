@@ -1,7 +1,7 @@
 <ion-content>
-
     <ion-searchbar
         animated
+        placeholder="Use Another Sift"
         id="homeSearchBar"
     ></ion-searchbar>
 
@@ -11,24 +11,30 @@
     </div>
 
     <ion-segment scrollable>
-        <ion-segment-button>
-            <ion-label> Price</ion-label>
+        <ion-segment-button checked>
+            <ion-label>Item</ion-label>
         </ion-segment-button>
         <ion-segment-button >
-            <ion-label>Goal</ion-label>
+            <ion-label>Restaurant</ion-label>
         </ion-segment-button>
         <ion-segment-button>
-                <ion-label>Close By</ion-label>
+                <ion-label>Goal</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+                <ion-label>Distance</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+                <ion-label>Price</ion-label>
         </ion-segment-button>
         <ion-segment-button>
                 <ion-label>Full Bar</ion-label>
         </ion-segment-button>
         <ion-segment-button>
-                <ion-label>Delivery</ion-label>
-        </ion-segment-button>
-        <ion-segment-button>
-                <ion-label>Open Now</ion-label>
-        </ion-segment-button>
+            <ion-label>Delivery</ion-label>
+    </ion-segment-button>
+    <ion-segment-button>
+        <ion-label>Open Now</ion-label>
+</ion-segment-button>
       </ion-segment>
       
     <ion-virtual-scroll [items]="items">

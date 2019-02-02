@@ -15,11 +15,11 @@ const routes: Routes = [
             },
             {
                 path: 'profile',
-                loadChildren: './home/home.module#HomeModule'
+                loadChildren: './health/health.module#HealthPageModule'
             },
             {
-                path: 'settings',
-                loadChildren: './home/home.module#HomeModule'
+                path: 'health',
+                loadChildren: './profile/profile.module#ProfilePageModule'
             }
         ]
     }
