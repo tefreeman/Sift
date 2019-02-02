@@ -1,0 +1,33 @@
+#homeSearchBar {
+  display: block;
+  position: absolute;
+  z-index: 1;
+}
+
+#test {
+  position: absolute;
+}
+
+ion-label {
+  font-size: 12px;
+}
+
+ion-segment-button {
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --margin-start: 0px;
+  --margin-end: 0px;
+}
+
+.fullWidthLine {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+  border-top: 2px solid rgba(0, 0, 0, 0.15);
+  width: 12vw;
+  height: 0px;
+  border-radius: 4px;
+}
+/*# sourceMappingURL=home.component.css.map */

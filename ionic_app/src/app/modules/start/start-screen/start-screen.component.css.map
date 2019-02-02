@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,WAAW,CAAC;EACR,YAAY,CAAA,yBAAC;CAChB",
+    "sources": [
+        "start-screen.component.scss"
+    ],
+    "names": [],
+    "file": "start-screen.component.css"
+}
