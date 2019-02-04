@@ -1,6 +1,6 @@
-# Project Title
+# Sift
 
-One Paragraph of project description goes here
+Connects users with the food they want.
 
 ## Getting Started
 
