@@ -1,0 +1,28 @@
+<ion-grid no-padding id="gridMargin">
+    <ion-row id="barShadow">
+      <ion-col size="5"  [ngClass]="notTapped ? 'insideLeft' : 'insideLeftTapped'" no-margin no-padding > 
+          <ion-row no-margin no-padding align-items-center style="height: 100%" (tap)="changeStatus()">
+              <ion-col size="12" no-margin no-padding>
+                <h4 *ngIf="notTapped" no-padding no-margin style="color: white; margin-left: 8px;">Trev's Sift</h4>
+                <h4 *ngIf="!notTapped" no-padding no-margin style="color: white; margin-left: 8px;">Select A Sift</h4>
+              </ion-col>
+            </ion-row>
+      </ion-col>
+      <ion-col size="7" [ngClass]="notTapped ? 'insideRight' : 'insideRightTapped'" align-self-center no-margin no-padding>
+        <ion-row no-margin no-padding align-items-center style="height: 100%" (tap)="changeStatus()">
+          <ion-col size="10" no-margin no-padding>
+            <p no-margin no-padding [ngClass]="notTapped ? 'dimText' : 'dimTextTapped'"> 42 Restaurants  |  123 Items</p>
+          </ion-col>
+          <ion-col size ="2" no-margin no-padding>
+              <ion-icon *ngIf="notTapped" name="options" id="iconSize" float-right></ion-icon>
+              <ion-icon *ngIf="!notTapped" name="menu" id="iconSizeTapped" float-right></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+  </ion-row>
+  <ion-row id="siftSpace" *ngIf="!notTapped" align-items-center>
+    <ion-col *ngFor="let sift of userSifts" size="auto" class="userSiftsClass">
+      {{sift}}
+    </ion-col>
+  </ion-row>
+</ion-grid>
