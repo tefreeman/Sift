@@ -32,6 +32,7 @@ export class FiltersService {
         private dataService: DataService
     ) {
         this.getActiveFilter().subscribe(initActive => {
+            log('active filter', '', initActive);
             this.activeFilter$$.next(initActive);
         });
     }
@@ -61,7 +62,11 @@ export class FiltersService {
     }
 
     public getAllFilters$(): Observable<IFilterObj[]> {
-        return this.dataService.getAll('filters');
+        return this.dataService.getAll('filters').pipe(map( (filters) => {
+            filters = this.sortByLastActive(filters);
+            filters[0].active = true;
+            return filters;
+        }))
     }
 
     public setActiveFilter(filterId: string) {
@@ -75,7 +80,6 @@ export class FiltersService {
     public getActiveFilter() {
         return this.getAllFilters$().pipe(
             map(filterObjs => {
-                filterObjs = this.sortByLastActive(filterObjs);
                 return filterObjs[0];
             })
         );
@@ -110,7 +114,8 @@ export class FiltersService {
     }
 
     private prepareFilter$(filterObj: IFilterObj): Observable<IFilterObj> {
-        return this.normalizeService.normalizeFilterObj(filterObj).pipe(
+        let normalizedFilterObj = filterObj;
+        return this.normalizeService.normalizeFilterObj(normalizedFilterObj).pipe(
             concatMap(normalizedFilter => {
                 return this.efficientFilterSort(normalizedFilter);
             })

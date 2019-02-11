@@ -28,8 +28,9 @@ export class NormalizeService {
         );
     }
 
-    public deNormalizeResults(results: object[], limit) {
-        return this.dataStats$.pipe(map(cacheCol => {}));
+    public deNormalizeItems(results: object[], filters) {
+        return this.dataStats$.pipe(map(cacheCol => {
+        }));
     }
 
     public normalize(x: number, min: number, max: number) {

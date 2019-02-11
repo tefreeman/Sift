@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SiftActionSheetComponent } from './sift-action-sheet.component';
+import { SiftModalComponent } from './sift-modal.component';
 
-describe('SiftActionSheetComponent', () => {
-  let component: SiftActionSheetComponent;
-  let fixture: ComponentFixture<SiftActionSheetComponent>;
+describe('SiftModalComponent', () => {
+  let component: SiftModalComponent;
+  let fixture: ComponentFixture<SiftModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SiftActionSheetComponent ]
+      declarations: [ SiftModalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SiftActionSheetComponent);
+    fixture = TestBed.createComponent(SiftModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

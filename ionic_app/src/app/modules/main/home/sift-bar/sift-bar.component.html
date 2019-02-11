@@ -4,7 +4,7 @@
           <ion-row no-margin no-padding align-items-center style="height: 100%" (tap)="changeStatus()">
               <ion-col size="12" no-margin no-padding>
                 <h4 *ngIf="notTapped" no-padding no-margin style="color: white; margin-left: 8px;">Trev's Sift</h4>
-                <h4 *ngIf="!notTapped" no-padding no-margin style="color: white; margin-left: 8px;">Select A Sift</h4>
+                <h4 *ngIf="!notTapped" no-padding no-margin style="color: white; margin-left: 8px;">Manage Sifts</h4>
               </ion-col>
             </ion-row>
       </ion-col>
@@ -15,14 +15,32 @@
           </ion-col>
           <ion-col size ="2" no-margin no-padding>
               <ion-icon *ngIf="notTapped" name="options" id="iconSize" float-right></ion-icon>
-              <ion-icon *ngIf="!notTapped" name="menu" id="iconSizeTapped" float-right></ion-icon>
           </ion-col>
         </ion-row>
       </ion-col>
   </ion-row>
-  <ion-row id="siftSpace" *ngIf="!notTapped" align-items-center>
-    <ion-col *ngFor="let sift of userSifts" size="auto" class="userSiftsClass">
-      {{sift}}
+  <ion-row id="siftSpace" *ngIf="!notTapped" justify-content-center>
+    <ion-col size="12">
+        <ion-item>
+            <ion-label>Select</ion-label>
+            <ion-select [interfaceOptions]="customActionSheetOptions" interface="action-sheet" placeholder="Select One">
+              <ion-select-option *ngFor="let sift of userSifts"  [selected]="sift.active ? true : null" value="{{sift.name}}">{{sift.name}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+    </ion-col>
+    <ion-col size="auto">
+        <ion-segment>
+            <ion-segment-button (tap)="presentModal()">
+              <ion-label>Create</ion-label>
+            </ion-segment-button>
+            <ion-segment-button>
+              <ion-label>Edit</ion-label>
+            </ion-segment-button>
+            <ion-segment-button>
+              <ion-label>Delete</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+          
     </ion-col>
   </ion-row>
 </ion-grid>
