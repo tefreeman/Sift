@@ -11,8 +11,7 @@ import { DomAdapter } from '@angular/platform-browser/src/dom/dom_adapter';
 
 @Injectable({ providedIn: 'root' })
 export class CacheDbService {
-    private userDbSubject$: BehaviorSubject<Loki> = new BehaviorSubject(null);
-    private userDb$: Observable<Loki> = this.userDbSubject$.asObservable().pipe(filter(db => db !== null));
+    private userDb: Loki;
 
     constructor() {}
 
@@ -28,13 +27,11 @@ export class CacheDbService {
         log('init UserCacheDb');
         return this.loadCacheDbFromAdapter(user.email, lokiAdapter)
             .pipe(
-                catchError(err =>
-                    this.createUserCacheDb(user, db).pipe(
-                        tap(dbData => {
-                            log('creating UserCacheDb', '', err);
-                            this.saveCacheDbAdapter(user.email, dbData, lokiAdapter);
-                        })
-                    )
+                catchError(err => {
+                       const newDb = this.createUserCacheDb(user, db);
+                      this.saveCacheDbAdapter(user.email, newDb, lokiAdapter);
+                      return of(newDb);
+                  }
                 )
             )
             .pipe(
@@ -45,18 +42,17 @@ export class CacheDbService {
             )
             .subscribe(userCacheDb => {
                 log('userCacheDb', '', userCacheDb);
-                this.userDbSubject$.next(userCacheDb);
+               this.userDb = userCacheDb;
             });
     }
 
-    public getCollection$(colName: string): Observable<Collection<any>> {
-        return this.userDb$.pipe(map(db => db.getCollection(colName)));
+    public getCollection(colName: string): Collection<any> {
+        return this.userDb.getCollection(colName);
     }
 
     public cache(colName: string, cacheDoc: IMetaIdDoc) {
         log('cacheing', '', cacheDoc);
-        this.userDb$.subscribe(db => {
-            const col = db.getCollection(colName);
+            const col = this.userDb.getCollection(colName);
             let foundItem;
             if (col) {
                 foundItem = col.findOne({ id: { $eq: cacheDoc.id } });
@@ -68,13 +64,11 @@ export class CacheDbService {
             } else {
                 throw Error('collection cannot be found in loadUserCacheDb');
             }
-        });
     }
 
     public getCached(colName: string, metaDoc: IMetaIdDoc) {
-        return this.userDb$.pipe(
-            map(db => {
-                const col = db.getCollection(colName);
+
+                const col = this.userDb.getCollection(colName);
                 let foundItem;
                 if (col) {
                     log('collection found', '', metaDoc);
@@ -88,18 +82,11 @@ export class CacheDbService {
                 } else {
                     throw Error('collection cannot be found in loadUserCacheDb');
                 }
-            })
-        );
+
     }
 
     public deleteCached(colName: string, id: string) {
-        return this.getCollection$(colName)
-            .pipe(
-                tap(collection => {
-                    collection.findAndRemove({ id: { $eq: id } });
-                })
-            )
-            .subscribe();
+        this.getCollection(colName).findAndRemove({ id: { $eq: id } });
     }
 
     private loadCacheDbFromAdapter(name: string, adapter): Observable<string> {
@@ -120,7 +107,7 @@ export class CacheDbService {
                 }
             });
         });
-    }
+}
 
     private createUserCacheDb(user: IProfile, db: Loki) {
         const newDb = new Loki(name, {
@@ -136,7 +123,7 @@ export class CacheDbService {
         newDb.addCollection('cache', { indices: ['id', 'lastUpdate'] });
         newDb.addCollection('sort', { indices: ['id', 'lastUpdate'] });
 
-        return of(newDb.serialize());
+        return newDb.serialize();
     }
 
     private saveCacheDbAdapter(name, dbData, adapter) {

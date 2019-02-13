@@ -40,7 +40,7 @@ export class FiltersService {
     }
 
     public isValidName(filterName) {
-        this.cacheDB.getCollection$('filters').pipe(
+        this.cacheDB.getCollection('filters').pipe(
             map(col => {
                 if (col.findOne({ name: { $eq: filterName } }) === null) {
                     return true;
@@ -117,7 +117,7 @@ export class FiltersService {
     }
 
     private getFilter$(filterId: string): Observable<IFilterObj> {
-        return this.cacheDB.getCollection$('filters').pipe(
+        return this.cacheDB.getCollection('filters').pipe(
             map(col => {
                 return col.findOne({ id: { $eq: filterId } });
             })

@@ -166,28 +166,30 @@ export class DataService {
     }
 
     get(colName: string, metaDoc: IMetaIdDoc) {
-        return this.cacheService.getCached(colName, metaDoc).pipe(
-            concatMap(result => {
-                if (result) {
-                    log('get', 'cached', result);
-                    return of(result);
-                } else {
-                    return this.afs
-                        .collection(colName)
-                        .doc(metaDoc.id)
-                        .get()
-                        .pipe(
-                            map(res => res.data()),
-                            tap(data => {
-                                log('get', 'server', data);
-                                data['lastUpdate'] = metaDoc.lastUpdate;
-                                data['id'] = metaDoc.id;
-                                this.cacheService.cache(colName, data);
-                            })
-                        );
-                }
-            })
-        );
+      return Observable.create( (observer) => {
+        const cachedDoc = this.cacheService.getCached(colName, metaDoc);
+        if (cachedDoc) {
+          log('get', 'cached', cachedDoc);
+          return observer.next(cachedDoc);
+        } else {
+          this.afs
+            .collection(colName)
+            .doc(metaDoc.id)
+            .get()
+            .pipe(
+              map(res => res.data()),
+              tap(data => {
+                log('get', 'server', data);
+                data['lastUpdate'] = metaDoc.lastUpdate;
+                data['id'] = metaDoc.id;
+                this.cacheService.cache(colName, data);
+              })
+            ).subscribe((serverDoc) => {
+              observer.next(serverDoc);
+          })
+        }
+
+      })
     }
 
     addOrUpdate(colName: string, doc: any) {
