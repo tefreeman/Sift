@@ -26,7 +26,6 @@ export interface IFilter {
     prob?: number;
 }
 type TRestaurantFilterKey = 'distance' | 'price' | 'tag_ids' | 'reviewScore' | 'reviewCount' | 'name';
-
 export interface IRestaurantsFilter extends IFilter {
     key: TRestaurantFilterKey;
 }
@@ -66,10 +65,9 @@ type TNutrientFilterKey =
     | 'potassium'
     | 'sodium'
     | 'zinc';
+
 export interface INutrientFilter extends IFilter {
-    key: string;
-    min: number;
-    max: number;
+    key: TNutrientFilterKey;
 }
 
 /**

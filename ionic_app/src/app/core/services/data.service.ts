@@ -153,6 +153,7 @@ export class DataService {
                                 dataArr.push(res);
                                 count++;
                                 if (count === arr.length) {
+
                                     observer.next(dataArr);
                                     observer.complete();
                                 }

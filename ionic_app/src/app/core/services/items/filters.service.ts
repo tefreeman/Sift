@@ -22,7 +22,7 @@ import { NormalizeService } from './normalize.service';
 @Injectable({ providedIn: 'root' })
 export class FiltersService {
     private activeFilter$$: BehaviorSubject<IFilterObj> = new BehaviorSubject<IFilterObj>(null);
-    private activeFilter$: Observable<IFilterObj> = this.activeFilter$$.pipe(filter(val => val !== null));
+    private activeFilter$: Observable<IFilterObj>;
 
     constructor(
         private localDbService: LocalDbService,
@@ -31,6 +31,8 @@ export class FiltersService {
         private cacheDB: CacheDbService,
         private dataService: DataService
     ) {
+        this.activeFilter$ = this.activeFilter$$.pipe(filter(val => val !== null));
+
         this.getActiveFilter().subscribe(initActive => {
             log('active filter', '', initActive);
             this.activeFilter$$.next(initActive);
@@ -63,18 +65,23 @@ export class FiltersService {
 
     public getAllFilters$(): Observable<IFilterObj[]> {
         return this.dataService.getAll('filters').pipe(map( (filters) => {
-            filters = this.sortByLastActive(filters);
-            filters[0].active = true;
-            return filters;
+            let filtersDeepCopy = JSON.parse(JSON.stringify(filters));
+            filtersDeepCopy = this.sortByLastActive(filtersDeepCopy);
+            filtersDeepCopy[0].active = true;
+            return filtersDeepCopy;
         }))
     }
 
     public setActiveFilter(filterId: string) {
-        this.getFilter$(filterId).subscribe(filterObj => {
-            filterObj.lastActive = new Date().getTime();
-            this.cacheDB.cache('filters', filterObj);
-            this.activeFilter$$.next(filterObj);
-        });
+        return this.getFilter$(filterId).pipe(
+          map(filterObj => {
+                filterObj.lastActive = new Date().getTime();
+                this.cacheDB.cache('filters', filterObj);
+                this.activeFilter$$.next(filterObj);
+                return;
+            }
+          )
+        );
     }
 
     public getActiveFilter() {
@@ -85,13 +92,17 @@ export class FiltersService {
         );
     }
     public getItemResultSet$() {
-        return this.activeFilter$.pipe(
+        return this.activeFilter$$.pipe(
+            filter(val => val !== null),
+            tap(val => log('START', '',  val)),
             concatMap(activeFilter => {
                 return this.prepareFilter$(activeFilter);
             }),
+          tap(val => log('FIRSTFILTER', '',  val)),
             concatMap(preparedActiveFilter => {
                 return this.processFilters(preparedActiveFilter);
-            })
+            }),
+          tap((val)=> {console.log('LASTFILTER', val)}),
         );
     }
 
@@ -100,7 +111,7 @@ export class FiltersService {
             return [];
         }
         sort(filterObjs, (a: IFilterObj, b: IFilterObj) => {
-            return a.lastActive - b.lastActive;
+            return b.lastActive - a.lastActive;
         });
         return filterObjs;
     }
@@ -114,8 +125,7 @@ export class FiltersService {
     }
 
     private prepareFilter$(filterObj: IFilterObj): Observable<IFilterObj> {
-        let normalizedFilterObj = filterObj;
-        return this.normalizeService.normalizeFilterObj(normalizedFilterObj).pipe(
+        return this.normalizeService.normalizeFilterObj(filterObj).pipe(
             concatMap(normalizedFilter => {
                 return this.efficientFilterSort(normalizedFilter);
             })
@@ -150,6 +160,7 @@ export class FiltersService {
 
     private efficientFilterSort(filterObj: IFilterObj): Observable<IFilterObj> {
         return this.localDbService.getCollection$('tags').pipe(
+          tap((col) => {console.log('EFFICIENTFILTERSORT', '', col)}),
             map(col => {
                 for (const r of filterObj.filterRestaurants) {
                     if (r.key === 'tag_ids') {

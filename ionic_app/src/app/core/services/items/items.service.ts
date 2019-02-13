@@ -5,7 +5,7 @@ import { SortItemsService } from './sort-items.service';
 import { Injectable } from '@angular/core';
 
 import { LocalDbService } from '../local-db.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from "rxjs/operators";
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

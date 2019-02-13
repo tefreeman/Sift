@@ -1,5 +1,5 @@
 import { Observable, pipe } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from "rxjs/operators";
 
 import { Injectable } from '@angular/core';
 
@@ -19,6 +19,7 @@ export class NormalizeService {
 
     public normalizeFilterObj(filterObj: IFilterObj) {
         return this.dataStats$.pipe(
+          tap(val => log('NORMALIZEFILTEROBJ', '' , val )),
             map(cacheCol => {
                 filterObj.filterRestaurants = this.normalizeCollection('restaurants', filterObj.filterRestaurants, cacheCol);
                 filterObj.filterItems = this.normalizeCollection('items', filterObj.filterItems, cacheCol);

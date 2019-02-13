@@ -1,0 +1,7 @@
+    <ion-item>
+        <ion-range min="0.5" max="20" color="primary"  pin="true" #distance >
+          <ion-label slot="start">1/2 mile</ion-label>
+          <ion-label slot="end">20</ion-label>
+        </ion-range>
+      </ion-item>
+        <ion-button (tap)="addDistance('distance', distance.value)" > Add Filter </ion-button>

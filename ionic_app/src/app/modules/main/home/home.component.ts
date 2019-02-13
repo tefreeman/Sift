@@ -11,6 +11,7 @@ export class HomeComponent implements OnInit {
 
     constructor(private itemsService: ItemsService) {
         this.itemsService.getItems$({ name: 'defaultSort', items: [], restaurants: [] }).subscribe(items => {
+            console.log(this.items);
             this.items = items;
         });
     }

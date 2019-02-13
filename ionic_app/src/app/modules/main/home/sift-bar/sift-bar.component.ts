@@ -21,9 +21,13 @@ export class SiftBarComponent implements OnInit {
 
   constructor(public modalController: ModalController, private filterService: FiltersService) {
     this.filterService.getAllFilters$().subscribe( (sifts) => {
+      this.userSifts = [];
       this.userSifts = sifts;
       this.activeSift = sifts[0];
     })
+  }
+
+  ngOnInit() {
   }
 
   async presentModal() {
@@ -42,10 +46,15 @@ export class SiftBarComponent implements OnInit {
     this.notTapped = !this.notTapped;
   }
 
+  setActiveSift(event: any)  {
+    console.log(event.detail.value);
+    this.filterService.setActiveFilter(event.detail.value).subscribe(
+      () => {console.log('setActiveSift')}
+    );
+  }
+
   customActionSheetOptions: any = {
     header: 'My Sifts',
   };
 
-  ngOnInit() {
-  }
 }
