@@ -35,13 +35,13 @@
         </ion-col>
         <ion-col size="auto">
             <ion-segment>
-                <ion-segment-button (tap)="presentModal()">
+                <ion-segment-button (tap)="openManageSifts()">
                     <ion-label>Create</ion-label>
                 </ion-segment-button>
-                <ion-segment-button>
+                <ion-segment-button (tap)="openManageSifts(true)">
                     <ion-label>Edit</ion-label>
                 </ion-segment-button>
-                <ion-segment-button>
+                <ion-segment-button (tap)="confirmDelete()">
                     <ion-label>Delete</ion-label>
                 </ion-segment-button>
             </ion-segment>

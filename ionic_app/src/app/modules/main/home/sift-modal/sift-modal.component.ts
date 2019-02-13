@@ -1,13 +1,6 @@
-import { log } from "src/app/core/logger.service";
-import { Component, OnInit, Input } from "@angular/core";
-import { NavParams, ModalController } from "@ionic/angular";
-import {
-  IFilterObj,
-  IFilter,
-  IRestaurantsFilter,
-  INutrientFilter,
-  IItemsFilter
-} from "../../../../models/filters/filters.interface";
+import { Component, OnInit } from "@angular/core";
+import { ModalController, NavParams } from "@ionic/angular";
+import { IFilter, IFilterObj } from "../../../../models/filters/filters.interface";
 import { DataService } from "../../../../core/services/data.service";
 
 
@@ -25,6 +18,9 @@ interface IFilterPayload {
 export class SiftModalComponent implements OnInit {
 
   modalController: ModalController;
+  activeSift: IFilterObj;
+  siftName: string;
+  isEditMode: boolean = false;
 
   nutrientFilters: Map<string, IFilter> = new Map();
   itemFilters: Map<string, IFilter> = new Map();
@@ -32,6 +28,12 @@ export class SiftModalComponent implements OnInit {
 
   constructor(private navParams: NavParams, private dataService: DataService) {
     this.modalController = navParams.get("controller");
+    this.activeSift = navParams.get("sift");
+    if (navParams.get("editMode")) {
+      this.isEditMode = true;
+      this.siftName = this.activeSift.name;
+      this.loadActiveSift();
+    }
   }
 
   ngOnInit() {
@@ -48,9 +50,9 @@ export class SiftModalComponent implements OnInit {
     }
   }
 
-  createFilter(filterName: string){
+  createFilter() {
     const filterObj: IFilterObj = {
-      name: filterName,
+      name: this.siftName,
       public: false,
       timestamp: new Date().getTime(),
       lastActive: 0,
@@ -59,17 +61,42 @@ export class SiftModalComponent implements OnInit {
       filterRestaurants: Array.from(this.restaurantFilters.values()),
       filterNutrients: Array.from(this.nutrientFilters.values()),
       filterItems: Array.from(this.itemFilters.values()),
-    // Create your own diet?
-    diet: {},
+      // Create your own diet?
+      diet: {}
+    };
 
-    }
-
-    this.dataService.addOrUpdate('filters', filterObj);
+    this.dataService.addOrUpdate$("filters", filterObj).subscribe(() => {
+      this.exitModal();
+    });
 
   }
+
+  updateFilter() {
+    this.activeSift.name = this.siftName;
+    this.activeSift.lastUpdate = new Date().getTime();
+    this.activeSift.filterRestaurants = Array.from(this.restaurantFilters.values());
+    this.activeSift.filterNutrients = Array.from(this.nutrientFilters.values());
+    this.activeSift.filterItems = Array.from(this.itemFilters.values());
+    this.dataService.addOrUpdate$("filters", this.activeSift).subscribe(() => {
+      this.exitModal();
+    });
+
+  }
+
   exitModal() {
     this.modalController.dismiss();
   }
 
+  private loadActiveSift() {
+    for (let filter of this.activeSift.filterRestaurants) {
+      this.restaurantFilters.set(filter.key, filter);
+    }
+    for (let filter of this.activeSift.filterItems) {
+      this.itemFilters.set(filter.key, filter);
+    }
+    for (let filter of this.activeSift.filterNutrients) {
+      this.nutrientFilters.set(filter.key, filter);
+    }
+  }
 
 }

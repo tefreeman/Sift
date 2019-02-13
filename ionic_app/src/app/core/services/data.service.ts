@@ -1,40 +1,24 @@
-import { IMetaIdDoc } from './../../models/user/userProfile.interface';
-import { CacheDbService } from './cache/cache-db.service';
-import { auth, firestore } from 'firebase/app';
-import { from, Observable, of, zip, forkJoin } from 'rxjs';
-import {
-    concat,
-    concatMap,
-    distinctUntilChanged,
-    filter,
-    first,
-    flatMap,
-    map,
-    switchMap,
-    tap,
-    timeInterval,
-    mergeMap
-} from 'rxjs/operators';
-
+import { IMetaIdDoc } from "./../../models/user/userProfile.interface";
+import { CacheDbService } from "./cache/cache-db.service";
+import { forkJoin, from, Observable, of } from "rxjs";
+import { concatMap, first, map, switchMap, tap } from "rxjs/operators";
 // tslint:disable-next-line: no-submodule-imports
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
-import * as firebase from 'firebase';
-import { AngularFireStorage, StorageBucket } from '@angular/fire/storage';
-import { Router } from '@angular/router';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { AngularFireAuth } from "@angular/fire/auth";
+import { AngularFirestore, AngularFirestoreDocument } from "@angular/fire/firestore";
+import * as firebase from "firebase";
+import { AngularFireStorage } from "@angular/fire/storage";
+import { Router } from "@angular/router";
 
-import { IFilter, IFilterObj } from '../../models/filters/filters.interface';
-import { IProfile } from '../../models/user/userProfile.interface';
-import { log } from '../logger.service';
-import { LocalStorageCacheService } from './cache/local-storage-cache.service';
-import { GpsService } from './gps.service';
+import { IFilterObj } from "../../models/filters/filters.interface";
+import { IProfile } from "../../models/user/userProfile.interface";
+import { log } from "../logger.service";
+import { GpsService } from "./gps.service";
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
     user: Observable<IProfile>;
-
     constructor(
         private afAuth: AngularFireAuth,
         private afs: AngularFirestore,
@@ -101,21 +85,20 @@ export class DataService {
     }
 
     private removeMergeUserArray(data, field: string) {
-        this.user
+      return this.user
             .pipe(
                 map(user => {
                     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
                     return userRef.update({ [field]: firebase.firestore.FieldValue.arrayRemove(data) }).then();
                 })
             )
-            .subscribe();
     }
 
-    public remove(colName: string, id: string) {
-        this.afs
+  public remove$(colName: string, id: string) {
+    return from(this.afs
             .collection(colName)
             .doc(id)
-            .delete();
+      .delete());
     }
 
     getDataByGridKey$(key): Observable<any> {
@@ -192,9 +175,9 @@ export class DataService {
       })
     }
 
-    addOrUpdate(colName: string, doc: any) {
+  addOrUpdate$(colName: string, doc: any) {
         let getTime = new Date().getTime();
-        from(this.afs.collection(colName).add(doc))
+    return from(this.afs.collection(colName).add(doc))
             .pipe(
                 tap(docRef => {
                     const metaDoc: IMetaIdDoc = doc;
@@ -207,18 +190,25 @@ export class DataService {
                     this.updateMergeUserArray(metaDoc, colName);
                 })
             )
-            .subscribe();
     }
 
-    delete(colName: string, doc: IMetaIdDoc) {
-        this.cacheService.deleteCached(colName, doc.id);
-        this.remove(colName, doc.id);
-
+  delete(colName: string, doc: IMetaIdDoc): Observable<any> {
+    return Observable.create((observer) => {
         const metaDoc: IMetaIdDoc = { id: doc.id, lastUpdate: doc.lastUpdate };
-        this.removeMergeUserArray(metaDoc, colName);
+      this.cacheService.deleteCached(colName, doc.id);
+      forkJoin(this.remove$(colName, doc.id), this.removeMergeUserArray(metaDoc, colName)).subscribe(
+        (() => {
+            log("fired");
+            observer.next(null);
+            observer.complete();
+          }
+        )
+      );
+    })
     }
 
     getCurrentUser(): Observable<IProfile> {
         return this.user;
     }
+
 }

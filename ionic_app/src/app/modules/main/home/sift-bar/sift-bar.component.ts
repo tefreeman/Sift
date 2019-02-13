@@ -1,12 +1,12 @@
-import { FiltersService } from './../../../../core/services/items/filters.service';
-import { SiftModalComponent } from './../sift-modal/sift-modal.component';
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { log } from '../../../../core/logger.service';
-import 'hammerjs';
-import { filter } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { IFilterObj } from '../../../../models/filters/filters.interface';
+import { FiltersService } from "./../../../../core/services/items/filters.service";
+import { SiftModalComponent } from "./../sift-modal/sift-modal.component";
+import { Component, OnInit } from "@angular/core";
+import { AlertController, ModalController } from "@ionic/angular";
+import { log } from "../../../../core/logger.service";
+import "hammerjs";
+import { take } from "rxjs/operators";
+import { IFilterObj } from "../../../../models/filters/filters.interface";
+import { DataService } from "../../../../core/services/data.service";
 
 @Component({
   selector: 'sg-sift-bar',
@@ -19,27 +19,54 @@ export class SiftBarComponent implements OnInit {
   
   notTapped: boolean = true;
 
-  constructor(public modalController: ModalController, private filterService: FiltersService) {
-    this.filterService.getAllFilters$().subscribe( (sifts) => {
-      this.userSifts = [];
-      this.userSifts = sifts;
-      this.activeSift = sifts[0];
-    })
+  constructor(public modalController: ModalController, private filterService: FiltersService, private alertController: AlertController, private dataService: DataService) {
+    this.loadSifts();
   }
 
   ngOnInit() {
   }
 
-  async presentModal() {
+  async openManageSifts(edit: boolean = false) {
     const modal = await this.modalController.create({
       animated: true,
       component: SiftModalComponent,
       componentProps: { 
         sift: this.activeSift,
-        controller: this.modalController
+        controller: this.modalController,
+        editMode: edit
       }
     });
-    return await modal.present();
+    await modal.present();
+    modal.onDidDismiss().then(() => {
+      this.loadSifts();
+    });
+  }
+
+  async confirmDelete() {
+    const alert = await this.alertController.create({
+      header: "Confirm",
+      message: "Please confirm that you would like to delete <strong>" + this.activeSift.name + "</strong>!",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+          cssClass: "secondary",
+          handler: () => {
+
+          }
+        }, {
+          text: "Confirm",
+          handler: () => {
+            this.dataService.delete("filters", this.activeSift).subscribe(() => {
+              log("fired");
+              this.loadSifts();
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   changeStatus() {
@@ -48,9 +75,17 @@ export class SiftBarComponent implements OnInit {
 
   setActiveSift(event: any)  {
     console.log(event.detail.value);
-    this.filterService.setActiveFilter(event.detail.value).subscribe(
-      () => {console.log('setActiveSift')}
-    );
+    this.filterService.setActiveFilter(event.detail.value);
+    this.loadSifts();
+  }
+
+  public loadSifts() {
+    this.filterService.getAllFilters$().pipe(take(1)).subscribe((sifts) => {
+      this.userSifts = [];
+      this.userSifts = sifts;
+      this.activeSift = sifts[0];
+
+    });
   }
 
   customActionSheetOptions: any = {

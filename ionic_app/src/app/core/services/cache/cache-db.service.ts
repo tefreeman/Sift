@@ -1,13 +1,12 @@
-import { log } from 'src/app/core/logger.service';
-import { IProfile, IMetaIdDoc } from './../../../models/user/userProfile.interface';
-import { Observer } from 'firebase';
-import * as Loki from 'lokijs';
-import * as LokiIndexedAdapter from 'lokijs/src/loki-indexed-adapter';
-import { BehaviorSubject, combineLatest, merge, Observable, observable, of, pipe } from 'rxjs';
-import { catchError, concat, concatMap, debounceTime, filter, flatMap, map, mapTo, switchMap, tap, throttleTime } from 'rxjs/operators';
+import { log } from "src/app/core/logger.service";
+import { IMetaIdDoc, IProfile } from "./../../../models/user/userProfile.interface";
+import { Observer } from "firebase";
+import * as Loki from "lokijs";
+import * as LokiIndexedAdapter from "lokijs/src/loki-indexed-adapter";
+import { Observable, of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 
-import { Injectable } from '@angular/core';
-import { DomAdapter } from '@angular/platform-browser/src/dom/dom_adapter';
+import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class CacheDbService {
@@ -46,8 +45,13 @@ export class CacheDbService {
             });
     }
 
-    public getCollection(colName: string): Collection<any> {
-        return this.userDb.getCollection(colName);
+    public getCollection(colName: string): Collection<any> | null {
+        try {
+            return this.userDb.getCollection(colName);
+        } catch (e) {
+            console.log("GETCOLLECTION ERROR", e);
+            return null;
+        }
     }
 
     public cache(colName: string, cacheDoc: IMetaIdDoc) {

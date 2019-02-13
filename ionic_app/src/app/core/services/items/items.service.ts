@@ -1,12 +1,12 @@
-import { log } from 'src/app/core/logger.service';
-import { ISort } from './../../../models/sort/sort.interface';
-import { FiltersService } from './filters.service';
-import { SortItemsService } from './sort-items.service';
-import { Injectable } from '@angular/core';
+import { log } from "src/app/core/logger.service";
+import { ISort } from "./../../../models/sort/sort.interface";
+import { FiltersService } from "./filters.service";
+import { SortItemsService } from "./sort-items.service";
+import { Injectable } from "@angular/core";
 
-import { LocalDbService } from '../local-db.service';
+import { LocalDbService } from "../local-db.service";
 import { map, tap } from "rxjs/operators";
-import { Observable } from 'rxjs';
+import { Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class ItemsService {
@@ -26,6 +26,7 @@ export class ItemsService {
     }
     public getItems$(activeSort: ISort): Observable<any[]> {
         return this.filtersService.getItemResultSet$().pipe(
+          tap(val => log("VALLLLL", "", val)),
             map(views => {
                 return this.sortService.sortItems(activeSort, views);
             })

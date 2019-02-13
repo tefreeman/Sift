@@ -13,7 +13,8 @@
 
                 <ion-item>
                     <ion-label  style="font-size: 4vmin" position="floating">NAME</ion-label>
-                    <ion-input type="string" required #SiftName></ion-input>
+                    <ion-input [value]="siftName" (input)="siftName=$event.target.value" type="string" required
+                               #SiftName></ion-input>
                 </ion-item>
             </ion-col>
             <ion-col size="12"><h4>Add a Filter</h4></ion-col>
@@ -76,7 +77,10 @@
     </ion-grid>
 
 
-    <div class="createSiftButton" text-center (tap)="createFilter(SiftName.value)">
+    <div *ngIf="!isEditMode" class="createSiftButton" text-center (tap)="createFilter()">
         <h3 style="color: white">Create Sift</h3>
+    </div>
+    <div *ngIf="isEditMode" class="createSiftButton" text-center (tap)="updateFilter()">
+        <h3 style="color: white">Update Sift</h3>
     </div>
 </div>
