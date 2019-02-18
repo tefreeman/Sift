@@ -12,9 +12,11 @@ import { FilterNutrientsComponent } from './sift-modal/filter-nutrients/filter-n
 import { FilterPriceComponent } from './sift-modal/filter-price/filter-price.component';
 import { FilterReviewsComponent } from './sift-modal/filter-reviews/filter-reviews.component';
 import { FilterDistanceComponent } from './sift-modal/filter-distance/filter-distance.component';
+import { ItemsListComponent } from './items-list/items-list.component';
+import { ItemComponent } from './items-list/item/item.component';
 
 @NgModule({
-    declarations: [HeaderComponent, MapsComponent, HomeComponent, SiftBarComponent, SiftModalComponent, FilterNutrientsComponent, FilterPriceComponent, FilterReviewsComponent, FilterDistanceComponent],
+    declarations: [HeaderComponent, MapsComponent, HomeComponent, SiftBarComponent, SiftModalComponent, FilterNutrientsComponent, FilterPriceComponent, FilterReviewsComponent, FilterDistanceComponent, ItemsListComponent, ItemComponent],
     imports: [CommonModule, IonicModule, HomeRoutingModule],
     providers: [],
     entryComponents: [SiftModalComponent]

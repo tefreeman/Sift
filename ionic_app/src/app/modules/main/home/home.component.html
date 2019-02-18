@@ -14,8 +14,8 @@
         <ion-segment-button checked>
             <ion-label>Item</ion-label>
         </ion-segment-button>
-        <ion-segment-button >
-            <ion-label>Restaurant</ion-label>
+        <ion-segment-button (tap)="logout()">
+            <ion-label>Logout</ion-label>
         </ion-segment-button>
         <ion-segment-button>
                 <ion-label>Goal</ion-label>
@@ -36,14 +36,6 @@
         <ion-label>Open Now</ion-label>
 </ion-segment-button>
       </ion-segment>
-      
-    <ion-virtual-scroll [items]="items">
-        <ion-card *virtualItem="let item">
-            <ion-item>
-                <h2 text-capitalize>{{item.name}}</h2>
-            </ion-item>
-            <ion-card-content>{{item.price}}</ion-card-content>
-        </ion-card>
-    </ion-virtual-scroll>
+    <sg-home-items-list></sg-home-items-list>
 
 </ion-content>

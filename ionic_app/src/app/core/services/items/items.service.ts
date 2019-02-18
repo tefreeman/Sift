@@ -33,11 +33,4 @@ export class ItemsService {
         );
     }
 
-    public getItemRestaurant(restaurantId: number) {
-        return this.localDbService.getCollection$('restaurants').pipe(
-            map( col => {
-               return col.findOne({loki$: {eq: restaurantId}})
-            })
-        )
-    }
 }

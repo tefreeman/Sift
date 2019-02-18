@@ -1,7 +1,7 @@
 import { IMetaIdDoc } from "./../../models/user/userProfile.interface";
 import { CacheDbService } from "./cache/cache-db.service";
-import { forkJoin, from, Observable, of } from "rxjs";
-import { concatMap, first, map, switchMap, tap } from "rxjs/operators";
+import { forkJoin, from, merge, Observable, of } from "rxjs";
+import { concatMap, first, map, switchMap, take, tap } from "rxjs/operators";
 // tslint:disable-next-line: no-submodule-imports
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
@@ -15,6 +15,7 @@ import { IFilterObj } from "../../models/filters/filters.interface";
 import { IProfile } from "../../models/user/userProfile.interface";
 import { log } from "../logger.service";
 import { GpsService } from "./gps.service";
+import FieldValue = firebase.firestore.FieldValue;
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -46,59 +47,69 @@ export class DataService {
                     this.cacheService.loadUserCacheDb(user);
                 }),
                 // testing add method
-                tap(() => {
-                    let filter: IFilterObj = {
-                        name: 'trevor',
-                        public: true,
-                        timestamp: new Date().getTime(),
-                        lastActive: 0,
-                        diet: {},
-                        filterItems: [{ key: 'reviewCount', min: 40, max: 300 }],
-                        filterRestaurants: [{ key: 'reviewCount', min: 20, max: 100 }],
-                        filterNutrients: [{ key: 'protein', min: 24, max: 50 }]
-                    };
-                    // this.add('filters', filter);
-                })
             )
             .subscribe();
     }
     updateUserData(data) {
-        this.user
+        return this.user
             .pipe(
+              take(1),
                 map(user => {
                     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
                     return userRef.set(data, { merge: true }).then();
                 })
             )
-            .subscribe();
     }
 
     private updateMergeUserArray(data, field: string) {
-        this.user
+        return this.user
             .pipe(
+                take(1),
                 map(user => {
                     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-                    return userRef.update({ [field]: firebase.firestore.FieldValue.arrayUnion(data) }).then();
+                    return userRef.update({ [field]: firebase.firestore.FieldValue.arrayUnion(data),
+                                  timestamp: firebase.firestore.FieldValue.serverTimestamp()}).then();
                 })
             )
-            .subscribe();
     }
-
+  private updateMergeUserMap(id: string, lastUpdate: number, field: string) {
+    return this.user
+      .pipe(
+        take(1),
+        map(user => {
+          const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+          let docString = field + '.' + id;
+          return userRef.update({[docString]: lastUpdate}).then(function() {console.log('sucesss updateMergeUserMap')});
+        })
+      )
+  }
+  private removeMergeUserMap(id: string, field: string) {
+    return this.user
+      .pipe(
+        take(1),
+        map(user => {
+          const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+          let docString = field + '.' + id;
+          return userRef.update({[docString]: firebase.firestore.FieldValue.delete()}).then();
+        }),
+      )
+  }
     private removeMergeUserArray(data, field: string) {
       return this.user
             .pipe(
+              take(1),
                 map(user => {
                     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
                     return userRef.update({ [field]: firebase.firestore.FieldValue.arrayRemove(data) }).then();
-                })
+                }),
             )
     }
 
   public remove$(colName: string, id: string) {
-    return from(this.afs
+    return this.afs
             .collection(colName)
             .doc(id)
-      .delete());
+      .delete();
     }
 
     getDataByGridKey$(key): Observable<any> {
@@ -130,17 +141,22 @@ export class DataService {
             this.user
                 .pipe(
                     tap(user => {
-                        const arr: IMetaIdDoc[] = user[colName];
-                        for (const doc of arr) {
-                            this.get(colName, doc).subscribe(res => {
-                                dataArr.push(res);
-                                count++;
-                                if (count === arr.length) {
-
-                                    observer.next(dataArr);
-                                    observer.complete();
-                                }
-                            });
+                        const filtersMap = user[colName];
+                      for (let filterKey in filtersMap) {
+                        if (filtersMap.hasOwnProperty(filterKey)) {
+                          let doc: IMetaIdDoc = {};
+                          doc.id = filterKey;
+                          doc.lastUpdate = filtersMap[filterKey];
+                          log('METADOC', '', doc);
+                          this.get(colName, doc).subscribe(res => {
+                            dataArr.push(res);
+                            count++;
+                            if (count === Object.keys(filtersMap).length) {
+                              observer.next(dataArr);
+                              observer.complete();
+                            }
+                          });
+                        }
                         }
                     })
                 )
@@ -150,61 +166,71 @@ export class DataService {
 
     get(colName: string, metaDoc: IMetaIdDoc) {
       return Observable.create( (observer) => {
-        const cachedDoc = this.cacheService.getCached(colName, metaDoc);
-        if (cachedDoc) {
-          log('get', 'cached', cachedDoc);
-          return observer.next(cachedDoc);
-        } else {
-          this.afs
-            .collection(colName)
-            .doc(metaDoc.id)
-            .get()
-            .pipe(
-              map(res => res.data()),
-              tap(data => {
-                log('get', 'server', data);
-                data['lastUpdate'] = metaDoc.lastUpdate;
-                data['id'] = metaDoc.id;
-                this.cacheService.cache(colName, data);
-              })
-            ).subscribe((serverDoc) => {
+        this.cacheService.getCached(colName, metaDoc).pipe(tap(cachedDoc => {
+          if (cachedDoc) {
+            log('get', 'cached', cachedDoc);
+            observer.next(cachedDoc);
+          } else {
+            this.afs
+              .collection(colName)
+              .doc(metaDoc.id)
+              .get()
+              .pipe(
+                map(res => res.data()),
+                tap(data => {
+                  log('get', 'server', data);
+                  data['lastUpdate'] = metaDoc.lastUpdate;
+                  data['id'] = metaDoc.id;
+                  this.cacheService.cache(colName, data).subscribe();
+                })
+              ).subscribe((serverDoc) => {
               observer.next(serverDoc);
-          })
-        }
+            })
+          }
+        })).subscribe();
 
       })
     }
 
-  addOrUpdate$(colName: string, doc: any) {
-        let getTime = new Date().getTime();
-    return from(this.afs.collection(colName).add(doc))
-            .pipe(
-                tap(docRef => {
-                    const metaDoc: IMetaIdDoc = doc;
-                    metaDoc['id'] = docRef.id;
-                    metaDoc['lastUpdate'] = getTime;
-                    this.cacheService.cache(colName, metaDoc);
-                }),
-                tap(docRef => {
-                    const metaDoc: IMetaIdDoc = { id: docRef.id, lastUpdate: getTime };
-                    this.updateMergeUserArray(metaDoc, colName);
-                })
-            )
+  addOrUpdate$(colName: string, doc: any): Observable<any> {
+    let getTime = new Date().getTime();
+    const metaDoc: IMetaIdDoc = doc;
+    metaDoc['lastUpdate'] = getTime;
+    if(doc.id) {
+      log('UPDATE!');
+      metaDoc.id = doc.id;
+      return from(this.afs.collection(colName).doc(metaDoc.id).update(doc)).pipe(tap(() => {
+        this.cacheService.cache(colName, metaDoc).subscribe();
+        this.updateMergeUserMap(metaDoc.id, metaDoc.lastUpdate, colName).subscribe();
+      }));
+    } else {
+      log('ADD!');
+      return from(this.afs.collection(colName).add(doc))
+        .pipe(
+          tap(docRef => {
+            metaDoc['id'] = docRef.id;
+            this.cacheService.cache(colName, metaDoc).subscribe();
+            this.updateMergeUserMap(metaDoc.id, metaDoc.lastUpdate, colName).subscribe();
+          })
+        );
+    }
+
     }
 
   delete(colName: string, doc: IMetaIdDoc): Observable<any> {
-    return Observable.create((observer) => {
+      return Observable.create(observer=> {
         const metaDoc: IMetaIdDoc = { id: doc.id, lastUpdate: doc.lastUpdate };
-      this.cacheService.deleteCached(colName, doc.id);
-      forkJoin(this.remove$(colName, doc.id), this.removeMergeUserArray(metaDoc, colName)).subscribe(
-        (() => {
-            log("fired");
-            observer.next(null);
-            observer.complete();
-          }
-        )
-      );
-    })
+        this.cacheService.deleteCached(colName, doc.id).subscribe(() => {
+          this.remove$(colName, doc.id).then(() => {
+            this.removeMergeUserMap(metaDoc.id, colName).subscribe( () => {
+                observer.next();
+                observer.complete();
+            }
+            )
+          })
+        });
+      })
+
     }
 
     getCurrentUser(): Observable<IProfile> {

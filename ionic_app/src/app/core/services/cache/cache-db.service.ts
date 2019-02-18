@@ -3,15 +3,15 @@ import { IMetaIdDoc, IProfile } from "./../../../models/user/userProfile.interfa
 import { Observer } from "firebase";
 import * as Loki from "lokijs";
 import * as LokiIndexedAdapter from "lokijs/src/loki-indexed-adapter";
-import { Observable, of } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { BehaviorSubject, Observable, of } from "rxjs";
+import { catchError, filter, map, tap } from "rxjs/operators";
 
 import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class CacheDbService {
-    private userDb: Loki;
-
+    private userDb$$: BehaviorSubject<Loki> = new BehaviorSubject<Loki>(null);
+    private userDb$: Observable<Loki> = this.userDb$$.pipe(filter(val => val !== null));
     constructor() {}
 
     public loadUserCacheDb(user: IProfile) {
@@ -41,56 +41,58 @@ export class CacheDbService {
             )
             .subscribe(userCacheDb => {
                 log('userCacheDb', '', userCacheDb);
-               this.userDb = userCacheDb;
+               this.userDb$$.next(userCacheDb);
             });
     }
 
-    public getCollection(colName: string): Collection<any> | null {
-        try {
-            return this.userDb.getCollection(colName);
-        } catch (e) {
-            console.log("GETCOLLECTION ERROR", e);
-            return null;
+    public getCollection(colName: string): Observable<Collection<any>> | null {
+            return this.userDb$.pipe(map(db => {
+                return db.getCollection(colName);
+            }),
+              catchError(err => {
+                  console.log("GETCOLLECTION ERROR", err);
+                  return of(null);
+              }));
         }
-    }
 
     public cache(colName: string, cacheDoc: IMetaIdDoc) {
         log('cacheing', '', cacheDoc);
-            const col = this.userDb.getCollection(colName);
+            return this.getCollection(colName).pipe(tap(col => {
+                let doc = col.findOne({id: {$eq: cacheDoc.id}});
+                if (cacheDoc.$loki) {
+                    col.update(cacheDoc);
+                    } else if (doc) {
+                    col.findAndUpdate({id: {$eq: cacheDoc.id}}, () => cacheDoc);
+                }
+                else {
+                        col.insert(cacheDoc);
+                    }
+            }))
+    }
+
+    public getCached(colName: string, metaDoc: IMetaIdDoc): Observable<object | null>{
+        return this.getCollection(colName).pipe(map(col => {
             let foundItem;
             if (col) {
-                foundItem = col.findOne({ id: { $eq: cacheDoc.id } });
-                if (foundItem) {
-                    col.findAndUpdate({ id: { $eq: cacheDoc.id } }, () => cacheDoc);
+                log('collection found', '', metaDoc);
+                foundItem = col.findOne({ id: { $eq: metaDoc.id } });
+                log('found item', '', foundItem);
+                if (foundItem && foundItem.lastUpdate === metaDoc.lastUpdate) {
+                    return foundItem;
                 } else {
-                    col.insert(cacheDoc);
+                    return null;
                 }
             } else {
                 throw Error('collection cannot be found in loadUserCacheDb');
             }
-    }
-
-    public getCached(colName: string, metaDoc: IMetaIdDoc) {
-
-                const col = this.userDb.getCollection(colName);
-                let foundItem;
-                if (col) {
-                    log('collection found', '', metaDoc);
-                    foundItem = col.findOne({ id: { $eq: metaDoc.id } });
-                    log('found item', '', foundItem);
-                    if (foundItem && foundItem.lastUpdate === metaDoc.lastUpdate) {
-                        return foundItem;
-                    } else {
-                        return null;
-                    }
-                } else {
-                    throw Error('collection cannot be found in loadUserCacheDb');
-                }
+        }));
 
     }
 
     public deleteCached(colName: string, id: string) {
-        this.getCollection(colName).findAndRemove({ id: { $eq: id } });
+        return this.getCollection(colName).pipe(map(col => {
+           return  col.findAndRemove({ id: { $eq: id } });
+        }))
     }
 
     private loadCacheDbFromAdapter(name: string, adapter): Observable<string> {

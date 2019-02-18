@@ -5,7 +5,7 @@ import { AlertController, ModalController } from "@ionic/angular";
 import { log } from "../../../../core/logger.service";
 import "hammerjs";
 import { take } from "rxjs/operators";
-import { IFilterObj } from "../../../../models/filters/filters.interface";
+import { IFilter, IFilterObj } from "../../../../models/filters/filters.interface";
 import { DataService } from "../../../../core/services/data.service";
 
 @Component({
@@ -14,9 +14,8 @@ import { DataService } from "../../../../core/services/data.service";
   styleUrls: ['./sift-bar.component.scss']
 })
 export class SiftBarComponent implements OnInit {
-  userSifts: IFilterObj[];
+  userSifts: Map<string, IFilterObj> = new Map();
   activeSift: IFilterObj;
-  
   notTapped: boolean = true;
 
   constructor(public modalController: ModalController, private filterService: FiltersService, private alertController: AlertController, private dataService: DataService) {
@@ -58,7 +57,7 @@ export class SiftBarComponent implements OnInit {
           text: "Confirm",
           handler: () => {
             this.dataService.delete("filters", this.activeSift).subscribe(() => {
-              log("fired");
+              log("FIRED BABY");
               this.loadSifts();
             });
           }
@@ -74,22 +73,24 @@ export class SiftBarComponent implements OnInit {
   }
 
   setActiveSift(event: any)  {
-    console.log(event.detail.value);
-    this.filterService.setActiveFilter(event.detail.value);
-    this.loadSifts();
+    this.activeSift = this.userSifts.get(event.detail.value);
+    this.filterService.setActiveFilter(this.activeSift).subscribe();
   }
 
   public loadSifts() {
     this.filterService.getAllFilters$().pipe(take(1)).subscribe((sifts) => {
-      this.userSifts = [];
-      this.userSifts = sifts;
+      this.userSifts = this.arrToMap(sifts);
       this.activeSift = sifts[0];
-
+      log('LoadSifts', '', this.userSifts);
     });
   }
 
-  customActionSheetOptions: any = {
-    header: 'My Sifts',
-  };
+  private arrToMap(arr: IFilterObj[]): Map<string, IFilterObj> {
+    let tempMap = new Map();
+    for(let obj of arr) {
+      tempMap.set(obj.name, obj);
+    }
+    return tempMap;
+  }
 
 }
