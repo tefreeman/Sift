@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from "../../../core/services/data.service";
-import { AuthService } from "../../../core/authentication/auth.service";
 @Component({
     selector: 'sg-home',
     templateUrl: './home.component.html',
@@ -8,12 +6,9 @@ import { AuthService } from "../../../core/authentication/auth.service";
 })
 export class HomeComponent implements OnInit {
 
-    constructor(private userService: AuthService) {
+    constructor() {
     }
 
     ngOnInit() {}
 
-    logout(){
-        this.userService.signOut();
-    }
 }

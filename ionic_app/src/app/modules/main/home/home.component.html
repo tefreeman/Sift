@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content #IonScrollContent >
 
     <sg-sift-bar id="homeSiftBar">
     </sg-sift-bar>
@@ -9,33 +9,7 @@
     <div class="fullWidthLine">
 
     </div>
-
-    <ion-segment scrollable>
-        <ion-segment-button checked>
-            <ion-label>Item</ion-label>
-        </ion-segment-button>
-        <ion-segment-button (tap)="logout()">
-            <ion-label>Logout</ion-label>
-        </ion-segment-button>
-        <ion-segment-button>
-                <ion-label>Goal</ion-label>
-        </ion-segment-button>
-        <ion-segment-button>
-                <ion-label>Distance</ion-label>
-        </ion-segment-button>
-        <ion-segment-button>
-                <ion-label>Price</ion-label>
-        </ion-segment-button>
-        <ion-segment-button>
-                <ion-label>Full Bar</ion-label>
-        </ion-segment-button>
-        <ion-segment-button>
-            <ion-label>Delivery</ion-label>
-    </ion-segment-button>
-    <ion-segment-button>
-        <ion-label>Open Now</ion-label>
-</ion-segment-button>
-      </ion-segment>
-    <sg-home-items-list></sg-home-items-list>
+<sg-home-sort-bar></sg-home-sort-bar>
+    <sg-home-items-list [ionScrollContent]="IonScrollContent"></sg-home-items-list>
 
 </ion-content>

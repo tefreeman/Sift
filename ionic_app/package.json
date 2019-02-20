@@ -56,6 +56,7 @@
     "fs": "0.0.1-security",
     "hammerjs": "^2.0.8",
     "lokijs": "^1.5.6",
+    "ngx-virtual-scroller": "^1.0.16",
     "prettier": "^1.15.3",
     "run": "1.4.0",
     "rxjs": "^6.3.3",

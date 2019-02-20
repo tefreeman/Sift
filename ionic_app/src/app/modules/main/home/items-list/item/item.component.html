@@ -1,6 +1,11 @@
 <ion-card>
-  <ion-item>
-    <h2 text-capitalize>{{item.name}}</h2>
-  </ion-item>
-  <ion-card-content>{{item.price}}</ion-card-content>
+<ion-card-header>
+  <ion-card-subtitle>{{restaurant.name}}</ion-card-subtitle>
+  <ion-card-title>{{item.name}}</ion-card-title>
+</ion-card-header>
+
+<ion-card-content>
+user rating: {{item.reviewScore.toFixed(2)}}   reviews: {{toInt(item.reviewCount)}}
+  distance: {{(restaurant.distance /1000).toFixed(2)}}km  price: ${{toInt(item.price)}}
+</ion-card-content>
 </ion-card>

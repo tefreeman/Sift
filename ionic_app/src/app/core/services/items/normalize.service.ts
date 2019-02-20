@@ -29,11 +29,6 @@ export class NormalizeService {
         );
     }
 
-    public deNormalizeItems(results: object[], filters) {
-        return this.dataStats$.pipe(map(cacheCol => {
-        }));
-    }
-
     public normalize(x: number, min: number, max: number) {
         return (x - min) / (max - min);
     }

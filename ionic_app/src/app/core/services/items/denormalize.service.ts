@@ -8,6 +8,7 @@ import { IItemStats } from '../../../models/normalization/normalization.interfac
 import { zScore } from '../../../shared/functions/helpers.functions';
 import { log } from '../../logger.service';
 import { LocalDbService } from '../local-db.service';
+import { IItem } from "../../../models/item/item.interface";
 
 @Injectable({ providedIn: 'root' })
 export class DenormalizeService {
@@ -17,64 +18,30 @@ export class DenormalizeService {
     this.dataStats$ = localDbService.getCollectionCache$();
   }
 
-  public normalizeFilterObj(filterObj: IFilterObj) {
-    return this.dataStats$.pipe(
-      tap(val => log('DENORMALIZE', '' , val )),
-      map(cacheCol => {
-
-        return filterObj;
-      })
-    );
-  }
-
-  public deNormalizeItems(results: object[], filters) {
+  public deNormalizeObj$(obj: IItem, name: string): Observable<IItem> {
+     let newItem = JSON.parse(JSON.stringify(obj));
     return this.dataStats$.pipe(map(cacheCol => {
-    }));
+      return this.denormalizeByType(newItem, name, cacheCol);
+      }));
   }
 
-  public normalize(x: number, min: number, max: number) {
-    return (x - min) / (max - min);
-  }
 
-  private denormalizeItem(item: object, cacheCol: Collection<IItemStats>) {
-    item
-  }
-
-  /**
-   *
-   *
-   * @private
-   * @param {number} x - item value
-   * @param {number} u - the mean of the set
-   * @param {number} o -  the std dev of the set
-   * @returns {number}
-   * @memberof NormalizeService
-   */
-  private calculateZScore(x: number, u: number, o: number): number {
-    return (x - u) / o;
-  }
-
-  private normalizeFilterProps(filter: IFilter, stats: IItemStats) {
-    const numArr = [];
-    if (filter.max) {
-      numArr.push(this.calculateZScore(filter.max, stats.avg, stats.stdDev));
-      filter.max = this.normalize(filter.max, stats.min, stats.max);
-    }
-    if (filter.min) {
-      numArr.push(this.calculateZScore(filter.min, stats.avg, stats.stdDev));
-      filter.min = this.normalize(filter.min, stats.min, stats.max);
-    }
-    if (filter.hasVal) {
-      if (typeof filter.has === 'number') {
-        numArr.push(this.calculateZScore(filter.has, stats.avg, stats.stdDev));
-        filter.has = this.normalize(filter.has, stats.min, stats.max);
+  private denormalizeByType(objType: IItem, name: string, cacheCol: Collection<IItemStats>) {
+    for (let key in objType) {
+      if (objType.hasOwnProperty(key)) {
+        const isNormalizedObj = cacheCol.findOne({
+          name: {$eq: name + '.' + key}
+        });
+        if(isNormalizedObj) {
+          objType[key] = this.deNormalize(objType[key], isNormalizedObj['max'])
+        }
       }
-    }
-    if (numArr.length === 1) {
-      filter.prob = zScore(numArr[0]);
-      return filter;
-    } else if (numArr.length === 2) {
-      filter.prob = Math.abs(zScore(numArr[1]) - zScore(numArr[0]));
-    }
+      }
+    return objType;
   }
+
+  private deNormalize(x: number, max: number){
+    return x*max;
+  }
+
 }

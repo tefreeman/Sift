@@ -66,7 +66,7 @@ export class LocalDbService {
                 valArr[1].findAndUpdate({}, obj => {
                     obj['distance'] = distance(
                         { lat: valArr[0].latitude, lon: valArr[0].longitude },
-                        { lat: obj['coords']['lat'], lon: obj['coords']['lat'] }
+                        { lat: obj['coords']['lat'], lon: obj['coords']['lon'] }
                     );
                 });
                 return valArr[1];
@@ -111,8 +111,8 @@ export class LocalDbService {
                 })
             )
             .subscribe(newDb => {
+                log('--------------this.db$.next-------------', '', newDb);
                 this.gridDbSubject$.next(newDb);
-                log('this.db$.next', '', newDb);
             });
     }
 

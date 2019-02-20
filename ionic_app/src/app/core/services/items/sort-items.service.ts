@@ -5,29 +5,34 @@ import * as timSort from 'timsort';
 
 import { Injectable } from '@angular/core';
 import { empty, set } from '@collectable/red-black-tree';
-
 import { ISort, ISortable } from '../../../models/sort/sort.interface';
 import { log } from '../../logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class SortItemsService {
+
+    public activeSort$$: BehaviorSubject<ISort> = new BehaviorSubject({name: 'default', items: [], restaurants: [], nutrients: []});
     constructor() {}
+
+
+    public setActiveSort(sort: ISort) {
+        this.activeSort$$.next(sort);
+    }
 
     public sortItems(sortObj: ISort, viewSet: { itemView: Resultset<any>; restaurantView: Resultset<any> }) {
         return this.sortAll(sortObj, viewSet.restaurantView, viewSet.itemView.data()).values();
     }
 
     private sortAll(arrSorts: ISort, rView: Resultset<any>, itemArr: any[]) {
-        const restaurantsWeight = this.calcTotalWeight(arrSorts.restaurants);
-        const itemsWeight = this.calcTotalWeight(arrSorts.items);
         const itemTree = new AVLTree((a: number, b: number) => b - a);
-        log('itemArrSortingStart');
+        log('itemArrSortingStart', '', itemArr);
         for (let item of itemArr) {
             const restaurantObj = rView.collection.findOne({ $loki: { $eq: item['restaurant_id'] } });
-            const rTotal = this.calcTotal(restaurantObj, arrSorts.restaurants);
-            const key = rTotal + this.calcTotal(item, arrSorts.items);
+            const nutrientObj = rView.collection.findOne({ $loki: { $eq: item['nutrient_id'] } });
+            const key = this.calcTotal(item, arrSorts.items) + this.calcTotal(restaurantObj, arrSorts.restaurants) + this.calcTotal(nutrientObj, arrSorts.nutrients);
             itemTree.insert(key, item);
         }
+        log('TREE', '', itemTree);
         return itemTree;
     }
 
