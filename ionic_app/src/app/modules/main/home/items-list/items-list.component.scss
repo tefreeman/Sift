@@ -1,4 +1,12 @@
-virtual-scroller {
+virtual-scroller{
   width: 100%;
   height: 600px;
+  margin-right: -25px;
+  padding-right: 25px;
+}
+
+sg-home-item {
+  height: 140px;
+  width: 100%;
+  display: block;
 }

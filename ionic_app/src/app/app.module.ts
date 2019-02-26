@@ -18,12 +18,13 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LandingModule } from './modules/start/landing.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, HttpClientModule, AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule, AngularFireAuthModule, AngularFireStorageModule, LandingModule, IonicModule.forRoot(), AppRoutingModule],
+    AngularFirestoreModule, AngularFireAuthModule, AngularFireStorageModule, LandingModule, IonicModule.forRoot(), AppRoutingModule, NoopAnimationsModule],
   providers: [
     StatusBar,
     SplashScreen,

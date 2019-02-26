@@ -15,11 +15,13 @@ import { ItemComponent } from './items-list/item/item.component';
 import { SortBarComponent } from './sort-bar/sort-bar.component';
 import { IonicModule } from "@ionic/angular";
 import { NgModule } from "@angular/core";
+import {ScrollingModule} from "@angular/cdk/scrolling";
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
-    declarations: [HeaderComponent, MapsComponent, HomeComponent, SiftBarComponent, SiftModalComponent, FilterNutrientsComponent, FilterPriceComponent, FilterReviewsComponent, FilterDistanceComponent, ItemsListComponent, ItemComponent, SortBarComponent],
-    imports: [CommonModule, IonicModule, HomeRoutingModule, VirtualScrollerModule],
+    declarations: [ HeaderComponent, MapsComponent, HomeComponent, SiftBarComponent, SiftModalComponent, FilterNutrientsComponent, FilterPriceComponent, FilterReviewsComponent, FilterDistanceComponent, ItemsListComponent, ItemComponent, SortBarComponent],
+    imports: [CommonModule, IonicModule, ScrollingModule, HomeRoutingModule, VirtualScrollerModule, FormsModule],
     providers: [],
     entryComponents: [SiftModalComponent]
 })

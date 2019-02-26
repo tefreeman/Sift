@@ -1,6 +1,6 @@
 import { IMetaIdDoc } from "./../../models/user/userProfile.interface";
 import { CacheDbService } from "./cache/cache-db.service";
-import { forkJoin, from, merge, Observable, of } from "rxjs";
+import { forkJoin, from, merge, Observable, of, zip } from "rxjs";
 import { concatMap, first, map, switchMap, take, tap } from "rxjs/operators";
 // tslint:disable-next-line: no-submodule-imports
 import { HttpClient } from "@angular/common/http";
@@ -218,18 +218,13 @@ export class DataService {
     }
 
   delete(colName: string, doc: IMetaIdDoc): Observable<any> {
-      return Observable.create(observer=> {
         const metaDoc: IMetaIdDoc = { id: doc.id, lastUpdate: doc.lastUpdate };
-        this.cacheService.deleteCached(colName, doc.id).subscribe(() => {
-          this.remove$(colName, doc.id).then(() => {
-            this.removeMergeUserMap(metaDoc.id, colName).subscribe( () => {
-                observer.next();
-                observer.complete();
-            }
-            )
-          })
-        });
-      })
+
+       return zip(
+          this.cacheService.deleteCached(colName, doc.id),
+          from(this.remove$(colName, doc.id)),
+          this.removeMergeUserMap(metaDoc.id, colName),
+          );
 
     }
 
