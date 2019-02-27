@@ -4,7 +4,7 @@ import { Component, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
 import { log } from "../../../../core/logger.service";
 import "hammerjs";
-import { concatMap, map, take } from "rxjs/operators";
+import { concatMap, filter, map, take } from "rxjs/operators";
 import { IFilter, IFilterObj } from "../../../../models/filters/filters.interface";
 import { DataService } from "../../../../core/services/data.service";
 import {NgModel} from "@angular/forms";
@@ -16,15 +16,13 @@ import { BehaviorSubject, Observable, Subject } from "rxjs";
   styleUrls: ['./sift-bar.component.scss']
 })
 export class SiftBarComponent implements OnInit {
-  userSifts: BehaviorSubject<Map<string, IFilterObj>> = new BehaviorSubject(new Map());
-  activeSift: IFilterObj;
+  userSifts$$: BehaviorSubject<Map<string, IFilterObj>> = new BehaviorSubject(new Map());
+  userSifts$: Observable<Map<string, IFilterObj>> = this.userSifts$$.asObservable().pipe(filter(map =>  map.size > 0));
+  activeSift$: Observable<IFilterObj>;
   notTapped: boolean = true;
 
   constructor(public modalController: ModalController, private filterService: FiltersService, private alertController: AlertController, private dataService: DataService) {
-    this.loadSifts().subscribe();
-    this.userSifts.subscribe((map) => {
-
-    })
+    this.reloadSifts().subscribe();
   }
 
   ngOnInit() {
@@ -34,15 +32,15 @@ export class SiftBarComponent implements OnInit {
     const modal = await this.modalController.create({
       animated: true,
       component: SiftModalComponent,
-      componentProps: { 
-        sift: this.activeSift,
+      componentProps: {
+        sift: this.activeSift$,
         controller: this.modalController,
         editMode: edit
       }
     });
     await modal.present();
     modal.onDidDismiss().then(() => {
-      this.loadSifts().subscribe();
+      this.reloadSifts().subscribe();
     });
   }
 
@@ -63,7 +61,9 @@ export class SiftBarComponent implements OnInit {
           handler: () => {
             this.dataService.delete("filters", this.activeSift).subscribe(() => {
               log("FIRED BABY");
-              this.loadSifts().subscribe();
+              this.reloadSifts().subscribe(() => {
+                this.setActiveSift()
+              });
             });
           }
         }
@@ -77,22 +77,20 @@ export class SiftBarComponent implements OnInit {
     this.notTapped = !this.notTapped;
   }
 
-  setActiveSift(event: any)  {
-    log('', '', name);
-    this.userSifts.subscribe((siftMap)=>{
-      this.activeSift = siftMap.get(event.detail.value);
-      this.filterService.setActiveFilter(this.activeSift).subscribe();
-    })
-    // causes the filter service to send new filtered items to be sorted
-    // auto updates the view
+  setActiveSift(event)  {
+       const siftName = event.detail.value;
+    log('eventSift','', siftName);
+    this.userSifts$.subscribe(currentSift=> {
+        this.filterService.setActiveFilter(currentSift.get(siftName)).subscribe();
+      }
+    )
   }
 
-  public loadSifts() {
+  public reloadSifts() {
     return this.filterService.getAllFilters$().pipe(take(1)).pipe(map((sifts) => {
-      this.activeSift = sifts[0];
-      this.userSifts.next(this.arrToMap(sifts));
-      log('LoadSifts', '', this.userSifts);
-      return;
+      this.userSifts$$.next(this.arrToMap(sifts));
+      log('LoadSifts', '', this.userSifts$$);
+      return sifts[0];
     }));
   }
 
@@ -102,9 +100,5 @@ export class SiftBarComponent implements OnInit {
       tempMap.set(obj.name, obj);
     }
     return tempMap;
-  }
-
-  trackByFn(index, item) {
-    return item.name;
   }
 }

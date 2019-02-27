@@ -30,7 +30,7 @@
                 <ion-label>Select</ion-label>
                 <ion-select (ionChange)="setActiveSift($event)" [interfaceOptions]="customActionSheetOptions" interface="action-sheet"
                             placeholder="Select One">
-                    <ion-select-option  *ngFor="let sift of (userSifts | async | keyvalue)" [selected]="sift.key === activeSift.name ? true : null"
+                    <ion-select-option  *ngFor="let sift of (userSifts$ | async | keyvalue)" [selected]="sift.key === activeSift.name ? true : null"
                                        value="{{sift.key}}">{{sift.key}}</ion-select-option>
                 </ion-select>
             </ion-item>

@@ -24,6 +24,8 @@ export class FiltersService {
 
     private activeFilterResultSet$$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     private activeFilterResultSet$: Observable<any>;
+    private activeFilter$$: BehaviorSubject<IFilterObj> = new BehaviorSubject<IFilterObj>(null);
+    private activeFilter$: Observable<IFilterObj>;
     constructor(
         private localDbService: LocalDbService,
         private normalizeService: NormalizeService,
@@ -32,9 +34,11 @@ export class FiltersService {
         private dataService: DataService
     ) {
         this.activeFilterResultSet$ = this.activeFilterResultSet$$.pipe(filter(val => val !== null));
+        this.activeFilter$ = this.activeFilter$$.pipe(filter(val => val !== null));
         this.getAllFilters$().pipe(take(1), concatMap(filters=>{
             return this.setActiveFilter(filters[0]);
         })).subscribe();
+
     }
 
     public getAllFilters$(): Observable<IFilterObj[]> {
@@ -49,9 +53,46 @@ export class FiltersService {
         return this.activeFilterResultSet$;
     }
 
+    public getActiveFilter$() {
+        return this.activeFilter$;
+    }
+    public createFilter(siftName: string, filterRestaurants: IRestaurantsFilter[], filterNutrients: INutrientFilter[],
+    filterItems: IItemsFilter[]) {
+        const date = new Date().getTime();
+        const filterObj: IFilterObj = {
+            name: siftName,
+            public: false,
+            timestamp: date,
+            lastActive: date,
+            lastUpdate: date,
+            active: false,
+            filterRestaurants: filterRestaurants,
+            filterNutrients:filterNutrients,
+            filterItems: filterItems,
+            // Create your own diet?
+            diet: {}
+        };
+
+        return this.dataService.addOrUpdate$("filters", filterObj);
+    }
+
+    public updateFilter(siftObj: IFilterObj, siftName: string, filterRestaurants: IRestaurantsFilter[], filterNutrients: INutrientFilter[],
+                        filterItems: IItemsFilter[]) {
+        const date = new Date().getTime();
+            siftObj.name = siftName;
+            siftObj.lastActive =  date;
+            siftObj.lastUpdate = date;
+            siftObj.filterRestaurants = filterRestaurants;
+            siftObj.filterNutrients =filterNutrients;
+            siftObj.filterItems = filterItems;
+
+        return this.dataService.addOrUpdate$("filters", siftObj);
+    }
+
     public setActiveFilter(filter: IFilterObj) {
         filter.lastActive = new Date().getTime();
         this.cacheDB.cache('filters', filter).subscribe();
+        this.activeFilter$$.next(filter);
         let copiedFilter = JSON.parse(JSON.stringify(filter));
         return this.loadItemResultSet$(copiedFilter).pipe(take(1), tap(views => {
             this.activeFilterResultSet$$.next(views);

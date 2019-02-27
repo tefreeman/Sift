@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ModalController, NavParams } from "@ionic/angular";
 import { IFilter, IFilterObj } from "../../../../models/filters/filters.interface";
 import { DataService } from "../../../../core/services/data.service";
+import { FiltersService } from "../../../../core/services/items/filters.service";
 
 
 interface IFilterPayload {
@@ -26,7 +27,7 @@ export class SiftModalComponent implements OnInit {
   itemFilters: Map<string, IFilter> = new Map();
   restaurantFilters: Map<string, IFilter> = new Map();
 
-  constructor(private navParams: NavParams, private dataService: DataService) {
+  constructor(private navParams: NavParams, private dataService: DataService, private filterService: FiltersService) {
     this.modalController = navParams.get("controller");
     this.activeSift = navParams.get("sift");
     if (navParams.get("editMode")) {
@@ -51,35 +52,18 @@ export class SiftModalComponent implements OnInit {
   }
 
   createFilter() {
-    const filterObj: IFilterObj = {
-      name: this.siftName,
-      public: false,
-      timestamp: new Date().getTime(),
-      lastActive: 0,
-      lastUpdate: new Date().getTime(),
-      active: false,
-      filterRestaurants: Array.from(this.restaurantFilters.values()),
-      filterNutrients: Array.from(this.nutrientFilters.values()),
-      filterItems: Array.from(this.itemFilters.values()),
-      // Create your own diet?
-      diet: {}
-    };
-
-    this.dataService.addOrUpdate$("filters", filterObj).subscribe(() => {
-      this.exitModal();
-    });
-
+   this.filterService.createFilter(this.siftName, Array.from(this.restaurantFilters.values()),
+     Array.from(this.nutrientFilters.values()),  Array.from(this.itemFilters.values()))
+     .subscribe(()=> {});
+    this.exitModal();
   }
 
   updateFilter() {
-    this.activeSift.name = this.siftName;
-    this.activeSift.lastUpdate = new Date().getTime();
-    this.activeSift.filterRestaurants = Array.from(this.restaurantFilters.values());
-    this.activeSift.filterNutrients = Array.from(this.nutrientFilters.values());
-    this.activeSift.filterItems = Array.from(this.itemFilters.values());
-    this.dataService.addOrUpdate$("filters", this.activeSift).subscribe(() => {
-      this.exitModal();
-    });
+    this.filterService.updateFilter(this.activeSift, this.siftName, Array.from(this.restaurantFilters.values()),
+      Array.from(this.nutrientFilters.values()),  Array.from(this.itemFilters.values()))
+      .subscribe(() => {
+        this.exitModal();
+      });
 
   }
 
