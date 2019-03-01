@@ -117,9 +117,9 @@ export class CacheDbService {
 
     private createUserCacheDb(user: IProfile, db: Loki) {
         const newDb = new Loki(name, {
-            verbose: true,
+            autosave: true,            verbose: true,
             destructureDelimiter: '=',
-            autosave: true,
+
             autoload: false
         });
 

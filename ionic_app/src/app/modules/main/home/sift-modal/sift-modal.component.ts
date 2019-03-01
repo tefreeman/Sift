@@ -27,17 +27,19 @@ export class SiftModalComponent implements OnInit {
   itemFilters: Map<string, IFilter> = new Map();
   restaurantFilters: Map<string, IFilter> = new Map();
 
-  constructor(private navParams: NavParams, private dataService: DataService, private filterService: FiltersService) {
+  constructor(private navParams: NavParams, private filterService: FiltersService) {
     this.modalController = navParams.get("controller");
-    this.activeSift = navParams.get("sift");
-    if (navParams.get("editMode")) {
-      this.isEditMode = true;
-      this.siftName = this.activeSift.name;
-      this.loadActiveSift();
-    }
   }
 
   ngOnInit() {
+    this.filterService.getActiveSift$().subscribe( (activeSift) => {
+      this.activeSift = activeSift;
+      if (this.navParams.get("editMode")) {
+        this.isEditMode = true;
+        this.siftName = this.activeSift.name;
+        this.loadActiveSift();
+      }
+    })
   }
 
   addFilter(filterPayload: IFilterPayload) {
@@ -51,15 +53,16 @@ export class SiftModalComponent implements OnInit {
     }
   }
 
-  createFilter() {
-   this.filterService.createFilter(this.siftName, Array.from(this.restaurantFilters.values()),
+  createSift() {
+   this.filterService.createSift(this.siftName, Array.from(this.restaurantFilters.values()),
      Array.from(this.nutrientFilters.values()),  Array.from(this.itemFilters.values()))
-     .subscribe(()=> {});
-    this.exitModal();
+     .subscribe(()=> {
+       this.exitModal();
+     });
   }
 
-  updateFilter() {
-    this.filterService.updateFilter(this.activeSift, this.siftName, Array.from(this.restaurantFilters.values()),
+  updateSift() {
+    this.filterService.updateSift(this.activeSift, this.siftName, Array.from(this.restaurantFilters.values()),
       Array.from(this.nutrientFilters.values()),  Array.from(this.itemFilters.values()))
       .subscribe(() => {
         this.exitModal();

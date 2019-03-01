@@ -77,10 +77,10 @@
     </ion-grid>
 
 
-    <div *ngIf="!isEditMode" class="createSiftButton" text-center (tap)="createFilter()">
+    <div *ngIf="!isEditMode" class="createSiftButton" text-center (tap)="createSift()">
         <h3 style="color: white">Create Sift</h3>
     </div>
-    <div *ngIf="isEditMode" class="createSiftButton" text-center (tap)="updateFilter()">
+    <div *ngIf="isEditMode" class="createSiftButton" text-center (tap)="updateSift()">
         <h3 style="color: white">Update Sift</h3>
     </div>
 </div>

@@ -143,7 +143,7 @@ export class DataService {
                     tap(user => {
                         const filtersMap = user[colName];
                       for (let filterKey in filtersMap) {
-                        if (filtersMap.hasOwnProperty(filterKey)) {
+                          if (filtersMap.hasOwnProperty(filterKey)) {
                           let doc: IMetaIdDoc = {};
                           doc.id = filterKey;
                           doc.lastUpdate = filtersMap[filterKey];
