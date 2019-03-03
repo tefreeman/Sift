@@ -18,36 +18,34 @@ import { DataService } from "../data.service";
 import { GpsService } from "../gps.service";
 import { LocalDbService } from "../local-db.service";
 import { NormalizeService } from "./normalize.service";
+import { CollectionDataService } from "../test/collection-data.service";
 
 @Injectable({ providedIn: "root" })
 export class FiltersService {
 
-  private activeFilterResultSet$$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  private activeFilterResultSet$: Observable<any>;
-  private activeSift$$: BehaviorSubject<IFilterObj> = new BehaviorSubject<IFilterObj>(null);
-  private activeSift$: Observable<IFilterObj>;
-  private : BehaviorSubject<IFilterObj[]> = new BehaviorSubject<IFilterObj[]>(null);
-  private allSifts$: Observable<IFilterObj[]>;
+  private activeFilterResultSet$$: BehaviorSubject<any> = new BehaviorSubject(null);
+  private activeFilterResultSet$ = this.activeFilterResultSet$$.pipe(filter((val) => val ! = null));
+  private activeSift$$: BehaviorSubject<IFilterObj> = new BehaviorSubject(null);
+  private activeSift$ = this.activeSift$$.pipe(filter((val) => val ! = null));
 
   constructor(
     private localDbService: LocalDbService,
     private normalizeService: NormalizeService,
     private gpsService: GpsService,
     private cacheDB: CacheDbService,
-    private dataService: DataService
+    private collectionData: CollectionDataService
   ) {
-    this.activeFilterResultSet$ = this.activeFilterResultSet$$.pipe(filter(val => val !== null));
-    this.activeSift$ = this.activeSift$$.pipe(filter(val => val !== null));
-    this.allSifts$ = this.allSifts$$.pipe(filter(val => val !== null));
-    this.updateAllSifts$().pipe(take(1)).subscribe();
+      this.collectionData.setColAndInit('filters');
+      this.collectionData.getLiveView$().subscribe( (filtersArr) => {
+      filtersArr = this.sortByLastActive(filtersArr);
+      this.activeSift$$.next(filtersArr[0]);
+    })
 
-  this.activeSift$.subscribe(( (activeSift) => {
-    let copiedSift = JSON.parse(JSON.stringify(activeSift));
-       this.loadItemResultSet$(copiedSift).pipe(
-        tap(views => {
-          this.activeFilterResultSet$$.next(views);
-        })).subscribe();
-    }))
+    this.activeSift$.pipe( concatMap((activeSift) => {
+      return this.loadItemResultSet$(activeSift);
+    })).subscribe((resultSet) => {
+      this.activeFilterResultSet$$.next(resultSet);
+    })
   }
 
   /**
@@ -56,21 +54,7 @@ export class FiltersService {
    *
    */
   public getAllSifts$(): Observable<IFilterObj[]> {
-    return this.allSifts$;
-  }
-
-  /**
-   * gets all Sifts from DataService as an array, sorts by lastActive property, and then
-   *  updates allFilters$$  and activeFilter$$
-   */
-  private updateAllSifts$(): Observable<void> {
-    return this.dataService.getAll("filters").pipe(map((filters) => {
-      filters = this.sortByLastActive(filters);
-      log("updateAllSifts$", "", filters);
-      this.activeSift$$.next(filters[0]);
-      this.allSifts$$.next(filters);
-      return;
-    }));
+      return this.collectionData.getLiveView$();
   }
 
   public getItemResultSet$() {
@@ -89,12 +73,11 @@ export class FiltersService {
    */
   public setActiveSift(filter: IFilterObj): Observable<any> {
     filter.lastActive = new Date().getTime();
-    return this.cacheDB.cache("filters", filter).pipe(tap(
-      () => {
-        log('setActiveSiftFired!!!!!!', '', filter);
-        this.activeSift$$.next(filter);
-      }
-    ))
+    return this.collectionData.upsert(filter);
+  }
+
+  private getActiveSift() {
+
   }
   public createSift(siftName: string, filterRestaurants: IRestaurantsFilter[], filterNutrients: INutrientFilter[],
                       filterItems: IItemsFilter[]) {
@@ -113,11 +96,7 @@ export class FiltersService {
       diet: {}
     };
 
-     return this.dataService.addOrUpdate$("filters", sift).pipe(
-       concatMap( () => {
-         return this.updateAllSifts$();
-       })
-     )
+     return this.collectionData.upsert(sift).pipe(take(1));
   }
 
   public updateSift(siftObj: IFilterObj, siftName: string, filterRestaurants: IRestaurantsFilter[], filterNutrients: INutrientFilter[],
@@ -130,20 +109,13 @@ export class FiltersService {
     siftObj.filterNutrients = filterNutrients;
     siftObj.filterItems = filterItems;
 
-   return this.dataService.addOrUpdate$("filters", siftObj).pipe(
-      concatMap( () => {
-        return this.updateAllSifts$();
-      })
-    )
+   return this.collectionData.upsert(siftObj).pipe(take(1));
   }
 
-  public deleteSift(sift: IFilterObj): Observable<any> {
-    return this.dataService.delete("filters", sift).pipe(concatMap(() => {
-        return this.updateAllSifts$();
-    }));
+  public deleteSift(sift: IFilterObj): Observable<void> {
+    return this.collectionData.delete(sift);
+    }
 
-
-  }
 
 
   private loadItemResultSet$(activeFilterObj: IFilterObj) {

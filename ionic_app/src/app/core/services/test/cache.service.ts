@@ -6,8 +6,8 @@ import { UnifiedStorageService } from "./unified-storage.service";
 
 
 interface metaDoc {
-    id: string;
-    lastUpdate: number;
+    id?: string;
+    lastUpdate?: number;
 }
 
 @Injectable({providedIn: 'root'})

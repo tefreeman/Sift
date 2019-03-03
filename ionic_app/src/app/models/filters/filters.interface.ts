@@ -3,6 +3,7 @@ import { IIngredients } from '../food/ingredients.interface';
 import { INutrients } from '../nutrition/nutrition.interface';
 
 export interface IFilterObj {
+    id?: string;
     name: string;
     public: boolean;
     timestamp: number;

@@ -6,12 +6,12 @@ import { AngularFirestore, AngularFirestoreDocument } from "@angular/fire/firest
 import * as firebase from "firebase";
 
 interface IMetaDoc {
-  id: string;
-  lastUpdate: number;
+  id?: string;
+  lastUpdate?: number;
 }
 
 @Injectable({ providedIn: 'root' })
-export class DataService {
+export class DataCollectionServerService {
 
   user: Observable<IProfile>;
   constructor( private afs: AngularFirestore,) {
