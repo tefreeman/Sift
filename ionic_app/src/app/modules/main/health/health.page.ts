@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UnifiedStorageService } from "../../../core/services/test/unified-storage.service";
+import { UnifiedStorageService } from "../../../core/services/storage/unified-storage.service";
 import { log } from "../../../core/logger.service";
-import { CacheService } from "../../../core/services/test/cache.service";
-import { CollectionDataService } from "../../../core/services/test/collection-data.service";
+import { CacheService } from "../../../core/services/cache/cache.service";
+import { CollectionDataService } from "../../../core/services/data/sync-collection/collection-data.service";
 
 interface ITest {
   name: string;

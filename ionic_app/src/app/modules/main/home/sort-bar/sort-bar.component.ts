@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SortItemsService } from "../../../../core/services/items/sort-items.service";
+import { SortItemsService } from "../../../../core/services/data/items/sort-items.service";
 @Component({
   selector: 'sg-home-sort-bar',
   templateUrl: './sort-bar.component.html',

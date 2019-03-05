@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { UnifiedStorageService } from "./core/services/test/unified-storage.service";
+import { UnifiedStorageService } from "./core/services/storage/unified-storage.service";
 @Component({
     selector: 'app-root',
     templateUrl: 'app.component.html'

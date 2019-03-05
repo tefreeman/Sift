@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { DenormalizeService } from "../../../../../core/services/items/denormalize.service";
+import { DenormalizeService } from "../../../../../core/services/data/transformations/denormalize.service";
 import { log } from "../../../../../core/logger.service";
 import {Observable} from "rxjs";
 import { IRestaurant } from "../../../../../models/restaurant/restaurant.interface";
 import { concatMap } from "rxjs/operators";
-import { ItemsService } from "../../../../../core/services/items/items.service";
+import { ItemsService } from "../../../../../core/services/data/items/items.service";
 import { IItem } from "../../../../../models/item/item.interface";
 
 @Component({

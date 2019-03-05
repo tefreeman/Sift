@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ModalController, NavParams } from "@ionic/angular";
 import { IFilter, IFilterObj } from "../../../../models/filters/filters.interface";
-import { DataService } from "../../../../core/services/data.service";
-import { FiltersService } from "../../../../core/services/items/filters.service";
+import { DataService } from "../../../../core/services/user/data.service";
+import { FiltersService } from "../../../../core/services/data/sync-collection/collections/filters.service";
 
 
 interface IFilterPayload {

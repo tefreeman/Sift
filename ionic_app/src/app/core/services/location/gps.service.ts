@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 import { sortedChanges } from '@angular/fire/firestore';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 
-import { distance } from '../../shared/functions/helpers.functions';
-import { log } from '../logger.service';
+import { distance } from '../../../shared/functions/helpers.functions';
+import { log } from '../../logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class GpsService {

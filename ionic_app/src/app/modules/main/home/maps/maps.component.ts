@@ -1,4 +1,4 @@
-import { GpsService } from './../../../../core/services/gps.service';
+import { GpsService } from '../../../../core/services/location/gps.service';
 import { first, skip } from 'rxjs/operators';
 import { log } from 'src/app/core/logger.service';
 

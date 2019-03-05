@@ -7,7 +7,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 
-import { DataService } from '../services/data.service';
+import { DataService } from '../services/user/data.service';
 
 interface User {
   uid: string;

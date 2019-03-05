@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
-import { ItemsService } from "../../../../core/services/items/items.service";
-import { SortItemsService } from "../../../../core/services/items/sort-items.service";
+import { ItemsService } from "../../../../core/services/data/items/items.service";
+import { SortItemsService } from "../../../../core/services/data/items/sort-items.service";
 import { concatMap, mergeMap, switchMap } from "rxjs/operators";
 import {VirtualScrollerComponent} from "ngx-virtual-scroller";
 import { IonContent } from "@ionic/angular";

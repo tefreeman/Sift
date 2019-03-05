@@ -1,4 +1,4 @@
-import { FiltersService } from "./../../../../core/services/items/filters.service";
+import { FiltersService } from "../../../../core/services/data/sync-collection/collections/filters.service";
 import { SiftModalComponent } from "./../sift-modal/sift-modal.component";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
@@ -6,7 +6,7 @@ import { log } from "../../../../core/logger.service";
 import "hammerjs";
 import { concatMap, filter, map, take, tap } from "rxjs/operators";
 import { IFilter, IFilterObj } from "../../../../models/filters/filters.interface";
-import { DataService } from "../../../../core/services/data.service";
+import { DataService } from "../../../../core/services/user/data.service";
 import {NgModel} from "@angular/forms";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 
