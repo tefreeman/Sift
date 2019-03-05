@@ -44,6 +44,7 @@ export class DataService {
             .pipe(
                 first(),
                 tap(user => {
+                    log('current user', '', user);
                     this.cacheService.loadUserCacheDb(user);
                 }),
                 // testing add method

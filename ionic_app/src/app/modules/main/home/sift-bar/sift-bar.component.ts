@@ -18,7 +18,6 @@ import { BehaviorSubject, Observable, Subject } from "rxjs";
 export class SiftBarComponent implements OnInit {
   userSifts$: Observable<Map<string, IFilterObj>>;
   activeSift: IFilterObj;
-  activeSift$: Observable<IFilterObj>;
   notTapped: boolean = true;
 
   constructor(public modalController: ModalController, private filterService: FiltersService, private alertController: AlertController, private dataService: DataService) {
@@ -30,7 +29,7 @@ export class SiftBarComponent implements OnInit {
       this.activeSift = sift;
     });
     this.userSifts$ = this.filterService.getAllSifts$().pipe(
-      tap( (sifts) => log('userSifts$ UPDATEDQ!!$!$!$%#', '', sifts)),
+      tap( (sifts) => log('userSifts$ UPDATED', '', sifts)),
       map( (sifts) => {
         return this.arrToMap(sifts);
       })
@@ -86,7 +85,7 @@ export class SiftBarComponent implements OnInit {
   setActiveSift(event)  {
        const siftName = event.detail.value;
     log('eventSift','', siftName);
-    this.userSifts$.pipe(take(1),concatMap((sifts) => {
+    this.userSifts$.pipe(take(1),map((sifts) => {
       return this.filterService.setActiveSift(sifts.get(siftName));
     })).subscribe();
   }

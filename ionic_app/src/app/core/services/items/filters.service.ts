@@ -24,9 +24,9 @@ import { CollectionDataService } from "../test/collection-data.service";
 export class FiltersService {
 
   private activeFilterResultSet$$: BehaviorSubject<any> = new BehaviorSubject(null);
-  private activeFilterResultSet$ = this.activeFilterResultSet$$.pipe(filter((val) => val ! = null));
+  private activeFilterResultSet$ = this.activeFilterResultSet$$.pipe(filter((val) => val !== null));
   private activeSift$$: BehaviorSubject<IFilterObj> = new BehaviorSubject(null);
-  private activeSift$ = this.activeSift$$.pipe(filter((val) => val ! = null));
+  private activeSift$ = this.activeSift$$.pipe(filter((val) => val !== null), map(activeSift=>JSON.parse(JSON.stringify(activeSift))));
 
   constructor(
     private localDbService: LocalDbService,
@@ -35,17 +35,24 @@ export class FiltersService {
     private cacheDB: CacheDbService,
     private collectionData: CollectionDataService
   ) {
-      this.collectionData.setColAndInit('filters');
-      this.collectionData.getLiveView$().subscribe( (filtersArr) => {
-      filtersArr = this.sortByLastActive(filtersArr);
-      this.activeSift$$.next(filtersArr[0]);
-    })
+      this.collectionData.setColAndInit('filters').subscribe(() =>{});
 
-    this.activeSift$.pipe( concatMap((activeSift) => {
+      this.collectionData.getLiveView$().subscribe( (filtersArr) => {
+          filtersArr = this.sortByLastActive(filtersArr);
+          log('filtersARR', '', filtersArr);
+          this.activeSift$$.next(filtersArr[0]);
+      });
+
+    this.activeSift$.pipe(
+      tap((activeSift)=> {log('activeSift$PIPE', '', activeSift)}),
+      concatMap((activeSift) => {
       return this.loadItemResultSet$(activeSift);
-    })).subscribe((resultSet) => {
-      this.activeFilterResultSet$$.next(resultSet);
-    })
+    }),
+      tap((resultSet)=> {
+        log('RESULTSET','', resultSet);
+        this.activeFilterResultSet$$.next(resultSet);
+      })
+    ).subscribe();
   }
 
   /**
@@ -71,14 +78,11 @@ export class FiltersService {
    * to the result set behavior subject (observable)
    * @param {IFilterObj}filter
    */
-  public setActiveSift(filter: IFilterObj): Observable<any> {
-    filter.lastActive = new Date().getTime();
-    return this.collectionData.upsert(filter);
+  public setActiveSift(filter: IFilterObj) {
+     this.collectionData.updateActive(filter);
+     this.activeSift$$.next(filter);
   }
 
-  private getActiveSift() {
-
-  }
   public createSift(siftName: string, filterRestaurants: IRestaurantsFilter[], filterNutrients: INutrientFilter[],
                       filterItems: IItemsFilter[]) {
     const date = new Date().getTime();
@@ -149,6 +153,7 @@ export class FiltersService {
   private prepareSift(sift: IFilterObj): Observable<IFilterObj> {
     return this.normalizeService.normalizeFilterObj(sift).pipe(
       concatMap(normalizedFilter => {
+        log('preparingFilter', '', normalizedFilter);
         return this.efficientFilterSort(normalizedFilter);
       })
     );
