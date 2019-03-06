@@ -1,46 +1,60 @@
-import { ICuisines } from '../food/cuisines.interface';
-import { IReview } from '../review/review.interface';
-import { IHealth } from './userHealth.interface';
-import { IHistory } from './userProfile.interface';
+import { ICuisines } from "../food/cuisines.interface";
+import { IHealth } from "./userHealth.interface";
+import { IHistory } from "./userProfile.interface";
 
 export interface ITaste {
-    cuisinesPref: ICuisines;
-    favoriteIngredients: string[];
+   cuisinesPref: ICuisines;
+   favoriteIngredients: string[];
 }
+
 export interface IGoal {
-    tasteVsHealth: number; // TODO should I move this only into filters?
-    goalAmt: number;
-    goalTimeline: number;
-    timeStamp: number;
+   goalAmt: number;
+   goalTimeline: number;
+   tasteVsHealth: number; // TODO should I move this only into filters?
+   timeStamp: number;
 }
 
 export interface IPersonal {
-    age: number;
-    displayName: string;
-    gender: string;
-    ethnicity: string;
-    photoUrl: string;
+   age: number;
+   displayName: string;
+   ethnicity: string;
+   gender: string;
+   photoUrl: string;
 }
+
 export interface IProfile {
-    email: string;
-    uid: string;
-    filters: IMetaIdDoc[];
-    quickSetup: boolean;
-    profile: IPersonal;
-    Health: IHealth;
-    history: IHistory;
-    goal: IGoal;
-    taste: ITaste;
+   Health: IHealth;
+   email: string;
+   filters: userMetaMap[];
+   goal: IGoal;
+   history: IHistory;
+   profile: IPersonal;
+   quickSetup: boolean;
+   taste: ITaste;
+   uid: string;
 }
+
+export interface userMetaMap {
+   [key: string]: number
+}
+
 // the property name using IcachedId must match cached collection name
-export interface IMetaIdDoc {
-    id?: string;
-    lastUpdate?: number;
-    [key: string]: any;
+export interface IDocMeta {
+   created?: number;
+   inActiveLife?: number;
+   lastActive?: number;
+   lastUpdate?: number;
 }
+
+export interface IDataDoc {
+   cacheId?: string;
+   id?: string;
+   meta: IDocMeta
+}
+
 export interface IHistory {
-    userCreated: number;
-    userTimeSpent: number;
-    ProfileChanges: IProfile[];
-    reviewIds: number[];
+   ProfileChanges: IProfile[];
+   reviewIds: number[];
+   userCreated: number;
+   userTimeSpent: number;
 }

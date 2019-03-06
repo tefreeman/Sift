@@ -1,74 +1,68 @@
-import { ICuisines } from '../food/cuisines.interface';
-import { IIngredients } from '../food/ingredients.interface';
-import { INutrients } from '../nutrition/nutrition.interface';
+import { IDataDoc } from "../user/userProfile.interface";
 
-export interface IFilterObj {
-    id?: string;
-    name: string;
-    public: boolean;
-    timestamp: number;
-    lastActive: number;
-    lastUpdate?: number;
-    active?: boolean;
-    filterRestaurants: IRestaurantsFilter[];
-    filterNutrients: INutrientFilter[];
-    filterItems: IItemsFilter[];
-    // Create your own diet?
-    diet: {};
-    // Need to add preset diets to automatically set health and food filters
+export interface IFilterObj extends IDataDoc {
+   diet: {};
+   filterItems: IItemsFilter[];
+   filterNutrients: INutrientFilter[];
+   filterRestaurants: IRestaurantsFilter[];
+   name: string;
+   public: boolean;
 }
 
 export interface IFilter {
-    key: any;
-    max?: number;
-    min?: number;
-    has?: string | number | boolean;
-    hasVal?: number | string;
-    prob?: number;
-}
-type TRestaurantFilterKey = 'distance' | 'price' | 'tag_ids' | 'reviewScore' | 'reviewCount' | 'name';
-export interface IRestaurantsFilter extends IFilter {
-    key: TRestaurantFilterKey;
+   has?: string | number | boolean;
+   hasVal?: number | string;
+   key: any;
+   max?: number;
+   min?: number;
+   prob?: number;
 }
 
-type TItemsFilterKey = 'price' | 'tag_ids' | 'reviewScore' | 'reviewCount' | 'name';
+type TRestaurantFilterKey = "distance" | "price" | "tag_ids" | "reviewScore" | "reviewCount" | "name";
+
+export interface IRestaurantsFilter extends IFilter {
+   key: TRestaurantFilterKey;
+}
+
+type TItemsFilterKey = "price" | "tag_ids" | "reviewScore" | "reviewCount" | "name";
+
 export interface IItemsFilter extends IFilter {
-    key: TItemsFilterKey;
+   key: TItemsFilterKey;
 }
 
 type TNutrientFilterKey =
-    | 'calories'
-    | 'fat'
-    | 'fatTrans'
-    | 'fatSat'
-    | 'monoUnsaturated'
-    | 'polyUnsaturated'
-    | 'carb'
-    | 'protein'
-    | 'fiber'
-    | 'cholesterol'
-    | 'vitaminA'
-    | 'vitaminB6'
-    | 'vitaminB12'
-    | 'vitaminC'
-    | 'vitaminD'
-    | 'vitaminE'
-    | 'vitaminK'
-    | 'thiamin'
-    | 'riboflavin'
-    | 'niacin'
-    | 'pantothenicAcid'
-    | 'folate'
-    | 'calcium'
-    | 'iron'
-    | 'magnesium'
-    | 'phosphorus'
-    | 'potassium'
-    | 'sodium'
-    | 'zinc';
+   | "calories"
+   | "fat"
+   | "fatTrans"
+   | "fatSat"
+   | "monoUnsaturated"
+   | "polyUnsaturated"
+   | "carb"
+   | "protein"
+   | "fiber"
+   | "cholesterol"
+   | "vitaminA"
+   | "vitaminB6"
+   | "vitaminB12"
+   | "vitaminC"
+   | "vitaminD"
+   | "vitaminE"
+   | "vitaminK"
+   | "thiamin"
+   | "riboflavin"
+   | "niacin"
+   | "pantothenicAcid"
+   | "folate"
+   | "calcium"
+   | "iron"
+   | "magnesium"
+   | "phosphorus"
+   | "potassium"
+   | "sodium"
+   | "zinc";
 
 export interface INutrientFilter extends IFilter {
-    key: TNutrientFilterKey;
+   key: TNutrientFilterKey;
 }
 
 /**
@@ -79,6 +73,6 @@ export interface INutrientFilter extends IFilter {
  * @extends {IFilter}
  */
 export interface IIngredientFilter extends IFilter {
-    key: string;
-    hasVal: number;
+   hasVal: number;
+   key: string;
 }

@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { log } from "../../logger.service";
 import { UnifiedStorageService } from "../storage/unified-storage.service";
-import { IMetaIdDoc } from "../../../models/user/userProfile.interface";
+import { IDataDoc } from "../../../models/user/userProfile.interface";
+import { MetaService } from "./meta.service";
 
 @Injectable({ providedIn: "root" })
 export class CacheService {
@@ -14,15 +15,8 @@ export class CacheService {
       this.collection = this.unifiedStorageService.getSertCollection("cache", ["cachedId"]);
    }
 
-   private static isValidVersion<T>(userMetaDoc: IMetaIdDoc, cachedDoc: T): boolean {
-      return cachedDoc["lastUpdate"] === userMetaDoc.lastUpdate;
-   }
-
-   private static setMeta<T>(doc: T, id: string, lastUpdate: number, propPath: string) {
-      doc["id"] = id;
-      doc["lastUpdate"] = lastUpdate;
-      doc["cacheId"] = propPath + doc["id"];
-      return doc;
+   private static isValidVersion<T extends IDataDoc>(userMetaDoc: IDataDoc, cachedDoc: T): boolean {
+      return cachedDoc.meta.lastUpdate === userMetaDoc.meta.lastUpdate;
    }
 
    private static stripMetaData(doc) {
@@ -43,19 +37,19 @@ export class CacheService {
       }
    }
 
-   public get<T>(metaDoc: IMetaIdDoc, propPath): T | void {
+   public get<T>(metaDoc: IDataDoc, propPath): T | void {
       let ifCachedObj = this.getFromCollection<T>(metaDoc.id, propPath);
       if (ifCachedObj) {
-         if (CacheService.isValidVersion<T>(metaDoc, ifCachedObj)) {
+         if (CacheService.isValidVersion<any>(metaDoc, ifCachedObj)) {
             // editing cached objects will not make changes to the db. changes must go through set method.
             return CacheService.stripMetaData(ifCachedObj);
          } else {
             log("invalid version getting newest version");
             this.removeDoc<T>(ifCachedObj);
-            return;
+            return null;
          }
       } else {
-         return;
+         return null;
       }
    }
 
@@ -63,7 +57,7 @@ export class CacheService {
       if (doc["$loki"]) {
          new Error("Trying to set doc with $loki ");
       }
-      doc = CacheService.setMeta(doc, id, lastUpdate, propPath);
+      doc = MetaService.initMeta<any>(doc, id, lastUpdate, propPath);
       this.insertDoc(doc);
       return;
    }
@@ -80,12 +74,14 @@ export class CacheService {
    private insertDoc<T>(doc: T) {
       this.collection.insert(doc);
       this.unifiedStorageService.saveChanges();
+      return;
    }
 
    private removeDoc<T>(doc: T) {
       log("removingDoc");
       this.collection.remove(doc);
       this.unifiedStorageService.saveChanges();
+      return;
    }
 
    private updateDoc<T>(id: string, propPath: string, updateDoc: T) {
