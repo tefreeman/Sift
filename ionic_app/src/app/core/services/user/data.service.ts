@@ -1,5 +1,5 @@
-import { from, Observable, of } from "rxjs";
-import { concatMap, map, switchMap, take } from "rxjs/operators";
+import { from, merge, Observable, of } from "rxjs";
+import { concatMap, filter, map, pairwise, switchMap, take } from "rxjs/operators";
 // tslint:disable-next-line: no-submodule-imports
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
@@ -35,7 +35,14 @@ export class DataService {
    }
 
    getCurrentUser(): Observable<IProfile> {
-      return this.user;
+      const firstUser$ = this.user.pipe(take(1));
+      const changedUser$ = this.user.pipe(
+         pairwise(),
+         filter(usersArr => {
+            return usersArr[0].uid !== usersArr[1].uid;
+         }),
+         map((usersArr) => usersArr[1]));
+      return merge(firstUser$, changedUser$);
    }
 
    getDataByGridKey$(key): Observable<any> {

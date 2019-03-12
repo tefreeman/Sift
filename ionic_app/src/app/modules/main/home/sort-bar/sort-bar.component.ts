@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { SortItemsService } from "../../../../core/services/data/items/sort-items.service";
+import { Component, OnInit } from "@angular/core";
+import { SortsService } from "../../../../core/services/data/sync-collection/collections/sorts.service";
+import { Observable } from "rxjs";
+import { ISort } from "../../../../models/sort/sort.interface";
+
 @Component({
-  selector: 'sg-home-sort-bar',
-  templateUrl: './sort-bar.component.html',
-  styleUrls: ['./sort-bar.component.scss']
+   selector: "sg-home-sort-bar",
+   templateUrl: "./sort-bar.component.html",
+   styleUrls: ["./sort-bar.component.scss"]
 })
 export class SortBarComponent implements OnInit {
 
-  constructor(private sortItemsService: SortItemsService) { }
+   public sorts$: Observable<ISort[]>;
 
-  ngOnInit() {
-  }
-  sortReviews(){
-    console.log('fired');
-    this.sortItemsService.setActiveSort({name: 'distance', nutrients: [], items: [{key: 'reviewScore', weight: 1}],restaurants: []})
-  }
+   constructor(private sortsService: SortsService) {
+   }
 
-  sortReviewCount(){
-    console.log('fired');
-    this.sortItemsService.setActiveSort({name: 'tedt1', nutrients: [], items: [{key: 'reviewCount', weight: 1}],restaurants: []})
-  }
+   ngOnInit() {
+      this.sorts$ = this.sortsService.getAllObjs$<ISort>();
+   }
+
 }

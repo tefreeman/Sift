@@ -1,4 +1,4 @@
 <virtual-scroller #scroll [items]="myItems">
-    <sg-home-item  *ngFor="let item of scroll.viewPortItems" [normalizedItem]="item"></sg-home-item>
+    <sg-home-item (onTap)="presentModal()"  *ngFor="let item of scroll.viewPortItems" [normalizedItem]="item"></sg-home-item>
 </virtual-scroller>
 

@@ -1,0 +1,19 @@
+<div style="position: fixed; width: 100%;">
+    <ion-toolbar color="primary" no-margin no-padding>
+        <ion-buttons slot="start">
+            <ion-icon (tap)="exitModal()" name="arrow-back" style="font-size: 24px;"></ion-icon>
+        </ion-buttons>
+        <ion-title>Detailed View</ion-title>
+    </ion-toolbar>
+</div>
+<div style='overflow:scroll; margin-top: 56px;'>
+    <h2>{{item.name}}</h2>
+    <h4>{{restaurant.name}}</h4>
+    <ion-text> distance: {{restaurant.distance}}</ion-text>
+    <ion-text> price: {{restaurant.price}}</ion-text>
+    <ion-text> item score: {{item.reviewScore}}</ion-text>
+    <ion-text> restaurant score: {{restaurant.reviewScore}}</ion-text>
+    <ion-text> restaurant review count: {{restaurant.reviewCount}}</ion-text>
+    <ion-text> item review count: {{item.reviewCount}}</ion-text>
+
+</div>

@@ -1,37 +1,40 @@
-<ion-grid no-padding id="gridMargin">
+<ion-grid id="gridMargin" no-padding>
     <ion-row id="barShadow">
-        <ion-col size="5" [ngClass]="notTapped ? 'insideLeft' : 'insideLeftTapped'" no-margin no-padding>
-            <ion-row no-margin no-padding align-items-center style="height: 100%" (tap)="changeStatus()">
-                <ion-col size="12" no-margin no-padding>
-                    <div *ngIf="activeSift">
-                    <h4 *ngIf="notTapped" no-padding no-margin style="color: white; margin-left: 8px;">{{activeSift.name}}</h4>
-                    <h4 *ngIf="!notTapped" no-padding no-margin style="color: white; margin-left: 8px;">Manage
+        <ion-col [ngClass]="notTapped ? 'insideLeft' : 'insideLeftTapped'" no-margin no-padding size="5">
+            <ion-row (tap)="changeStatus()" align-items-center no-margin no-padding style="height: 100%">
+                <ion-col no-margin no-padding size="12">
+                    <h4 *ngIf="notTapped" no-margin no-padding
+                        style="color: white; margin-left: 8px;">{{(activeSift | async)?.name}}</h4>
+                    <h4 *ngIf="!notTapped" no-margin no-padding style="color: white; margin-left: 8px;">Manage
                         Sifts</h4>
-                    </div>
                 </ion-col>
             </ion-row>
         </ion-col>
-        <ion-col size="7" [ngClass]="notTapped ? 'insideRight' : 'insideRightTapped'" align-self-center no-margin
-                 no-padding>
-            <ion-row no-margin no-padding align-items-center style="height: 100%" (tap)="changeStatus()">
-                <ion-col size="10" no-margin no-padding>
-                    <p no-margin no-padding [ngClass]="notTapped ? 'dimText' : 'dimTextTapped'"> xx Restaurants | xxx
+        <ion-col [ngClass]="notTapped ? 'insideRight' : 'insideRightTapped'" align-self-center no-margin no-padding
+                 size="7">
+            <ion-row (tap)="changeStatus()" align-items-center no-margin no-padding style="height: 100%">
+                <ion-col no-margin no-padding size="10">
+                    <p [ngClass]="notTapped ? 'dimText' : 'dimTextTapped'" no-margin no-padding> xx Restaurants | xxx
                         Items</p>
                 </ion-col>
-                <ion-col size="2" no-margin no-padding>
-                    <ion-icon *ngIf="notTapped" name="options" id="iconSize" float-right></ion-icon>
+                <ion-col no-margin no-padding size="2">
+                    <ion-icon *ngIf="notTapped" float-right id="iconSize" name="options"></ion-icon>
                 </ion-col>
             </ion-row>
         </ion-col>
     </ion-row>
-    <ion-row id="siftSpace" *ngIf="!notTapped" justify-content-center>
+    <ion-row *ngIf="!notTapped" id="siftSpace" justify-content-center>
         <ion-col size="12">
             <ion-item>
                 <ion-label>Select</ion-label>
-                <ion-select (ionChange)="setActiveSift($event)" [interfaceOptions]="customActionSheetOptions" interface="action-sheet"
+                <ion-select (ionChange)="setActiveSift($event)" [interfaceOptions]="customActionSheetOptions"
+                            interface="action-sheet"
                             placeholder="Select One">
-                    <ion-select-option  *ngFor="let sift of (userSifts$ | async | keyvalue)" [selected]="sift.key === activeSift.name ? true : null"
-                                       value="{{sift.key}}">{{sift.key}}</ion-select-option>
+                    <div #selectDiv *ngFor="let sift of (userSifts$ | async | keyvalue)">
+                        <ion-select-option
+                                [selected]="sift.key === (activeSift | async)?.name"
+                                value="{{sift.key}}">{{sift.key}}</ion-select-option>
+                    </div>
                 </ion-select>
             </ion-item>
         </ion-col>
