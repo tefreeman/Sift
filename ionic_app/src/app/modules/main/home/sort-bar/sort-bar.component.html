@@ -1,5 +1,5 @@
 <ion-segment scrollable>
-    <ion-segment-button *ngFor="let sort of sorts$ | async">
+    <ion-segment-button (tap)="setActiveSort(sort)" *ngFor="let sort of sorts$ | async">
         <ion-label>{{sort.name}}</ion-label>
     </ion-segment-button>
 </ion-segment>

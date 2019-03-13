@@ -19,4 +19,8 @@ export class SortBarComponent implements OnInit {
       this.sorts$ = this.sortsService.getAllObjs$<ISort>();
    }
 
+   setActiveSort(sortsObj: any) {
+      this.sortsService.setActiveObj(sortsObj).subscribe();
+   }
+
 }
