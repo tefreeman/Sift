@@ -4,7 +4,7 @@
             <ion-row (tap)="changeStatus()" align-items-center no-margin no-padding style="height: 100%">
                 <ion-col no-margin no-padding size="12">
                     <h4 *ngIf="notTapped" no-margin no-padding
-                        style="color: white; margin-left: 8px;">{{(activeSift | async)?.name}}</h4>
+                        style="color: white; margin-left: 8px;">{{(activeDoc$ | async)?.name}}</h4>
                     <h4 *ngIf="!notTapped" no-margin no-padding style="color: white; margin-left: 8px;">Manage
                         Sifts</h4>
                 </ion-col>
@@ -27,14 +27,14 @@
         <ion-col size="12">
             <ion-item>
                 <ion-label>Select</ion-label>
-                <ion-select (ionChange)="setActiveSift($event)" [interfaceOptions]="customActionSheetOptions"
+                <ion-select (ionChange)="setActiveDoc($event)" [interfaceOptions]="customActionSheetOptions"
                             interface="action-sheet"
                             placeholder="Select One">
-                    <div #selectDiv *ngFor="let sift of (userSifts$ | async | keyvalue)">
-                        <ion-select-option
-                                [selected]="sift.key === (activeSift | async)?.name"
-                                value="{{sift.key}}">{{sift.key}}</ion-select-option>
-                    </div>
+                    <ion-select-option *ngFor="let sift of (docsMap$ | async | keyvalue)"
+                                       [selected]="sift.key === (activeDoc$ | async)?.name"
+                                       [value]="sift">
+                        {{sift.key}}
+                    </ion-select-option>
                 </ion-select>
             </ion-item>
         </ion-col>

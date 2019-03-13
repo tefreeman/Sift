@@ -2,24 +2,23 @@ import { FiltersService } from "../../../../core/services/data/sync-collection/c
 import { SiftModalComponent } from "./../sift-modal/sift-modal.component";
 import { Component, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
-import { log } from "../../../../core/logger.service";
 import "hammerjs";
-import { concatMap, map, take, tap } from "rxjs/operators";
+import { concatMap, take } from "rxjs/operators";
 import { IFilterObj } from "../../../../models/filters/filters.interface";
-import { from, Observable } from "rxjs";
+import { from } from "rxjs";
+import { BaseCollection } from "../../../base/components/base-collection";
 
 @Component({
    selector: "sg-sift-bar",
    templateUrl: "./sift-bar.component.html",
    styleUrls: ["./sift-bar.component.scss"]
 })
-export class SiftBarComponent implements OnInit {
-   activeSift: Observable<IFilterObj>;
+export class SiftBarComponent extends BaseCollection<IFilterObj> implements OnInit {
    notTapped: boolean = true;
-   userSifts$: Observable<Map<string, IFilterObj>>;
 
-   constructor(public modalController: ModalController, private filterService: FiltersService,
+   constructor(public modalController: ModalController, public filterService: FiltersService,
                private alertController: AlertController) {
+      super(filterService);
    }
 
 
@@ -28,7 +27,7 @@ export class SiftBarComponent implements OnInit {
    }
 
    confirmDelete() {
-      this.activeSift.pipe(concatMap((activeSift) => {
+      this.activeDoc$.pipe(concatMap((activeSift) => {
          return from(this.alertController.create({
             header: "Confirm",
             message: "Please confirm that you would like to delete <strong>" + activeSift.name + "</strong>!",
@@ -43,7 +42,7 @@ export class SiftBarComponent implements OnInit {
                }, {
                   text: "Confirm",
                   handler: () => {
-                     this.activeSift.pipe(concatMap((activeSift) => {
+                     this.activeDoc$.pipe(concatMap((activeSift) => {
                         return this.filterService.deleteObj(activeSift);
                      })).subscribe();
                   }
@@ -56,13 +55,6 @@ export class SiftBarComponent implements OnInit {
    }
 
    ngOnInit() {
-      this.activeSift = this.filterService.getActiveObj$().pipe(tap((sift) => log("NgOnInit ActiveSift", "", sift)));
-      this.userSifts$ = this.filterService.getAllObjs$<any>().pipe(
-         tap((sifts) => log("userSifts$ UPDATED", "", sifts)),
-         map((sifts) => {
-            return this.arrToMap(sifts);
-         })
-      );
    }
 
    async openManageSifts(edit: boolean = false) {
@@ -70,7 +62,7 @@ export class SiftBarComponent implements OnInit {
          animated: true,
          component: SiftModalComponent,
          componentProps: {
-            sift: this.activeSift,
+            sift: this.activeDoc$,
             controller: this.modalController,
             editMode: edit
          }
@@ -79,21 +71,5 @@ export class SiftBarComponent implements OnInit {
       modal.onDidDismiss().then(() => {
 
       });
-   }
-
-   setActiveSift(event) {
-      const siftName = event.detail.value;
-      log("eventSift", "", siftName);
-      this.userSifts$.pipe(take(1), concatMap((sifts) => {
-         return this.filterService.setActiveObj(sifts.get(siftName));
-      })).subscribe();
-   }
-
-   private arrToMap(arr: IFilterObj[]): Map<string, IFilterObj> {
-      let tempMap = new Map();
-      for (let obj of arr) {
-         tempMap.set(obj.name, obj);
-      }
-      return tempMap;
    }
 }
