@@ -21,6 +21,19 @@ export class ItemComponent implements OnInit {
    constructor(private deNormalizeService: DenormalizeService, private itemsService: ItemsService, private modalController: ModalController) {
    }
 
+   arrayFromInt(n: number): any[] {
+      return Array(n);
+   }
+
+   getFloatPart = x => (x - Math.trunc(x));
+
+   getIntPart = x => Math.trunc(x);
+
+   metersToMiles(x: number) {
+      let mtmFactor = 0.000621371;
+      return mtmFactor * x;
+   }
+
    ngOnInit() {
       this.deNormalizeService.deNormalizeObj$(this.normalizedItem, "items").pipe(concatMap((item) => {
             this.item = <IItem>item;
@@ -41,7 +54,6 @@ export class ItemComponent implements OnInit {
       return await modal.present();
    }
 
-   toInt = x => parseInt(x);
-
+   roundInt = x => Math.round(x);
 
 }

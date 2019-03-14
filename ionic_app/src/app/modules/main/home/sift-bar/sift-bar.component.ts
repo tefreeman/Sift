@@ -57,7 +57,7 @@ export class SiftBarComponent extends BaseCollection<IFilterObj> implements OnIn
    ngOnInit() {
    }
 
-   async openManageSifts(edit: boolean = false) {
+   async openManageSiftsModal(edit: boolean = false) {
       const modal = await this.modalController.create({
          animated: true,
          component: SiftModalComponent,

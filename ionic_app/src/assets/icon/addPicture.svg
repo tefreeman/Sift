@@ -1,0 +1,40 @@
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54.33 81">
+    <defs>
+        <style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;}</style>
+    </defs>
+    <title>addPicture</title>
+    <path class="cls-1" d="M50.53,13.66h0Z" transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1" d="M55.1,13.66h0Z" transform="translate(-22.83 -9.5)"/>
+    <circle class="cls-1" cx="24.95" cy="56.32" r="2.29"/>
+    <path class="cls-1" d="M69.26,55.94l-3.18-3.18Z" transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1"
+          d="M66.08,52.76V47.21l8.37,8.36a7.58,7.58,0,0,1,2.22,5.37V90H51.1V84.83L36.67,70.39H60V59.25l-5.17-5.17a8.87,8.87,0,0,1,0-12.57Z"
+          transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1" d="M60,70.39v0Z" transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1" d="M29.48,22.83l-3.54-3.55a8.88,8.88,0,0,0,0,12.58l3.54,3.54Z"
+          transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1" d="M29.48,35.4l-5,5V60.85a8.83,8.83,0,0,0,5-1.59Z" transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1"
+          d="M60,59.25l-5.17-5.17a8.87,8.87,0,0,1,0-12.57L66.08,52.76V15.49h0A5.49,5.49,0,0,0,60.59,10H35a5.49,5.49,0,0,0-5.49,5.49h0V64.9A5.49,5.49,0,0,0,35,70.39H60V59.25Z"
+          transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1" d="M60,59.25l-5.17-5.17a8.87,8.87,0,0,1,0-12.57L63.34,50V17.32H32.22V61.25H60Z"
+          transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1" d="M48.39,28.22a3.06,3.06,0,1,1-3.06-3A3.06,3.06,0,0,1,48.39,28.22Z"
+          transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1"
+          d="M52.66,35.56a7.31,7.31,0,0,0,4.59-1.62l-3.32-5.29a1.37,1.37,0,0,0-2.53,0L48.09,34A7.3,7.3,0,0,0,52.66,35.56Z"
+          transform="translate(-22.83 -9.5)"/>
+    <circle class="cls-1" cx="19.39" cy="38.28" r="6.67"/>
+    <circle class="cls-1" cx="19.39" cy="38.28" r="6.67"/>
+    <path class="cls-1"
+          d="M37.75,42.87a6.55,6.55,0,0,1,4.47-1.76,7.1,7.1,0,0,1,1.31.13l1.56-2.49L41.43,32.9a1.07,1.07,0,0,0-2,0l-3.9,6.24v1.3A2.44,2.44,0,0,0,37.75,42.87Z"
+          transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1"
+          d="M42.22,41.11a6.6,6.6,0,0,1,4.5,1.78h7a8.31,8.31,0,0,1,1.13-1.38l1.38,1.38h1.34A2.45,2.45,0,0,0,60,40.44V25.78a2.45,2.45,0,0,0-2.45-2.45H38a2.45,2.45,0,0,0-2.44,2.45V40.44a2.42,2.42,0,0,0,2.19,2.42A6.59,6.59,0,0,1,42.22,41.11Z"
+          transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1"
+          d="M53.7,42.89a8.31,8.31,0,0,1,1.13-1.38l1.38,1.38h1.35A2.45,2.45,0,0,0,60,40.44V38.35l-6.07-9.7a1.37,1.37,0,0,0-2.53,0L43.53,41.24a6.7,6.7,0,0,1,3.19,1.65Z"
+          transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1" d="M42.22,44.44v0Z" transform="translate(-22.83 -9.5)"/>
+    <path class="cls-1" d="M38.89,47.78h0Z" transform="translate(-22.83 -9.5)"/>
+</svg>
