@@ -1,0 +1,54 @@
+<div [@slideState]="stateSlide" class="horizontal-scroll-wrapper">
+    <div class="displayItem">
+        <ion-card (click)="presentModal()" (swipeleft)="toggleState(true)" (swiperight)="toggleState(false)">
+            <ion-grid no-margin no-padding>
+                <ion-row align-items-start no-marign no-padding style="height: 112px">
+                    <ion-col no-margin no-padding size=4>
+                        <img alt="placeholder image" src="assets/images/itemPlaceHolder.jpg"
+                             style="object-fit: contain"/>
+                    </ion-col>
+                    <ion-col no-margin no-padding size=8>
+                        <ion-card-header
+                                style="margin-top: 8px; margin-bottom: 8px; padding-bottom: 0; padding-top: 0;">
+                            <ion-label
+                                    style="display: inline; float: right; margin-top: 0;"> {{roundInt(metersToMiles(restaurant.distance))}}
+                                miles
+                            </ion-label>
+                            <ion-card-subtitle>{{(restaurant.items.length)}} matches</ion-card-subtitle>
+                            <ion-card-title>{{restaurant.name}}</ion-card-title>
+                        </ion-card-header>
+                        <!-- TODO change the heart display to display a different svg not generate several svg's (performance -->
+                        <ion-card-content
+                                style="margin-top: 0; margin-bottom: 8px; padding-bottom: 0; padding-top: 0; float: right;">
+                            <div style="display: block;">
+                                <ion-icon *ngFor="let i of arrayFromInt(getIntPart(restaurant.reviewScore))"
+                                          color="primary"
+                                          name="heart"></ion-icon>
+                                <ion-icon
+                                        *ngIf="getFloatPart(restaurant.reviewScore) >= 0.75 || getIntPart(restaurant.reviewScore) === 0"
+                                        color="primary" name="heart"></ion-icon>
+                                <ion-icon
+                                        *ngIf="getFloatPart(restaurant.reviewScore) > 0.25 && getFloatPart(restaurant.reviewScore) < 0.75"
+                                        color="primary"
+                                        name="heart-half"></ion-icon>
+                            </div>
+                            <div style="display: block;">
+                                <ion-label>
+                                    {{roundInt(restaurant.reviewCount)}} reviews
+                                </ion-label>
+                            </div>
+                        </ion-card-content>
+                        <ion-card-content style="padding-top: 8px; padding-bottom: 8px; float: left;">
+                        </ion-card-content>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card>
+    </div>
+    <sg--home-items-list *ngIf="slideState" [itemScores]="restaurantView.itemScores" [itemsArr]="restaurantView.items"
+                         [stats]="stats"
+                         style="display: inline-flex">
+
+    </sg--home-items-list>
+</div>
+

@@ -11,8 +11,8 @@ export class CacheService {
 
    private collection$$: BehaviorSubject<Collection<any>> = new BehaviorSubject(null);
    private collection: Observable<Collection<any>> = this.collection$$.pipe(filter(value => value !== null));
-
-   constructor(private unifiedStorageService: UnifiedStorageService) {
+   private unifiedStorageService: UnifiedStorageService = new UnifiedStorageService("cache.db");
+   constructor() {
       // dbName should be user id
       this.unifiedStorageService.getSertCollection("cache", ["cacheId"], ["cacheId", "name"])
          .subscribe(

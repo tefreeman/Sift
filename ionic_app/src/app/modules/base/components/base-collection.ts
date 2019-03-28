@@ -33,4 +33,9 @@ export abstract class BaseCollection<T> {
       log("eventSift", "", sift);
       return this.baseCollectionsService.setActiveObj(sift).subscribe();
    }
+
+   public setActiveDocDirect<T extends IDataDoc>(doc: T) {
+      log("eventSift", "", doc);
+      return this.baseCollectionsService.setActiveObj(doc).subscribe();
+   }
 }

@@ -10,70 +10,117 @@
     <ion-grid no-padding no-margin>
         <ion-row justify-content-center>
             <ion-col size="12">
+                <ion-segment #FilterSortSegment>
+                    <ion-segment-button value="filter" checked>
+                        <ion-label>Filter</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="sort">
+                        <ion-label>Sort</ion-label>
+                    </ion-segment-button>
+                </ion-segment>
 
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="12">
                 <ion-item>
-                    <ion-label  style="font-size: 4vmin" position="floating">NAME</ion-label>
+                    <ion-label style="font-size: 4vmin" position="floating">NAME</ion-label>
                     <ion-input [value]="siftName" (input)="siftName=$event.target.value" type="string" required
                                #SiftName></ion-input>
                 </ion-item>
             </ion-col>
-            <ion-col size="12"><h4>Add a Filter</h4></ion-col>
-            <ion-col size="12">
-                <ion-item>
-                    <ion-label>Filter Type</ion-label>
-                    <ion-select placeholder="Select One" #FilterType>
-                        <ion-select-option value="nutrient">Nutrient</ion-select-option>
-                        <ion-select-option value="cuisine">Cuisine</ion-select-option>
-                        <ion-select-option value="ingredient">Ingredient</ion-select-option>
-                        <ion-select-option value="distance">Distance</ion-select-option>
-                        <ion-select-option value="price">Price</ion-select-option>
-                        <ion-select-option value="reviews">Reviews</ion-select-option>
-                    </ion-select>
-                </ion-item>
-            </ion-col>
-            <ion-col size="12" *ngIf="FilterType.value === 'nutrient'">
-                <sg-filter-nutrients (addNutrientEvent)='addFilter($event);'></sg-filter-nutrients>
-            </ion-col>
-            <ion-col size="12" *ngIf="FilterType.value === 'price'">
-                <sg-modal-filter-price (addPriceEvent)='addFilter($event); FilterType.value=""'></sg-modal-filter-price>
-            </ion-col>
-            <ion-col size="12" *ngIf="FilterType.value === 'reviews'">
-                <sg-modal-filter-reviews
-                        (addReviewEvent)='addFilter($event); FilterType.value=""'></sg-modal-filter-reviews>
-            </ion-col>
-            <ion-col size="12" *ngIf="FilterType.value === 'distance'">
-                <sg-modal-filter-distance
-                        (addDistanceEvent)='addFilter($event); FilterType.value=""'></sg-modal-filter-distance>
-            </ion-col>
-            <ion-col size="12">
-                <h4>Active filters:</h4>
-            </ion-col>
-
-            <ion-col *ngFor="let nutrient of nutrientFilters | keyvalue" size="12">
-                <ion-text>
-                    <strong> Nutrient {{nutrient.value.key}} </strong> from {{nutrient.value.min}}
-                    to {{nutrient.value.max}}
-                    <ion-icon (tap)="nutrientFilters.delete(nutrient.key)" name="trash"></ion-icon>
-                </ion-text>
-            </ion-col>
-
-            <ion-col *ngFor="let item of itemFilters | keyvalue" size="12">
-                <ion-text>
-                    <strong> Food Item {{item.value.key}} </strong> from {{item.value.min}} to {{item.value.max}}
-                    <ion-icon (tap)="itemFilters.delete(item.key)" name="trash"></ion-icon>
-                </ion-text>
-            </ion-col>
-
-            <ion-col *ngFor="let restaurant of restaurantFilters | keyvalue" size="12">
-                <ion-text>
-                    <strong> Restaurant {{restaurant.value.key}} </strong> from {{restaurant.value.min}}
-                    to {{restaurant.value.max}}
-                    <ion-icon (tap)="restaurantFilters.delete(restaurant.key)" name="trash"></ion-icon>
-                </ion-text>
-            </ion-col>
-
-
         </ion-row>
+        <div *ngIf="FilterSortSegment.value === 'filter'">
+            <ion-row>
+                <ion-col size="12"><h4>Add a Filter</h4></ion-col>
+                <ion-col size="12">
+                    <ion-item>
+                        <ion-label>Filter Type</ion-label>
+                        <ion-select placeholder="Select One" #FilterType>
+                            <ion-select-option value="nutrient">Nutrient</ion-select-option>
+                            <ion-select-option value="cuisine">Cuisine</ion-select-option>
+                            <ion-select-option value="ingredient">Ingredient</ion-select-option>
+                            <ion-select-option value="distance">Distance</ion-select-option>
+                            <ion-select-option value="price">Price</ion-select-option>
+                            <ion-select-option value="reviews">Reviews</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="12" *ngIf="FilterType.value === 'nutrient'">
+                    <sg-filter-nutrients (addNutrientEvent)='addFilter($event);'></sg-filter-nutrients>
+                </ion-col>
+                <ion-col size="12" *ngIf="FilterType.value === 'price'">
+                    <sg-modal-filter-price
+                            (addPriceEvent)='addFilter($event); FilterType.value=""'></sg-modal-filter-price>
+                </ion-col>
+                <ion-col size="12" *ngIf="FilterType.value === 'reviews'">
+                    <sg-modal-filter-reviews
+                            (addReviewEvent)='addFilter($event); FilterType.value=""'></sg-modal-filter-reviews>
+                </ion-col>
+                <ion-col size="12" *ngIf="FilterType.value === 'distance'">
+                    <sg-modal-filter-distance
+                            (addDistanceEvent)='addFilter($event); FilterType.value=""'></sg-modal-filter-distance>
+                </ion-col>
+                <ion-col size="12">
+                    <h4>Active filters:</h4>
+                </ion-col>
+
+                <ion-col *ngFor="let nutrient of nutrientFilters | keyvalue" size="12">
+                    <ion-text>
+                        <strong> Nutrient {{nutrient.value.key}} </strong> from {{nutrient.value.min}}
+                        to {{nutrient.value.max}}
+                        <ion-icon (tap)="nutrientFilters.delete(nutrient.key)" name="trash"></ion-icon>
+                    </ion-text>
+                </ion-col>
+
+                <ion-col *ngFor="let item of itemFilters | keyvalue" size="12">
+                    <ion-text>
+                        <strong> Food Item {{item.value.key}} </strong> from {{item.value.min}} to {{item.value.max}}
+                        <ion-icon (tap)="itemFilters.delete(item.key)" name="trash"></ion-icon>
+                    </ion-text>
+                </ion-col>
+
+                <ion-col *ngFor="let restaurant of restaurantFilters | keyvalue" size="12">
+                    <ion-text>
+                        <strong> Restaurant {{restaurant.value.key}} </strong> from {{restaurant.value.min}}
+                        to {{restaurant.value.max}}
+                        <ion-icon (tap)="restaurantFilters.delete(restaurant.key)" name="trash"></ion-icon>
+                    </ion-text>
+                </ion-col>
+            </ion-row>
+        </div>
+        <div *ngIf="FilterSortSegment.value === 'sort'">
+            <ion-row>
+                <ion-col size="12"><h4>Add a Sort</h4></ion-col>
+                <ion-col size="12">
+                    <sg-sort-sliders (addSort)="addSort($event)"></sg-sort-sliders>
+                </ion-col>
+                <ion-col size="12">
+                    <h4>Active Sorts:</h4>
+                </ion-col>
+
+                <ion-col *ngFor="let nutrient of nutrientSorts | keyvalue" size="12">
+                    <ion-text>
+                        <strong> Nutrient {{nutrient.value.key}} </strong> is {{nutrient.value.weight}}
+                        <ion-icon (tap)="nutrientSortsr.delete(nutrient.key)" name="trash"></ion-icon>
+                    </ion-text>
+                </ion-col>
+
+                <ion-col *ngFor="let item of itemSorts | keyvalue" size="12">
+                    <ion-text>
+                        <strong> Food Item {{item.value.key}} </strong> is {{item.value.weight}}
+                        <ion-icon (tap)="itemSorts.delete(item.key)" name="trash"></ion-icon>
+                    </ion-text>
+                </ion-col>
+
+                <ion-col *ngFor="let restaurant of restaurantSorts | keyvalue" size="12">
+                    <ion-text>
+                        <strong> Restaurant {{restaurant.value.key}} </strong> is {{restaurant.value.weight}}
+                        <ion-icon (tap)="restaurantSorts.delete(restaurant.key)" name="trash"></ion-icon>
+                    </ion-text>
+                </ion-col>
+            </ion-row>
+        </div>
     </ion-grid>
 
 

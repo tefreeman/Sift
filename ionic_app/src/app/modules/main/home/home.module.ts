@@ -9,19 +9,27 @@ import { FilterNutrientsComponent } from "./sift-modal/filter-nutrients/filter-n
 import { FilterPriceComponent } from "./sift-modal/filter-price/filter-price.component";
 import { FilterReviewsComponent } from "./sift-modal/filter-reviews/filter-reviews.component";
 import { FilterDistanceComponent } from "./sift-modal/filter-distance/filter-distance.component";
-import { ItemsListComponent } from "./items-list/items-list.component";
-import { ItemComponent } from "./items-list/item/item.component";
+import { RestaurantsListComponent } from "./restaurants-list/restaurants-list.component";
+import { RestaurantComponent } from "./restaurants-list/restaurant/restaurant.component";
 import { SortBarComponent } from "./sort-bar/sort-bar.component";
 import { IonicModule } from "@ionic/angular";
 import { NgModule } from "@angular/core";
-import { ScrollingModule } from "@angular/cdk/scrolling";
 import { VirtualScrollerModule } from "ngx-virtual-scroller";
 import { FormsModule } from "@angular/forms";
 import { ItemModalComponent } from "./item-modal/item-modal.component";
+import { GalleryModule } from "@ngx-gallery/core";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { NutritionGraphComponent } from "./item-modal/nutrition-graph/nutrition-graph.component";
+import { SortSlidersComponent } from "./sift-modal/sort-sliders/sort-sliders.component";
+import { ItemsListComponent } from "./items-list/items-list.component";
+import { ItemComponent } from "./items-list/item/item.component";
 
 @NgModule({
-   declarations: [HeaderComponent, MapsComponent, HomeComponent, SiftBarComponent, SiftModalComponent, FilterNutrientsComponent, FilterPriceComponent, FilterReviewsComponent, FilterDistanceComponent, ItemsListComponent, ItemComponent, SortBarComponent, ItemModalComponent],
-   imports: [CommonModule, IonicModule, ScrollingModule, HomeRoutingModule, VirtualScrollerModule, FormsModule],
+   declarations: [HeaderComponent, MapsComponent, HomeComponent, SiftBarComponent, SiftModalComponent,
+      FilterNutrientsComponent, FilterPriceComponent, FilterReviewsComponent, FilterDistanceComponent,
+      RestaurantsListComponent, RestaurantComponent, SortBarComponent, ItemModalComponent, NutritionGraphComponent, SortSlidersComponent, ItemsListComponent, ItemComponent],
+   imports: [CommonModule, IonicModule, HomeRoutingModule, VirtualScrollerModule,
+      FormsModule, GalleryModule, NgxChartsModule],
    providers: [],
    entryComponents: [SiftModalComponent, ItemModalComponent]
 })

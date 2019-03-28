@@ -1,4 +1,5 @@
 import { IDataDoc } from "../user/userProfile.interface";
+import { IPreviewSort, ISortable } from "../sort/sort.interface";
 
 export interface IFilterObj extends IDataDoc {
    diet: {};
@@ -6,7 +7,11 @@ export interface IFilterObj extends IDataDoc {
    filterNutrients: INutrientFilter[];
    filterRestaurants: IRestaurantsFilter[];
    name: string;
+   previewSorts?: IPreviewSort[];
    public: boolean;
+   sortItems: ISortable[];
+   sortNutrients: ISortable[];
+   sortRestaurants: ISortable[];
 }
 
 export interface IFilter {

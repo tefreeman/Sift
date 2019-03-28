@@ -1,5 +1,6 @@
 <ion-segment scrollable>
-    <ion-segment-button (tap)="setActiveSort(sort)" *ngFor="let sort of sorts$ | async">
-        <ion-label>{{sort.name}}</ion-label>
+    <ion-segment-button (tap)="setActiveDocDirect(sift.value)" *ngFor="let sift of (docsMap$ | async | keyvalue)"
+                        [checked]="sift.key === (activeDoc$ | async)?.name">
+        <ion-label>{{sift.value.name}}</ion-label>
     </ion-segment-button>
 </ion-segment>

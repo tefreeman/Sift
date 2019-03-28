@@ -1,7 +1,21 @@
-<ion-content #IonScrollContent >
-
-    <sg-sift-bar id="homeSiftBar">
-    </sg-sift-bar>
+<ion-content #IonScrollContent>
+    <!-- TODO make Fab slightly transparent when user is using map  -->
+    <ion-fab horizontal="end" slot="fixed" vertical="top">
+        <ion-fab-button>
+            <ion-icon name="options"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="bottom">
+            <ion-fab-button (tap)="openManageSiftsModal()">
+                <ion-icon name="add"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (tap)="openManageSiftsModal(true)">
+                <ion-icon name="create"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (tap)="confirmDelete()">
+                <ion-icon name="trash"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
 
     <sg-home-maps id="homeSiftMap">
     </sg-home-maps>
@@ -10,6 +24,6 @@
 
     </div>
     <sg-home-sort-bar></sg-home-sort-bar>
-    <sg-home-items-list [ionContent]="IonScrollContent"></sg-home-items-list>
+    <sg-home-restaurants-list [ionContent]="IonScrollContent"></sg-home-restaurants-list>
 
 </ion-content>

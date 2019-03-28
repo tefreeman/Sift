@@ -1,0 +1,31 @@
+ion-card-title {
+  font-size: 18px;
+}
+
+ion-card-subtitle {
+  font-size: 14px;
+}
+
+
+.horizontal-scroll-wrapper {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.displayItem {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 124px;
+  flex: 0 0 auto;
+}

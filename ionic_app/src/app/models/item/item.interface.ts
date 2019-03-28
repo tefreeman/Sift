@@ -1,3 +1,6 @@
+export type TItemsKey = "price" | "reviewCount" | "reviewScore";
+
+export const ItemsTypeList = [["price", "price"], ["review count", "reviewCount"], ["review score", "reviewScore"]];
 
 export interface IItem {
     name: string;

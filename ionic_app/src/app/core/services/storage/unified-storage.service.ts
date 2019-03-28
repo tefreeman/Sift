@@ -1,25 +1,31 @@
-import { Injectable } from "@angular/core";
 import * as Loki from "lokijs";
 import * as LokiIndexedAdapter from "lokijs/src/loki-indexed-adapter";
 import { BehaviorSubject, Observable } from "rxjs";
 import { filter, map, take, tap } from "rxjs/operators";
 import { log } from "../../logger.service";
 
-
-@Injectable({ providedIn: "root" })
 export class UnifiedStorageService {
-
    private adapter: LokiIndexedAdapter;
    private db: Observable<Loki>;
    private db$$: BehaviorSubject<Loki> = new BehaviorSubject(null);
+   private dbName: string;
 
-   constructor() {
+   constructor(dbName: string) {
+      this.dbName = dbName;
       this.db = this.db$$.pipe(filter(value => value !== null && value !== undefined));
       this.adapter = new LokiIndexedAdapter();
-      this.loadDb("cache.db");
+
+      // universally stores everything
+      this.loadDb(this.dbName);
 
       // just logging can remove later
-      this.db.subscribe((db) => log("cacheDb", "", db));
+      this.db.subscribe((db) => log(this.dbName, "", db));
+   }
+
+   public getCollection<T extends object>(colName): Observable<Collection<T>> {
+      return this.db.pipe(map(db => {
+         return db.getCollection<T>(colName);
+      }));
    }
 
    public getSertCollection<T extends Object>(colName: string, binaryIndices: any[], uniqueIndices: any[]): Observable<Collection<T>> {
@@ -38,7 +44,7 @@ export class UnifiedStorageService {
       })).subscribe();
    }
 
-   private loadDb(name: string) {
+   private dbExists(name: string, callback) {
       this.adapter.getDatabaseList(result => {
          let match = false;
          for (const dbName of result) {
@@ -46,9 +52,15 @@ export class UnifiedStorageService {
                match = true;
             }
          }
+         callback(match);
+      });
+   }
+
+   private loadDb(name: string) {
+      this.dbExists(this.dbName, (match) => {
          log("loadDbInner");
          this.adapter.loadDatabase(name, (serializedDb: string) => {
-            let localDb = new Loki("cache.db", {
+            let localDb = new Loki(this.dbName, {
                adapter: this.adapter,
                verbose: true,
                destructureDelimiter: "=",
@@ -67,5 +79,6 @@ export class UnifiedStorageService {
 
       });
    }
+
 
 }

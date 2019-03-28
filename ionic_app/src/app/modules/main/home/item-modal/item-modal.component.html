@@ -7,13 +7,41 @@
     </ion-toolbar>
 </div>
 <div style='overflow:scroll; margin-top: 56px;'>
-    <h2>{{item.name}}</h2>
-    <h4>{{restaurant.name}}</h4>
-    <ion-text> distance: {{restaurant.distance}}</ion-text>
-    <ion-text> price: {{restaurant.price}}</ion-text>
-    <ion-text> item score: {{item.reviewScore}}</ion-text>
-    <ion-text> restaurant score: {{restaurant.reviewScore}}</ion-text>
-    <ion-text> restaurant review count: {{restaurant.reviewCount}}</ion-text>
-    <ion-text> item review count: {{item.reviewCount}}</ion-text>
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12">
+                <h2>{{restaurant.name}}</h2>
+                <div style="display: block;">
+                    <ion-icon *ngFor="let i of arrayFromInt(getIntPart(restaurant.reviewScore))" color="primary"
+                              name="heart"></ion-icon>
+                    <ion-icon
+                            *ngIf="getFloatPart(restaurant.reviewScore) >= 0.75 || getIntPart(restaurant.reviewScore) === 0"
+                            color="primary" name="heart"></ion-icon>
+                    <ion-icon
+                            *ngIf="getFloatPart(restaurant.reviewScore) > 0.25 && getFloatPart(restaurant.reviewScore) < 0.75"
+                            color="primary"
+                            name="heart-half"></ion-icon>
+                    <div *ngIf="roundInt(restaurant.reviewCount) > 0" class="textTab">
+                        {{roundInt(restaurant.reviewCount)}} reviews
+                    </div>
+                    <div *ngIf="roundInt(restaurant.reviewCount) < 0" class="textTab">>
+                        new
+                    </div>
+                </div>
+                <div style="display: block;">
+                    <div class="textTab">${{roundFloat(restaurant.price, 2)}}</div>
+                    <div class="textTab">Open Now</div>
+                    <div class="textTab">12:00 AM - 9:00 PM</div>
+                </div>
+            </ion-col>
+        </ion-row>
 
+    </ion-grid>
+    <div *ngFor="let test of (items | async)">
+        <p>{{test.name}}  {{test.reviewScore}}</p>
+    </div>
+
+    <div>
+        <p (tap)="test()">test me click me</p>
+    </div>
 </div>

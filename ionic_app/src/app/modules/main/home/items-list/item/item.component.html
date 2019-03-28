@@ -1,38 +1,29 @@
-<ion-card (click)="presentModal()">
-    <ion-grid no-margin no-padding>
-        <ion-row align-items-start no-marign no-padding style="height: 112px">
-            <ion-col no-margin no-padding size=4>
-                <img alt="placeholder image" src="assets/images/itemPlaceHolder.jpg" style="object-fit: contain"/>
+<ion-card>
+    <ion-grid no-margin no-padding style="height: 112px">
+        <ion-row justify-content-center no-margin no-padding>
+            <ion-col size="auto">
+                <ion-text style="font-size: 12px;">
+                    <strong> {{item.name}}</strong>
+                </ion-text>
             </ion-col>
-            <ion-col no-margin no-padding size=8>
-                <ion-card-header style="margin-top: 8px; margin-bottom: 8px; padding-bottom: 0; padding-top: 0;">
-                    <ion-label
-                            style="display: inline; float: right; margin-top: 0;"> {{roundInt(metersToMiles(restaurant.distance))}}
-                        miles
-                    </ion-label>
-                    <ion-card-subtitle style="width: auto">{{restaurant.name}}</ion-card-subtitle>
-                    <ion-card-title>{{item.name}}</ion-card-title>
-                </ion-card-header>
-
-                <ion-card-content
-                        style="margin-top: 0; margin-bottom: 8px; padding-bottom: 0; padding-top: 0; float: right;">
-                    <div style="display: block;">
-                        <ion-icon *ngFor="let i of arrayFromInt(getIntPart(item.reviewScore))" color="primary"
-                                  name="heart"></ion-icon>
-                        <ion-icon *ngIf="getFloatPart(item.reviewScore) >= 0.75 || getIntPart(item.reviewScore) === 0"
-                                  color="primary" name="heart"></ion-icon>
-                        <ion-icon *ngIf="getFloatPart(item.reviewScore) > 0.25 && getFloatPart(item.reviewScore) < 0.75"
-                                  color="primary"
-                                  name="heart-half"></ion-icon>
-                    </div>
-                    <div style="display: block;">
-                        <ion-label>
-                            {{roundInt(item.reviewCount)}} reviews
-                        </ion-label>
-                    </div>
-                </ion-card-content>
-                <ion-card-content style="padding-top: 8px; padding-bottom: 8px; float: left;">
-                </ion-card-content>
+        </ion-row>
+        <ion-row justify-content-center no-margin no-padding>
+            <ion-col size="auto">
+                <ion-text style="font-size: 12px;">
+                    {{score}}% Match
+                </ion-text>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let obj of previewSorts" justify-content-center no-margin no-padding>
+            <ion-col *ngIf="obj.type === 'item'" size="auto">
+                <ion-text style="font-size: 12px;">
+                    {{item[obj.key]}} {{obj.key}}
+                </ion-text>
+            </ion-col>
+            <ion-col *ngIf="obj.type === 'nutrient'" size="auto">
+                <ion-text style="font-size: 12px;">
+                    {{(nutrientData | async)[obj.key]}} {{obj.key}}
+                </ion-text>
             </ion-col>
         </ion-row>
     </ion-grid>

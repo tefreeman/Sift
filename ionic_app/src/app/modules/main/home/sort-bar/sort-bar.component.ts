@@ -1,26 +1,20 @@
 import { Component, OnInit } from "@angular/core";
-import { SortsService } from "../../../../core/services/data/sync-collection/collections/sorts.service";
-import { Observable } from "rxjs";
-import { ISort } from "../../../../models/sort/sort.interface";
+import { IFilterObj } from "../../../../models/filters/filters.interface";
+import { FiltersService } from "../../../../core/services/data/sync-collection/collections/filters.service";
+import { BaseCollection } from "../../../base/components/base-collection";
 
 @Component({
    selector: "sg-home-sort-bar",
    templateUrl: "./sort-bar.component.html",
    styleUrls: ["./sort-bar.component.scss"]
 })
-export class SortBarComponent implements OnInit {
+export class SortBarComponent extends BaseCollection<IFilterObj> implements OnInit {
 
-   public sorts$: Observable<ISort[]>;
-
-   constructor(private sortsService: SortsService) {
+   constructor(private filterService: FiltersService) {
+      super(filterService);
    }
 
    ngOnInit() {
-      this.sorts$ = this.sortsService.getAllObjs$<ISort>();
-   }
-
-   setActiveSort(sortsObj: any) {
-      this.sortsService.setActiveObj(sortsObj).subscribe();
    }
 
 }

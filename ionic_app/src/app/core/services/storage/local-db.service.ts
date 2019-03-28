@@ -29,8 +29,14 @@ export class LocalDbService {
       return this.gridDb$.pipe(map(db => db.getCollection(collectionName)));
    }
 
-   public getCollectionCache$(): Observable<Collection<any>> {
-      return this.gridDb$.pipe(map(db => db.getCollection("cache")));
+   public getDocsByArr<T>(collectionName: string, numArr: any[], prop: string) {
+      return this.gridDb$.pipe(map((db) => {
+         const returnArr: T[] = [];
+         for (let obj of numArr) {
+            returnArr.push(db.getCollection(collectionName).findOne({ $loki: { $eq: obj[prop] } }));
+         }
+         return returnArr;
+      }));
    }
 
    public setUpdateDistance() {

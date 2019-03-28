@@ -1,42 +1,39 @@
-import { throws } from 'assert';
 import * as fs from 'fs';
-import { normalize } from 'path';
 
-import { GenerateObject, getRandomInt } from './mock.obj';
+import {GenerateObject, getRandomInt} from './mock.obj';
 
 const Loki = require('lokijs');
-const brotli = require('brotli');
 
 let nutrients = {
-    calories:  '{{int(300,1400)}}', //Kcal
-    fat:  '{{int(0,60)}}', //g
-    fatTrans:  '{{int(0,60)}}', //g
-    fatSat:   '{{int(0,60)}}', //g
-    monoUnsaturated:  '{{int(0,60)}}', //g
-    polyUnsaturated:  '{{int(0,60)}}', //g
-    carb:  '{{int(0,100)}}', //g
-    protein:  '{{int(0,80)}}', //g
-    fiber:  '{{int(0, 25)}}', //g/ Liters
-    cholesterol:  '{{int(0,500)}}', //mg
-    vitaminA:  '{{int(0,500)}}', // iu
-    vitaminB6:  '{{int(0,500)}}', //mg
-    vitaminB12:  '{{int(0,500)}}', //mcg
-    vitaminC:  '{{int(0,500)}}', //mg
-    vitaminD:  '{{int(0,500)}}', // iu
-    vitaminE:  '{{int(0,500)}}', // mg
-    vitaminK:  '{{int(0,500)}}', //mcg
-    thiamin:  '{{int(0,500)}}', //mg
+    calories: '{{int(300,1400)}}', //Kcal
+    fat: '{{int(0,60)}}', //g
+    fatTrans: '{{int(0,60)}}', //g
+    fatSat: '{{int(0,60)}}', //g
+    monoUnsaturated: '{{int(0,60)}}', //g
+    polyUnsaturated: '{{int(0,60)}}', //g
+    carb: '{{int(0,100)}}', //g
+    protein: '{{int(0,80)}}', //g
+    fiber: '{{int(0, 25)}}', //g/ Liters
+    cholesterol: '{{int(0,500)}}', //mg
+    vitaminA: '{{int(0,500)}}', // iu
+    vitaminB6: '{{int(0,500)}}', //mg
+    vitaminB12: '{{int(0,500)}}', //mcg
+    vitaminC: '{{int(0,500)}}', //mg
+    vitaminD: '{{int(0,500)}}', // iu
+    vitaminE: '{{int(0,500)}}', // mg
+    vitaminK: '{{int(0,500)}}', //mcg
+    thiamin: '{{int(0,500)}}', //mg
     riboflavin: '{{int(0,500)}}', //mg
     niacin: '{{int(0,500)}}', //mg
-    pantothenicAcid:  '{{int(0,500)}}', //mg
-    folate:  '{{int(0,500)}}', //mcg
-    calcium:  '{{int(0,500)}}', // mg
-    iron:  '{{int(0,500)}}', // mg
-    magnesium:  '{{int(0,500)}}', //mg
-    phosphorus:  '{{int(0,500)}}', //mg
-    potassium:  '{{int(0,500)}}', //mg
-    sodium:  '{{int(0,3000)}}', //mg
-    zinc:   '{{int(0,500)}}', //mg]
+    pantothenicAcid: '{{int(0,500)}}', //mg
+    folate: '{{int(0,500)}}', //mcg
+    calcium: '{{int(0,500)}}', // mg
+    iron: '{{int(0,500)}}', // mg
+    magnesium: '{{int(0,500)}}', //mg
+    phosphorus: '{{int(0,500)}}', //mg
+    potassium: '{{int(0,500)}}', //mg
+    sodium: '{{int(0,3000)}}', //mg
+    zinc: '{{int(0,500)}}', //mg]
 }
 
 let ingredients = {
@@ -61,37 +58,37 @@ let item = {
     'isApproved': '{{int(0 ,1)}}',
     'tag_ids': [],
     'nutrition_id': -1,
-    'restaurant_id': -1,
     'ingredient_ids': []
 }
 
 let restaurant =
     {
-    'name': '{{char(5,14)}}',
-    'phone': '{{phone()}}',
-    'address': '{{text(2,4)}}',
-    'distance': -1,
-    'type':  '{{char(5,14)}}',
-    'price': '{{int(1,3)}}',
-    'reviewCount': '{{int(1,1000)}}',
-    'reviewScore': '{{float(1,5,2)}}',
-    'lastUpdated': '{{date()}}',
-    'isApproved': '{{int(0,1)}}',
-    'coords': {
-        'lat': '{{float(33.00696069, 33.40696069, 8)}}',
-        'lon': '{{float(-87.7642943, -87.3642943, 8)}}',
-    },
-    'tag_ids': [],
-}
+        'name': '{{char(5,14)}}',
+        'phone': '{{phone()}}',
+        'address': '{{text(2,4)}}',
+        'distance': -1,
+        'type': '{{char(5,14)}}',
+        'price': '{{int(1,3)}}',
+        'reviewCount': '{{int(1,1000)}}',
+        'reviewScore': '{{float(1,5,2)}}',
+        'lastUpdated': '{{date()}}',
+        'isApproved': '{{int(0,1)}}',
+        'coords': {
+            'lat': '{{float(33.00696069, 33.40696069, 8)}}',
+            'lon': '{{float(-87.7642943, -87.3642943, 8)}}',
+        },
+        'items': [],
+        'tag_ids': [],
+    }
 
 //let text = brotli.decompress(fs.readFileSync('jsonTestFile500'));
 
 const db = new Loki('localData', {
-  verbose: true,
-  disableMeta: true,
-  disableChangesApi: true,
+    verbose: true,
+    disableMeta: true,
+    disableChangesApi: true,
 
-  destructureDelimiter: '='
+    destructureDelimiter: '='
 });
 
 let itemsCol = db.addCollection('items');
@@ -131,14 +128,14 @@ for (let p = 0; p < ingredientIndex; p++) {
 }
 
 for (let i = 0; i < amtTlt; i++) {
-    let restaurantsItemsArr = []
+    let restaurantsItemsArr = [];
     for (let j = 0; j < itemAmt; j++) {
-        let ingredientIdsArr = []
-        let tagIdsArr = []
-        let ingredientAmt = getRandomInt(5,20);
-        for(let k = 0; k < ingredientAmt; k++) {
-            ingredientIdsArr.push(getRandomInt(1,1000));
-            tagIdsArr.push(getRandomInt(1,1000));
+        let ingredientIdsArr = [];
+        let tagIdsArr = [];
+        let ingredientAmt = getRandomInt(5, 20);
+        for (let k = 0; k < ingredientAmt; k++) {
+            ingredientIdsArr.push(getRandomInt(1, 1000));
+            tagIdsArr.push(getRandomInt(1, 1000));
         }
 
         let nutrient = tryToNumber(GenerateObject(nutrients));
@@ -147,21 +144,22 @@ for (let i = 0; i < amtTlt; i++) {
         let itemWId = item;
         itemWId['nutrition_id'] = nutriID;
         itemWId['ingredient_ids'] = ingredientIdsArr;
-        itemWId['restaurant_id'] = i+1;
         itemWId['tag_ids'] = tagIdsArr;
 
         let itemObj = tryToNumber(GenerateObject(itemWId))
         let tempItem_id = itemsCol.insert(itemObj)['$loki'];
+        restaurantsItemsArr.push(tempItem_id);
     }
     // for restaurants
-    let tagIdsArr1 = []
-    let tagAmt = getRandomInt(5,20);
-    for(let k = 0; k < tagAmt; k++) {
-        tagIdsArr1.push(getRandomInt(1,1000));
+    let tagIdsArr1 = [];
+    let tagAmt = getRandomInt(5, 20);
+    for (let k = 0; k < tagAmt; k++) {
+        tagIdsArr1.push(getRandomInt(1, 1000));
     }
 
     let restaurantWId = restaurant;
     restaurantWId['tag_ids'] = tagIdsArr1;
+    restaurantWId.items = restaurantsItemsArr;
     let restaurantObj = tryToNumber(GenerateObject(restaurantWId));
     restaurantsCol.insert(restaurantObj);
 }
@@ -171,47 +169,47 @@ console.log('starting normailization');
 normalizeDB([itemsCol, restaurantsCol, nutrientsCol]);
 console.log('done normalizing');
 
-let itemIndices = ['name', 'price', 'reviewCount', 'reviewScore', 'nutrition_id', 'restaurant_id', 'tag_ids', 'ingredient_ids' ]
-let restaurantIndices =['price', 'reviewCount', 'reviewScore', 'name', 'item_ids', 'tag_ids', 'type', 'distance']
+let itemIndices = ['name', 'price', 'reviewCount', 'reviewScore', 'nutrition_id', 'restaurant_id', 'tag_ids', 'ingredient_ids']
+let restaurantIndices = ['price', 'reviewCount', 'reviewScore', 'name', 'item_ids', 'tag_ids', 'type', 'distance']
 let nutrientIndices =
-[
-    'calories',
-    'fat',
-    'fatTrans',
-    'fatSat',
-    'monoUnsaturated',
-    'polyUnsaturated',
-    'carb',
-    'protein',
-    'fiber',
-    'cholesterol',
-    'vitaminA',
-    'vitaminB6',
-    'vitaminB12',
-    'vitaminC',
-    'vitaminD',
-    'vitaminE',
-    'vitaminK',
-    'thiamin',
-    'riboflavin',
-    'niacin',
-    'pantothenicAcid',
-    'folate',
-    'calcium',
-    'iron',
-    'magnesium',
-    'phosphorus',
-    'potassium',
-    'sodium',
-    'zinc', 
-]
+    [
+        'calories',
+        'fat',
+        'fatTrans',
+        'fatSat',
+        'monoUnsaturated',
+        'polyUnsaturated',
+        'carb',
+        'protein',
+        'fiber',
+        'cholesterol',
+        'vitaminA',
+        'vitaminB6',
+        'vitaminB12',
+        'vitaminC',
+        'vitaminD',
+        'vitaminE',
+        'vitaminK',
+        'thiamin',
+        'riboflavin',
+        'niacin',
+        'pantothenicAcid',
+        'folate',
+        'calcium',
+        'iron',
+        'magnesium',
+        'phosphorus',
+        'potassium',
+        'sodium',
+        'zinc',
+    ]
 let ingredientIndices = ['name'];
 let tagsIndices = ['name'];
 let cacheIndices = ['name', 'type'];
 
 addIndices(itemsCol, itemIndices);
 addIndices(restaurantsCol, restaurantIndices);
-addIndices(nutrientsCol,nutrientIndices);
+addIndices(nutrientsCol, nutrientIndices);
 
 addIndices(ingredientCol, ingredientIndices);
 addIndices(tagsCol, tagsIndices);
@@ -232,16 +230,15 @@ fs.writeFileSync('jsonTestFile500', textDb);
 db.close();
 
 
-
 function normalizeDB(collection) {
-    for (const col of collection ) {
+    for (const col of collection) {
         let obj = col.data[0];
-    for (let prop in obj) {
-        if (typeof(obj[prop]) === 'number' && prop !== '$loki' && prop.substr(prop.length - 2) !== 'id') {
-            normalizeProp(col, prop);
+        for (let prop in obj) {
+            if (typeof (obj[prop]) === 'number' && prop !== '$loki' && prop.substr(prop.length - 2) !== 'id') {
+                normalizeProp(col, prop);
+            }
         }
     }
-}
 }
 
 function normalizeProp(col, field: string) {
@@ -252,15 +249,29 @@ function normalizeProp(col, field: string) {
     let stdDev = col.stdDev(field);
     let median = col.median(field);
     let avg = col.avg(field);
-    
-   if (isNaN(min) || isNaN(max) || isNaN(stdDev) || isNaN(median) || isNaN(avg) || avg <= 1) {
-       return;
-   }
+
+    if (isNaN(min) || isNaN(max) || isNaN(stdDev) || isNaN(median) || isNaN(avg) || avg <= 1) {
+        return;
+    }
 
     let roundTo = (numDigits(max) - numDigits(min)) + 2
-    col.findAndUpdate({}, (obj) => { obj[field] = Number(normalizeVar(obj[field], min, max).toFixed(roundTo)); return obj})
+    col.findAndUpdate({}, (obj) => {
+        obj[field] = Number(normalizeVar(obj[field], min, max).toFixed(roundTo));
+        return obj
+    })
 
-    let dataCache = roundObject({name: col.name + '.' + field, type: 'dataCache', collection: col.name, field: field, min: min, max: max, mode: mode, stdDev: stdDev, median: median, avg: avg }, 6);
+    let dataCache = roundObject({
+        name: col.name + '.' + field,
+        type: 'dataCache',
+        collection: col.name,
+        field: field,
+        min: min,
+        max: max,
+        mode: mode,
+        stdDev: stdDev,
+        median: median,
+        avg: avg
+    }, 6);
     cacheCol.insert(dataCache);
     return;
 }
@@ -272,26 +283,26 @@ function normalizeVar(x: number, min: number, max: number) {
 
 function roundObject(obj: object, dPts: number) {
     for (let prop in obj) {
-        if (typeof(obj[prop]) === 'number') {
+        if (typeof (obj[prop]) === 'number') {
             obj[prop] = Number(obj[prop].toFixed(dPts));
         }
     }
- //   console.log(obj);
+    //   console.log(obj);
     return obj;
 }
 
 function numDigits(x) {
     x = Number(String(x).replace(/[^0-9]/g, ''));
     return (log10((x ^ (x >> 31)) - (x >> 31)) | 0) + 1;
-  }
+}
 
-  function log10(val) {
+function log10(val) {
     return Math.log(val) / Math.log(10);
-  }
+}
 
-  function addIndices(col, indices: Array<string>) {
-   //   console.log('adding ' + indices +  ' Indices');
-      for (const string of indices) {
-      col.ensureIndex(string, true);
-      }
-  }
+function addIndices(col, indices: Array<string>) {
+    //   console.log('adding ' + indices +  ' Indices');
+    for (const string of indices) {
+        col.ensureIndex(string, true);
+    }
+}
