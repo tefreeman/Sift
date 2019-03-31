@@ -14,7 +14,7 @@
                                     style="display: inline; float: right; margin-top: 0;"> {{roundInt(metersToMiles(restaurant.distance))}}
                                 miles
                             </ion-label>
-                            <ion-card-subtitle>{{(restaurant.items.length)}} matches</ion-card-subtitle>
+                            <ion-card-subtitle>{{(restaurantView.items.length)}} matches</ion-card-subtitle>
                             <ion-card-title>{{restaurant.name}}</ion-card-title>
                         </ion-card-header>
                         <!-- TODO change the heart display to display a different svg not generate several svg's (performance -->
@@ -45,10 +45,10 @@
             </ion-grid>
         </ion-card>
     </div>
-    <sg--home-items-list *ngIf="slideState" [itemScores]="restaurantView.itemScores" [itemsArr]="restaurantView.items"
-                         [stats]="stats"
-                         style="display: inline-flex">
+    <sg-home-items-list *ngIf="slideState" [itemScores]="restaurantView.itemScores" [itemsArr]="restaurantView.items"
+                        [stats]="stats"
+                        style="display: inline-flex">
 
-    </sg--home-items-list>
+    </sg-home-items-list>
 </div>
 

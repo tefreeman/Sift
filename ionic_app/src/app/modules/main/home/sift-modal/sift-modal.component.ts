@@ -25,6 +25,7 @@ interface ISortPayload {
 export class SiftModalComponent implements OnInit {
 
    activeSift: IFilterObj;
+   ingredientFilters: Map<string, IFilter> = new Map();
    isEditMode: boolean = false;
    itemFilters: Map<string, IFilter> = new Map();
    itemSorts: Map<string, ISortable> = new Map();
@@ -48,6 +49,8 @@ export class SiftModalComponent implements OnInit {
          this.itemFilters.set(filter.key, filter);
       } else if (filterPayload.type === "restaurant") {
          this.restaurantFilters.set(filter.key, filter);
+      } else if (filterPayload.type === "ingredient") {
+         this.ingredientFilters.set(filter.key, filter);
       }
    }
 
@@ -74,7 +77,7 @@ export class SiftModalComponent implements OnInit {
    createSift() {
       this.filterService.createSift(this.siftName, Array.from(this.restaurantFilters.values()),
          Array.from(this.nutrientFilters.values()), Array.from(this.itemFilters.values()),
-         Array.from(this.restaurantSorts.values()), Array.from(this.nutrientSorts.values()),
+         Array.from(this.ingredientFilters.values()), Array.from(this.restaurantSorts.values()), Array.from(this.nutrientSorts.values()),
          Array.from(this.itemSorts.values()), Array.from(this.previewSorts.values())
       )
          .subscribe(() => {
@@ -100,7 +103,7 @@ export class SiftModalComponent implements OnInit {
    updateSift() {
       this.filterService.updateSift(this.activeSift, this.siftName, Array.from(this.restaurantFilters.values()),
          Array.from(this.nutrientFilters.values()), Array.from(this.itemFilters.values()),
-         Array.from(this.restaurantSorts.values()), Array.from(this.nutrientSorts.values()),
+         Array.from(this.ingredientFilters.values()), Array.from(this.restaurantSorts.values()), Array.from(this.nutrientSorts.values()),
          Array.from(this.itemSorts.values()), Array.from(this.previewSorts.values()))
          .subscribe(() => {
             this.exitModal();
@@ -118,6 +121,9 @@ export class SiftModalComponent implements OnInit {
       }
       for (let filter of this.activeSift.filterNutrients) {
          this.nutrientFilters.set(filter.key, filter);
+      }
+      for (let filter of this.activeSift.filterIngredients) {
+         this.ingredientFilters.set(filter.key, filter);
       }
 
       // for sorts

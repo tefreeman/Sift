@@ -23,11 +23,12 @@ import { NutritionGraphComponent } from "./item-modal/nutrition-graph/nutrition-
 import { SortSlidersComponent } from "./sift-modal/sort-sliders/sort-sliders.component";
 import { ItemsListComponent } from "./items-list/items-list.component";
 import { ItemComponent } from "./items-list/item/item.component";
+import { FilterIngredientsComponent } from "./sift-modal/filter-ingredients/filter-ingredients.component";
 
 @NgModule({
    declarations: [HeaderComponent, MapsComponent, HomeComponent, SiftBarComponent, SiftModalComponent,
       FilterNutrientsComponent, FilterPriceComponent, FilterReviewsComponent, FilterDistanceComponent,
-      RestaurantsListComponent, RestaurantComponent, SortBarComponent, ItemModalComponent, NutritionGraphComponent, SortSlidersComponent, ItemsListComponent, ItemComponent],
+      RestaurantsListComponent, RestaurantComponent, SortBarComponent, ItemModalComponent, NutritionGraphComponent, SortSlidersComponent, ItemsListComponent, ItemComponent, FilterIngredientsComponent],
    imports: [CommonModule, IonicModule, HomeRoutingModule, VirtualScrollerModule,
       FormsModule, GalleryModule, NgxChartsModule],
    providers: [],

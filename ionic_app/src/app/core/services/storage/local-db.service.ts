@@ -25,7 +25,7 @@ export class LocalDbService {
       this.setUpdateDistance().subscribe();
    }
 
-   public getCollection$(collectionName: string): Observable<Collection<any>> {
+   public getCollection$<T>(collectionName: string): Observable<Collection<any | T>> {
       return this.gridDb$.pipe(map(db => db.getCollection(collectionName)));
    }
 

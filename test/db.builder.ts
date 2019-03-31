@@ -38,19 +38,20 @@ let nutrients = {
 
 let ingredients = {
     'name': '{{char(4,14)}}',
-    'prob': '{{float(0.001, 0.15)}}'
+    'prob': '{{int(0,100)}}',
 }
 
 let tags = {
     'name': '{{char(4,14)}}',
-    'prob': '{{float(0.001, 0.15)}}'
+    'prob': '{{float(0.0, 1.0)}}',
+    'value': '{{int(1,14)}}'
 }
 
 let item = {
     'name': '{{char(5,14)}}',
     'price': '{{float(4.0, 30.0)}}',
     'reviewCount': '{{int(1,1000)}}',
-    'reviewScore': '{{float(1,5,2)}}',
+    'reviewScore': '{{float(1.0,5.0)}}',
     'mQty': '{{int(1,2)}}',
     'mUnit': 'g',
     'servingQty': '{{int(1,2)}}',
@@ -59,15 +60,20 @@ let item = {
     'tag_ids': [],
     'nutrition_id': -1,
     'ingredient_ids': []
+};
+
+let review = {
+
 }
 
 let restaurant =
     {
+        'avgNutrition_id': -1,
         'name': '{{char(5,14)}}',
         'phone': '{{phone()}}',
         'address': '{{text(2,4)}}',
         'distance': -1,
-        'type': '{{char(5,14)}}',
+        'type': [],
         'price': '{{int(1,3)}}',
         'reviewCount': '{{int(1,1000)}}',
         'reviewScore': '{{float(1,5,2)}}',
@@ -119,7 +125,7 @@ var tryToNumber = function (obj) {
     return obj;
 }
 let amtTlt = 200;
-let itemAmt = 60;
+let itemAmt = 40;
 let ingredientIndex = 1000;
 
 for (let p = 0; p < ingredientIndex; p++) {
@@ -128,14 +134,21 @@ for (let p = 0; p < ingredientIndex; p++) {
 }
 
 for (let i = 0; i < amtTlt; i++) {
+    let tagItemAndRestaurantAmt = getRandomInt(1, 2);
     let restaurantsItemsArr = [];
+    let restaurtantTypeArr = [];
+    // for items
     for (let j = 0; j < itemAmt; j++) {
         let ingredientIdsArr = [];
         let tagIdsArr = [];
+        let itemTypeArr = [];
         let ingredientAmt = getRandomInt(5, 20);
         for (let k = 0; k < ingredientAmt; k++) {
             ingredientIdsArr.push(getRandomInt(1, 1000));
             tagIdsArr.push(getRandomInt(1, 1000));
+        }
+        for (let z = 0; z < tagItemAndRestaurantAmt; z++) {
+            itemTypeArr.push(getRandomInt(1, 1000));
         }
 
         let nutrient = tryToNumber(GenerateObject(nutrients));
@@ -143,6 +156,7 @@ for (let i = 0; i < amtTlt; i++) {
 
         let itemWId = item;
         itemWId['nutrition_id'] = nutriID;
+        itemWId['type'] = itemTypeArr;
         itemWId['ingredient_ids'] = ingredientIdsArr;
         itemWId['tag_ids'] = tagIdsArr;
 
@@ -157,8 +171,12 @@ for (let i = 0; i < amtTlt; i++) {
         tagIdsArr1.push(getRandomInt(1, 1000));
     }
 
+    for (let z = 0; z < tagItemAndRestaurantAmt; z++) {
+        restaurtantTypeArr.push(getRandomInt(1, 1000));
+    }
     let restaurantWId = restaurant;
     restaurantWId['tag_ids'] = tagIdsArr1;
+    restaurantWId['type'] = restaurtantTypeArr;
     restaurantWId.items = restaurantsItemsArr;
     let restaurantObj = tryToNumber(GenerateObject(restaurantWId));
     restaurantsCol.insert(restaurantObj);

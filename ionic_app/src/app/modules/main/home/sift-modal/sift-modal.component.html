@@ -61,10 +61,26 @@
                     <sg-modal-filter-distance
                             (addDistanceEvent)='addFilter($event); FilterType.value=""'></sg-modal-filter-distance>
                 </ion-col>
+                <ion-col size="12" *ngIf="FilterType.value === 'ingredient'">
+                    <sg-modal-filter-ingredients
+                            (addIngredientEvent)='addFilter($event); FilterType.value=""'>
+                    </sg-modal-filter-ingredients>
+                </ion-col>
+
+
                 <ion-col size="12">
                     <h4>Active filters:</h4>
                 </ion-col>
 
+                <ion-col *ngFor="let ingredient of ingredientFilters | keyvalue" size="12">
+                    <ion-text>
+                        <strong> Disallowed Ingredients: </strong>
+                        <ion-chip>
+                            <ion-icon (tap)="ingredientFilters.delete(ingredient.key)" name="trash"></ion-icon>
+                            <ion-label>{{ingredient.key}}</ion-label>
+                        </ion-chip>
+                    </ion-text>
+                </ion-col>
                 <ion-col *ngFor="let nutrient of nutrientFilters | keyvalue" size="12">
                     <ion-text>
                         <strong> Nutrient {{nutrient.value.key}} </strong> from {{nutrient.value.min}}
@@ -102,7 +118,7 @@
                 <ion-col *ngFor="let nutrient of nutrientSorts | keyvalue" size="12">
                     <ion-text>
                         <strong> Nutrient {{nutrient.value.key}} </strong> is {{nutrient.value.weight}}
-                        <ion-icon (tap)="nutrientSortsr.delete(nutrient.key)" name="trash"></ion-icon>
+                        <ion-icon (tap)="nutrientSorts.delete(nutrient.key)" name="trash"></ion-icon>
                     </ion-text>
                 </ion-col>
 
@@ -122,12 +138,11 @@
             </ion-row>
         </div>
     </ion-grid>
+</div>
 
-
-    <div *ngIf="!isEditMode" class="createSiftButton" text-center (tap)="createSift()">
-        <h3 style="color: white">Create Sift</h3>
-    </div>
-    <div *ngIf="isEditMode" class="createSiftButton" text-center (tap)="updateSift()">
-        <h3 style="color: white">Update Sift</h3>
-    </div>
+<div *ngIf="!isEditMode" class="createSiftButton" text-center (tap)="createSift()">
+    <h3 style="color: white">Create Sift</h3>
+</div>
+<div *ngIf="isEditMode" class="createSiftButton" text-center (tap)="updateSift()">
+    <h3 style="color: white">Update Sift</h3>
 </div>

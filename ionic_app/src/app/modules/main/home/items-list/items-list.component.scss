@@ -2,11 +2,13 @@
   margin: 0;
   padding: 0;
   width: 40vw;
-  height: 124px;
+  height: 112px;
+  text-align: center;
 }
 
 virtual-scroller {
   height: 124px;
   margin-bottom: -25px;
   padding-bottom: 25px;
+  overflow-y: hidden;
 }

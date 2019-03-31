@@ -1,0 +1,36 @@
+.item {
+  margin: 8px;
+  height: 100%;
+  perspective: 500px;
+  transform-style: preserve-3d;
+}
+
+p {
+  margin: 4px;
+  font-size: 12px;
+}
+
+
+.scoreForceBottom {
+  display: inline-block;
+  font-size: 24px;
+  text-align: center;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+}
+
+.front {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+}
+
+.back {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+}

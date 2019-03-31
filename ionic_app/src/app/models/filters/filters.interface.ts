@@ -2,7 +2,7 @@ import { IDataDoc } from "../user/userProfile.interface";
 import { IPreviewSort, ISortable } from "../sort/sort.interface";
 
 export interface IFilterObj extends IDataDoc {
-   diet: {};
+   filterIngredients: IIngredientFilter[];
    filterItems: IItemsFilter[];
    filterNutrients: INutrientFilter[];
    filterRestaurants: IRestaurantsFilter[];
@@ -16,7 +16,7 @@ export interface IFilterObj extends IDataDoc {
 
 export interface IFilter {
    has?: string | number | boolean;
-   hasVal?: number | string;
+   hasVal?: any[];
    key: any;
    max?: number;
    min?: number;
@@ -70,14 +70,8 @@ export interface INutrientFilter extends IFilter {
    key: TNutrientFilterKey;
 }
 
-/**
- *
- * Ingredient Filter interface. HasVal is a an ingredient_id
- * @export
- * @interface IIngredientFilter
- * @extends {IFilter}
- */
+
 export interface IIngredientFilter extends IFilter {
-   hasVal: number;
    key: string;
 }
+

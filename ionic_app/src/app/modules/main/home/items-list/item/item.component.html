@@ -1,30 +1,20 @@
-<ion-card>
-    <ion-grid no-margin no-padding style="height: 112px">
-        <ion-row justify-content-center no-margin no-padding>
-            <ion-col size="auto">
-                <ion-text style="font-size: 12px;">
-                    <strong> {{item.name}}</strong>
-                </ion-text>
-            </ion-col>
-        </ion-row>
-        <ion-row justify-content-center no-margin no-padding>
-            <ion-col size="auto">
-                <ion-text style="font-size: 12px;">
-                    {{score}}% Match
-                </ion-text>
-            </ion-col>
-        </ion-row>
-        <ion-row *ngFor="let obj of previewSorts" justify-content-center no-margin no-padding>
-            <ion-col *ngIf="obj.type === 'item'" size="auto">
-                <ion-text style="font-size: 12px;">
-                    {{item[obj.key]}} {{obj.key}}
-                </ion-text>
-            </ion-col>
-            <ion-col *ngIf="obj.type === 'nutrient'" size="auto">
-                <ion-text style="font-size: 12px;">
-                    {{(nutrientData | async)[obj.key]}} {{obj.key}}
-                </ion-text>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+<ion-card (click)="toggleState()" [@flip]="flipState" class="item">
+    <div *ngIf="contentHide === false" class="front">
+        <p style="display: inline-block; vertical-align: top">
+            {{item.name}} {{item.name}} {{item.name}}
+        </p>
+        <p class="scoreForceBottom">
+            {{score}}%
+        </p>
+    </div>
+    <div *ngIf="contentHide === true" class="back">
+        <div *ngFor="let prop of previewSorts">
+            <p *ngIf="prop.type==='item'" style="display: inline-block; vertical-align: top">
+                {{prop.key}}: {{ifNumberFix(deNormalizedItem[prop.key], 1)}}
+            </p>
+            <p *ngIf="prop.type==='nutrient'" style="display: inline-block; vertical-align: top">
+                {{prop.key}}: {{ifNumberFix((nutrientData | async)[prop.key], 1)}}
+            </p>
+        </div>
+    </div>
 </ion-card>
