@@ -16,23 +16,24 @@ import { IonicModule } from "@ionic/angular";
 import { NgModule } from "@angular/core";
 import { VirtualScrollerModule } from "ngx-virtual-scroller";
 import { FormsModule } from "@angular/forms";
-import { ItemModalComponent } from "./item-modal/item-modal.component";
+import { RestaurantDetailedModalComponent } from "./restaurant-detailed-modal/restaurant-detailed-modal.component";
 import { GalleryModule } from "@ngx-gallery/core";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
-import { NutritionGraphComponent } from "./item-modal/nutrition-graph/nutrition-graph.component";
+import { NutritionGraphComponent } from "./restaurant-detailed-modal/nutrition-graph/nutrition-graph.component";
 import { SortSlidersComponent } from "./sift-modal/sort-sliders/sort-sliders.component";
 import { ItemsListComponent } from "./items-list/items-list.component";
 import { ItemComponent } from "./items-list/item/item.component";
 import { FilterIngredientsComponent } from "./sift-modal/filter-ingredients/filter-ingredients.component";
+import { ImageSliderComponent } from './restaurant-detailed-modal/image-slider/image-slider.component';
 
 @NgModule({
    declarations: [HeaderComponent, MapsComponent, HomeComponent, SiftBarComponent, SiftModalComponent,
       FilterNutrientsComponent, FilterPriceComponent, FilterReviewsComponent, FilterDistanceComponent,
-      RestaurantsListComponent, RestaurantComponent, SortBarComponent, ItemModalComponent, NutritionGraphComponent, SortSlidersComponent, ItemsListComponent, ItemComponent, FilterIngredientsComponent],
+      RestaurantsListComponent, RestaurantComponent, SortBarComponent, RestaurantDetailedModalComponent, NutritionGraphComponent, SortSlidersComponent, ItemsListComponent, ItemComponent, FilterIngredientsComponent, ImageSliderComponent],
    imports: [CommonModule, IonicModule, HomeRoutingModule, VirtualScrollerModule,
       FormsModule, GalleryModule, NgxChartsModule],
    providers: [],
-   entryComponents: [SiftModalComponent, ItemModalComponent]
+   entryComponents: [SiftModalComponent, RestaurantDetailedModalComponent]
 })
 export class HomeModule {
 }

@@ -27,7 +27,7 @@
     "@collectable/core": "^5.0.1",
     "@collectable/red-black-tree": "^5.0.1",
     "@ionic-native/core": "^5.0.0-beta.22",
-    "@ionic-native/file": "^5.0.0-beta.23",
+    "@ionic-native/file": "^5.3.0",
     "@ionic-native/geolocation": "^5.0.0-beta.23",
     "@ionic-native/google-maps": "^5.0.0-beta.25",
     "@ionic-native/native-storage": "^5.0.0",

@@ -3,7 +3,7 @@ import { DenormalizeService } from "../../../../../core/services/data/transforma
 import { IRestaurant } from "../../../../../models/restaurant/restaurant.interface";
 import { take, tap } from "rxjs/operators";
 import { ModalController } from "@ionic/angular";
-import { ItemModalComponent } from "../../item-modal/item-modal.component";
+import { RestaurantDetailedModalComponent } from "../../restaurant-detailed-modal/restaurant-detailed-modal.component";
 import "hammerjs";
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { ISortedView, ISortViewStats } from "../../../../../models/sort/sort.interface";
@@ -77,7 +77,7 @@ export class RestaurantComponent implements OnInit {
 
    async presentModal() {
       const modal = await this.modalController.create({
-            component: ItemModalComponent,
+            component: RestaurantDetailedModalComponent,
             componentProps: {
                controller: this.modalController,
                restaurantView: this.restaurantView,

@@ -10,11 +10,11 @@ import { switchMap } from "rxjs/operators";
 import { Observable } from "rxjs";
 
 @Component({
-   selector: "sg-home-item-modal",
-   templateUrl: "./item-modal.component.html",
-   styleUrls: ["./item-modal.component.scss"]
+   selector: "sg-home-restaurant-modal",
+   templateUrl: "./restaurant-detailed-modal.component.html",
+   styleUrls: ["./restaurant-detailed-modal.component.scss"]
 })
-export class ItemModalComponent implements OnInit {
+export class RestaurantDetailedModalComponent implements OnInit {
 
    calorieGraph: any;
    public items: Observable<IItem[]> = null;
