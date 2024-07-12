@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "food-avoids.component.scss"
+    ],
+    "names": [],
+    "file": "food-avoids.component.css"
+}

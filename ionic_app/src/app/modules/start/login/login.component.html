@@ -1,0 +1,95 @@
+<ion-content scrollY="false">
+    <ion-grid
+        no-padding
+        margin
+    >
+
+        <ion-row justify-content-center>
+
+            <ion-col size="12" size-lg="6"
+                style="margin-top: 24px;"
+            >
+                <!-- place holder for the logo element -->
+                <div style="height: 20vh; width: 20vh; background: var(--ion-color-primary); margin: auto; padding: 0px"></div>
+                <div text-center>
+                    <ion-text color="primary">
+                        <h1 style="font-size: 8vmin; padding: 0px; margin: 0px">LOGIN</h1>
+                    </ion-text>
+                </div>
+            </ion-col>
+
+            <ion-col size="12" size-lg="6">
+
+                <form [formGroup]="userForm"  (ngSubmit)="loginWithEmail()">
+                <ion-item>
+                    <ion-label for="email" style="font-size: 4vmin" position="floating">EMAIL</ion-label>
+                    <ion-input type="email" formControlName="email" required></ion-input>
+                </ion-item>
+                
+                <div *ngIf="formErrors.email">
+                        {{ formErrors.email }}
+                      </div>
+                <ion-item>
+                    <ion-label for="password"  style="font-size: 4vmin" position="floating">PASSWORD</ion-label>
+                    <ion-input type="password" formControlName="password" required ></ion-input>
+                </ion-item>
+
+                <div *ngIf="formErrors.password">
+                        {{ formErrors.password }}
+                </div>
+                <label (click)="presentAlertConfirm()">
+                    <p style="font-size: 2vmin"
+                        text-align-right
+                        no-margin
+                        no-padding
+                    >
+                        forgot password?
+                    </p>
+                </label>
+                <div text-center>
+                    <ion-button
+                        type="submit"  [disabled]="!userForm.valid"
+                        style="width: 40vmin; height: 8vmin; font-size: 4vmin; margin-top: 5vh"
+                        shape="round"
+                        fill="outline"
+                        color="primary"
+                    >
+                        LOGIN
+                    </ion-button>
+                </div>
+                <span *ngIf="userForm.valid" >Form is valid</span>
+            </form>
+        </ion-col>
+            <ion-col size="12">
+                <h4 text-center>OR CONNECT WITH</h4>
+            </ion-col>
+            <ion-col size="6">
+                <div style="width: 30vmin; margin: auto;">
+                    <ion-button
+                        (click)="loginWithGoogle()"
+                        style="width: 30vmin; height: 6vmin; font-size: 3vmin; margin: auto;"
+                        shape="round"
+                        fill="outline"
+                        color="primary"
+                    >
+                        Google
+                    </ion-button>
+                </div>
+            </ion-col>
+            <ion-col size="6">
+                <div style="width: 30vmin; margin: auto;">
+                    <ion-button
+                        (click)="loginWithFacebook()"
+                        style="width: 30vmin; height: 6vmin; font-size: 3vmin;"
+                        shape="round"
+                        fill="outline"
+                        color="primary"
+                    >
+                        Facebook
+                    </ion-button>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

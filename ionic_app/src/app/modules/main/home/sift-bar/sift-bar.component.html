@@ -1,0 +1,56 @@
+<ion-grid id="gridMargin" no-padding>
+    <ion-row id="barShadow">
+        <ion-col [ngClass]="notTapped ? 'insideLeft' : 'insideLeftTapped'" no-margin no-padding size="5">
+            <ion-row (tap)="changeStatus()" align-items-center no-margin no-padding style="height: 100%">
+                <ion-col no-margin no-padding size="12">
+                    <h4 *ngIf="notTapped" no-margin no-padding
+                        style="color: white; margin-left: 8px;">{{(activeDoc$ | async)?.name}}</h4>
+                    <h4 *ngIf="!notTapped" no-margin no-padding style="color: white; margin-left: 8px;">Manage
+                        Sifts</h4>
+                </ion-col>
+            </ion-row>
+        </ion-col>
+        <ion-col [ngClass]="notTapped ? 'insideRight' : 'insideRightTapped'" align-self-center no-margin no-padding
+                 size="7">
+            <ion-row (tap)="changeStatus()" align-items-center no-margin no-padding style="height: 100%">
+                <ion-col no-margin no-padding size="10">
+                    <p [ngClass]="notTapped ? 'dimText' : 'dimTextTapped'" no-margin no-padding> xx Restaurants | xxx
+                        Items</p>
+                </ion-col>
+                <ion-col no-margin no-padding size="2">
+                    <ion-icon *ngIf="notTapped" float-right id="iconSize" name="options"></ion-icon>
+                </ion-col>
+            </ion-row>
+        </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!notTapped" id="siftSpace" justify-content-center>
+        <ion-col size="12">
+            <ion-item>
+                <ion-label>Select</ion-label>
+                <ion-select (ionChange)="setActiveDoc($event)" [interfaceOptions]="customActionSheetOptions"
+                            interface="action-sheet"
+                            placeholder="Select One">
+                    <ion-select-option *ngFor="let sift of (docsMap$ | async | keyvalue)"
+                                       [selected]="sift.key === (activeDoc$ | async)?.name"
+                                       [value]="sift">
+                        {{sift.key}}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+        </ion-col>
+        <ion-col size="auto">
+            <ion-segment>
+                <ion-segment-button (tap)="openManageSiftsModal()">
+                    <ion-label>Create</ion-label>
+                </ion-segment-button>
+                <ion-segment-button (tap)="openManageSiftsModal(true)">
+                    <ion-label>Edit</ion-label>
+                </ion-segment-button>
+                <ion-segment-button (tap)="confirmDelete()">
+                    <ion-label>Delete</ion-label>
+                </ion-segment-button>
+            </ion-segment>
+
+        </ion-col>
+    </ion-row>
+</ion-grid>

@@ -9,6 +9,7 @@
 log.txt
 *.sublime-project
 *.sublime-workspace
+*.db
 .vscode/
 npm-debug.log*
 
@@ -20,6 +21,7 @@ npm-debug.log*
 .versions/
 coverage/
 www/
+data/
 node_modules/
 tmp/
 temp/

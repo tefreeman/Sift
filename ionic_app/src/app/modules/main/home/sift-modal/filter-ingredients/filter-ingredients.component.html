@@ -1,0 +1,11 @@
+<div>
+    <ion-searchbar (ionChange)="inputChanged($event.detail.value)" debounce="500" placeholder="Filter Ingredients"
+                   spellcheck="true">
+    </ion-searchbar>
+    <ion-list *ngFor="let ingredient of ingredientMatches">
+        <ion-chip (tap)="addIngredient(ingredient)">
+            <ion-label>{{ingredient}}</ion-label>
+        </ion-chip>
+    </ion-list>
+</div>
+

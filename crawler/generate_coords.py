@@ -7,16 +7,16 @@ db = DataStore('127.0.0.1', 27017,'yelp','coords')
 # round gps coords to x decimal places
 numDecimals = 7
 # size of rectangle
-width = 6000
-height = 5000
+width = 5000
+height = 3200
 
 # resolution (yelp 50 miles)
-res = 30
+res = 50
 
 coords = []
 #start point top left of rect box
-lat = 52.086352520085065
-lon = -132.60429142855412
+lat = 50.484779
+lon = -128.065144
 
 start = distance.Point(lat, lon)
 while height > 0:

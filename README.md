@@ -1,6 +1,6 @@
-# Sift
+# Project Title
 
-Connects users with the food they want.
+Names? Sift(y), ReSift, MyMenu, Foodup, UrMenu
 
 ## Getting Started
 

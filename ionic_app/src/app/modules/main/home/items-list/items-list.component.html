@@ -1,0 +1,6 @@
+<virtual-scroller #scroll [horizontal]="true" [items]="itemsArr" class="hideScrollBar">
+    <div *ngFor="let item of scroll.viewPortItems; index as i" class="displayItem">
+        <sg-home-item [item]="item" [previewSorts]="activeFilter.previewSorts"
+                      [score]="normalize(itemScores[i])"></sg-home-item>
+    </div>
+</virtual-scroller>

@@ -1,11 +1,16 @@
+import requests
+import re
+from bs4 import BeautifulSoup
+import fake_useragent
+import bleach
+import avl
 from db import DataStore
+from multiprocessing import Pool, freeze_support
 
-db = DataStore('68.185.251.95', 27017,'nutritionix','grocery')
+def f(x):
+    return x*x
 
-test = db.Find_One({"id": "51db37ca176fe9790a8997a5"})
-count = 0
-testList = []
-for item in test['items']:
-    if item['item_name'] == 'Noodle Bowl, Soy Ginger':
-        testList.append(item)
-print(testList[0])
+if __name__ == '__main__':
+        freeze_support()
+        p = Pool(16)
+        print(p.map(f, [1, 2, 3]))

@@ -1,0 +1,7 @@
+<virtual-scroller #scroll [items]="restaurantsList.restaurants">
+    <div *ngFor="let view of scroll.viewPortItems" class="horizontal-scroll-wrapper">
+        <sg-home-restaurant [restaurantView]="view" [stats]="restaurantsList.stats"></sg-home-restaurant>
+
+    </div>
+</virtual-scroller>
+

@@ -1,0 +1,20 @@
+<ion-card (click)="toggleState()" [@flip]="flipState" class="item">
+    <div *ngIf="contentHide === false" class="front">
+        <p style="display: inline-block; vertical-align: top">
+            {{item.name}} {{item.name}} {{item.name}}
+        </p>
+        <p class="scoreForceBottom">
+            {{score}}%
+        </p>
+    </div>
+    <div *ngIf="contentHide === true" class="back">
+        <div *ngFor="let prop of previewSorts">
+            <p *ngIf="prop.type==='item'" style="display: inline-block; vertical-align: top">
+                {{prop.key}}: {{ifNumberFix(deNormalizedItem[prop.key], 1)}}
+            </p>
+            <p *ngIf="prop.type==='nutrient'" style="display: inline-block; vertical-align: top">
+                {{prop.key}}: {{ifNumberFix((nutrientData | async)[prop.key], 1)}}
+            </p>
+        </div>
+    </div>
+</ion-card>

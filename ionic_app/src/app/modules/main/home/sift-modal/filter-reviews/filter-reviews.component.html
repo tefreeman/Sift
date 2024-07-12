@@ -1,0 +1,30 @@
+
+    <ion-item>
+        <ion-label>Type Of Reviews</ion-label>
+        <ion-select placeholder="Select One" #reviewType> 
+            <ion-select-option value="reviewScoreItem">Item Score</ion-select-option>
+            <ion-select-option value="reviewCountItem">Item Count</ion-select-option>
+            <ion-select-option value="reviewScoreRestaurant">Restaurant Score</ion-select-option>
+            <ion-select-option value="reviewCountRestaurant">Restaurant Count</ion-select-option>
+        </ion-select>
+    </ion-item>
+    <div *ngIf="reviewType.value === 'reviewCountItem' || reviewType.value === 'reviewCountRestaurant'">
+      <ion-item >
+          <ion-label position="floating">Minimum Value</ion-label>
+          <ion-input type="number"  #min></ion-input>
+        </ion-item>
+        <ion-item >
+            <ion-label position="floating">Maximum Value</ion-label>
+            <ion-input  type="number" #max></ion-input>
+          </ion-item>
+          <ion-button (tap)="addReview(reviewType.value, min.value, max.value)" > Add Filter </ion-button>
+    </div>
+    <div *ngIf="reviewType.value === 'reviewScoreItem' || reviewType.value === 'reviewScoreRestaurant'">
+        <ion-item>
+            <ion-range min="1" max="5" color="primary" step="0.25" snaps="true" pin="true" #Score >
+              <ion-label slot="start">1</ion-label>
+              <ion-label slot="end">5</ion-label>
+            </ion-range>
+          </ion-item>
+            <ion-button (tap)="addReview(reviewType.value, Score.value, 5)" > Add Filter </ion-button>
+      </div>

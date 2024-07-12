@@ -1,0 +1,26 @@
+.borderLeft {
+    border-left: 1px solid var(--ion-color-primary);
+}
+.borderTop {
+    border-top: 1px solid var(--ion-color-primary);
+}
+.borderBot {
+    border-bottom: 1px solid var(--ion-color-primary);
+}
+.borderRight {
+    border-right: 1px solid var(--ion-color-primary);
+}
+
+.pickerHeight {
+    height: 100px;
+}
+
+
+.createSiftButton {
+    position: fixed;
+    bottom: 0;
+    background-color: var(--ion-color-primary);
+    width: 100%;
+    height: 64px;
+
+}

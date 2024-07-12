@@ -1,0 +1,70 @@
+<ion-item>
+    <ion-label>Sort Type</ion-label>
+    <ion-select #SortType placeholder="Select One">
+        <ion-select-option value="item">Item</ion-select-option>
+        <ion-select-option value="restaurant">Restaurant</ion-select-option>
+        <ion-select-option value="nutrient">Nutrient</ion-select-option>
+    </ion-select>
+</ion-item>
+<ion-item *ngIf="SortType.value ===  'item'">
+    <ion-label>Item Sort</ion-label>
+    <ion-select placeholder="Select One" (ionChange)="setActiveKey($event.target.value)">
+        <ion-select-option *ngFor="let itemSortProp of itemSortsTypes"
+                           [value]="itemSortProp[1]">{{itemSortProp[0]}}</ion-select-option>
+
+    </ion-select>
+</ion-item>
+<ion-item *ngIf="SortType.value ===  'restaurant'">
+    <ion-label>Restaurant Sort</ion-label>
+    <ion-select placeholder="Select One" (ionChange)="setActiveKey($event.target.value)">
+        <ion-select-option *ngFor="let prop of restaurantSortTypes"
+                           [value]="prop[1]">{{prop[0]}}</ion-select-option>
+
+    </ion-select>
+</ion-item>
+<ion-item *ngIf="SortType.value ===  'nutrient'">
+    <ion-label>Nutrient Sort</ion-label>
+    <ion-select placeholder="Select One" (ionChange)="setActiveKey($event.target.value)">
+        <ion-select-option *ngFor="let prop of nutritionSortTypes"
+                           [value]="prop[1]">{{prop[0]}}</ion-select-option>
+
+    </ion-select>
+</ion-item>
+
+<div *ngIf="SortType.value ===  'item' && activeKey !== ''">
+    <ion-item>
+        <ion-range #ItemSortVal max="5" min="-5" snaps="true" step="1" value="0">
+            <ion-label slot="start">Dislike</ion-label>
+            <ion-label slot="end">Like</ion-label>
+        </ion-range>
+    </ion-item>
+    <ion-item>
+        <ion-label>Add To Item Preview</ion-label>
+        <ion-checkbox #isPreview color="primary"></ion-checkbox>
+    </ion-item>
+    <ion-button (tap)="FireAddSortEvent('item', ItemSortVal.value, isPreview.checked)">Add Item Sort</ion-button>
+</div>
+<div *ngIf="SortType.value ===  'restaurant' && activeKey !== ''">
+    <ion-item>
+        <ion-range #RestaurantSortVal max="5" min="-5" snaps="true" step="1" value="0">
+            <ion-label slot="start">Dislike</ion-label>
+            <ion-label slot="end">Like</ion-label>
+        </ion-range>
+    </ion-item>
+    <ion-button (tap)="FireAddSortEvent('restaurant', RestaurantSortVal.value, false)"> Add Restaurant Sort
+    </ion-button>
+</div>
+<div *ngIf="SortType.value ===  'nutrient' && activeKey !== ''">
+    <ion-item>
+        <ion-range #NutrientSortVal max="5" min="-5" snaps="true" step="1" value="0">
+            <ion-label slot="start">Dislike</ion-label>
+            <ion-label slot="end">Like</ion-label>
+        </ion-range>
+    </ion-item>
+    <ion-item>
+        <ion-label>Add To Item Preview</ion-label>
+        <ion-checkbox #isPreview color="primary"></ion-checkbox>
+    </ion-item>
+    <ion-button (tap)="FireAddSortEvent('nutrient', NutrientSortVal.value, isPreview.checked)">Add Nutrient Sort
+    </ion-button>
+</div>

@@ -1,0 +1,17 @@
+{
+  "name": "ionic_app",
+  "version": "0.0.1",
+  "author": "Ionic Framework",
+  "homepage": "http://ionicframework.com/",
+  "scripts": {
+    "start": "ts-node db.builder.ts"
+  },
+  "dependencies": {
+    "@types/lokijs": "^1.5.2",
+    "@types/node": "^10.12.18",
+    "@types/timsort": "^0.3.0",
+    "brotli": "^1.3.2",
+    "lokijs": "^1.5.6",
+    "timsort": "^0.3.0"
+  }
+}

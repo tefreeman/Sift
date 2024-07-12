@@ -1,0 +1,35 @@
+#homeSiftBar {
+    display: block;
+    position: absolute;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto;
+    padding-top: 24px;
+    width: 100%;
+    z-index: 10;
+}
+
+#homeSiftMap {
+    z-index: -1;
+}
+
+#test {
+    position: absolute;
+}
+
+ion-label {
+    font-size: 12px;
+}
+
+.fullWidthLine {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom:2px solid rgba(0, 0, 0, 0.15);
+    border-top: 2px solid rgba(0, 0, 0, 0.15);
+    width: 12vw;
+    height: 0px;
+    border-radius: 4px
+}

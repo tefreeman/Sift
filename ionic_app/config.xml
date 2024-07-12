@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="io.ionic.starter" version="0.0.1">
     <name>MyApp</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
@@ -41,6 +41,9 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>We use your location for full functionality of certain app features.</string>
+        </edit-config>
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
@@ -87,8 +90,21 @@
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyCnpxUKLVpYuLOXAtm_nYeKvNsVH3vgDNk" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyCnpxUKLVpYuLOXAtm_nYeKvNsVH3vgDNk" />
     </plugin>
+    <plugin name="cordova-plugin-geolocation" spec="4.0.1">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
+    </plugin>
+    <allow-navigation href="http://192.168.0.100:8100" sessionid="ba22f265" />
+    <allow-navigation href="http://172.16.101.13:8100" sessionid="f6fcbee4" />
+    <allow-navigation href="http://172.18.49.193:8100" sessionid="f0b66b1f" />
+    <allow-navigation href="http://172.18.49.193:8101" sessionid="2eb64b60" />
+    <allow-navigation href="http://192.168.56.1:8100" sessionid="d93bcae3" />
+    <plugin name="cordova-plugin-nativestorage" spec="^2.3.2" />
+    <allow-navigation href="http://192.168.160.113:8100" sessionid="b50c3811" />
+    <allow-navigation href="http://172.17.23.129:8100" sessionid="6486d64f" />
+    <allow-navigation href="http://172.18.35.241:8100" sessionid="70f19d90" />
+    <allow-navigation href="http://127.0.0.1:8100" sessionid="331231e9" />
+    <allow-navigation href="http://127.0.0.1:8101" sessionid="35b7fe50" />
+    <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <engine name="android" spec="7.1.4" />
     <engine name="browser" spec="5.0.4" />
-    <plugin name="cordova-plugin-nativestorage" spec="^2.3.2" />
-    <plugin name="cordova-plugin-file" spec="6.0.1" />
 </widget>

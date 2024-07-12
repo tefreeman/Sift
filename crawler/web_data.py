@@ -27,7 +27,7 @@ class Browser:
                 http = "http://" + proxy['ip'] + ':' + proxy['port']
                 https = "https://" + proxy['ip'] + ':' + proxy['port']
                 proxydict = {'http': http, 'https': https}
-                response = requests.get(url, timeout=TIMEOUT, proxies=proxydict, headers=headers)
+                response = requests.get(url, timeout=TIMEOUT, proxies=proxy, headers=headers)
             
             if response.ok and response != type(None):
                 return response
